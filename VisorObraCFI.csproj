@@ -148,6 +148,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\MySqlDbContext.cs" />
+    <Compile Include="Models\PryArchivosObra.cs" />
     <Compile Include="Models\vw_looker_obras.cs" />
     <Compile Include="ObraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

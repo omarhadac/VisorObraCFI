@@ -239,7 +239,12 @@ namespace VisorObraCFI
                         Inicio = x.FechaInicio,
                         Fin = x.FechaFin,
                         Latitud = x.Latitud,
-                        Longitud =x.Longitud
+                        Longitud = x.Longitud,
+                        ListaArchivos = context.PryArchivosObra
+                            .Where(a => a.IdProyecto == x.PryProyecto_Id)
+                            .ToList() // Materializar los datos en memoria
+                            .Select(a => a.Url)
+                            .ToList()
                     }).ToList();
 
                     return Ok(listaObra);
@@ -254,6 +259,5 @@ namespace VisorObraCFI
                 return InternalServerError(ex);
             }
         }
-
     }
 }

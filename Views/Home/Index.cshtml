@@ -359,17 +359,31 @@
                 <select id="selectDepartamento" class="form-control rounded-custom mr-2" style="width: 150px;">
                     <option value="0">Todos</option>
                     <option value="1">Ciudad</option>
-                    <option value="2">Maipú</option>
-                    <option value="3">San Martín</option>
-                    <option value="4">Junín</option>
+                    <option value="2">Godoy Cruz</option>
+                    <option value="3">Guaymallén</option>
+                    <option value="4">Gral Alvear</option>
+                    <option value="5">Junín</option>
+                    <option value="6">La Paz</option>
+                    <option value="7">Las Heras</option>
+                    <option value="8">Lavalle</option>
+                    <option value="9">Luján</option>
+                    <option value="10">Maipú</option>
+                    <option value="11">Malargüe</option>
+                    <option value="12">Rivadavia</option>
+                    <option value="13">San Carlos</option>
+                    <option value="14">San Martín</option>
+                    <option value="15">San Rafael</option>
+                    <option value="16">Santa Rosa</option>
+                    <option value="17">Tunuyan</option>
+                    <option value="18">Tupungato</option>
                 </select>
                 <label for="selectOrganismo" class="mr-2 bold-label mb-0">Dependencia</label>
                 <select id="selectOrganismo" class="form-control rounded-custom mr-2" style="width: 150px;">
                     <option value="0">Todos</option>
                     <option value="4">IPV</option>
                     <option value="14">Aysam</option>
-                    <option value="9">Vialidad Provincial</option>
-                    <option value="2">Dirección de Obras Públicas</option>
+                    <option value="9">Dirección Provincial Vialidad</option>
+                    <option value="2">Infraestructura</option>
                 </select>
                 <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
             </div>
@@ -401,17 +415,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="small-column">Nuevo complejo penitenciario provincial Almafuerte II</td>
-                            <td>En ejecución</td>
-                            <td>Dirección de Obras Públicas</td>
-                            <td>Luján</td>
-                            <td>$ 1.320.512.000</td>
-                            <td>$ 2.526.321.187</td>
-                            <td><span class="badge badge-success">86.62%</span></td>
-                            <td>01-02-2018</td>
-                            <td>31-01-2020</td>
-                        </tr>
                     </tbody>
                 </table>
                 <!-- Paginación -->
@@ -668,10 +671,11 @@
                             fechaInicio: obra.inicioFormatted,
                             fechaFin: obra.finFormatted,
                             icon: obra.icono,
-                            archivos: [] // Ajusta los archivos según sea necesario
+                            //archivos: [] // Ajusta los archivos según sea necesario
+                            archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop() })) // Asignar ListaArchivos a archivos
                         }));
-                        console.log('obras');
-                        console.log(obras);
+                        //console.log('obras');
+                        //console.log(obras);
                         initMap(obras);
                     })
                     .catch(error => {

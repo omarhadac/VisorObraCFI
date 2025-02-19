@@ -20,5 +20,6 @@ namespace VisorObraCFI.Models
             }
         }
         public DbSet<vw_looker_obras> vw_looker_obras { get; set; }
+        public DbSet<PryArchivosObra> PryArchivosObra { get; set; }
     }
 }

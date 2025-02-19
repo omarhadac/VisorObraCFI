@@ -656,21 +656,22 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
+                        //console.log(data);
                         var obras = data.map(obra => ({
-                            position: { lat: parseFloat(obra.LatitudFormatted), lng: parseFloat(obra.LongitudFormatted) },
-                            nombre: obra.NombreFormatted,
-                            estado: obra.EstadoFormatted,
-                            departamento: obra.DepartamentoFormatted,
-                            montoContratado: obra.ContratoFormatted,
-                            montoPagado: obra.TotalPagadoFormatted,
-                            avance: obra.AvanceFormatted,
-                            fechaInicio: obra.InicioFormatted,
-                            fechaFin: obra.FinFormatted,
-                            icon: '/Content/Iconos/infraestructura.png', // Ajusta el icono según sea necesario
+                            position: { lat: parseFloat(obra.latitudFormatted), lng: parseFloat(obra.longitudFormatted) },
+                            nombre: obra.nombreFormatted,
+                            estado: obra.estadoFormatted,
+                            departamento: obra.departamentoFormatted,
+                            montoContratado: obra.contratoFormatted,
+                            montoPagado: obra.totalPagadoFormatted,
+                            avance: obra.avanceFormatted,
+                            fechaInicio: obra.inicioFormatted,
+                            fechaFin: obra.finFormatted,
+                            icon: obra.icono,
                             archivos: [] // Ajusta los archivos según sea necesario
                         }));
-
+                        console.log('obras');
+                        console.log(obras);
                         initMap(obras);
                     })
                     .catch(error => {
@@ -703,7 +704,7 @@
                             <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                             <p><strong>Anexos:</strong></p>
                             <ul>${archivosHtml}</ul>
-                            <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
+                            
                         </div>
                     `;
 

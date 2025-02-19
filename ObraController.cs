@@ -129,6 +129,59 @@ namespace VisorObraCFI
             }
         }
 
+        [Route("api/Obra/BuscarObrasFiltradas")]
+        [System.Web.Http.ActionName("BuscarObrasFiltradas")]
+        [System.Web.Http.HttpGet]
+        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, int? selectOrganismo)
+        {
+            List<ObraGrilla> listaObra = new List<ObraGrilla>();
+            try
+            {
+                using (var context = new MySqlDbContext())
+                {
+                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras.Where(x=>x.IdEstado == 1);
+                    if (!(string.IsNullOrEmpty(nombreObra)))
+                    {
+                        tmp = tmp.Where(x=>x.Nombre.Contains(nombreObra));
+                    }
+                    if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.IdDepartamento == selectDepartamento.Value);
+                    }
+
+                    if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
+                    }
+
+                    var obrasFiltradas = await tmp.ToListAsync();
+
+                    listaObra = obrasFiltradas.Select(x => new ObraGrilla
+                    {
+                        IdObra = x.PryProyecto_Id,
+                        Nombre = x.Nombre,
+                        Estado = x.Estado,
+                        Dependencia = x.Dependencia,
+                        Departamento = x.Departamento,
+                        Contrato = x.MontoContratado,
+                        TotalPagado = x.OB_MontoPagado,
+                        Avance = x.OB_AvanceReal,
+                        Inicio = x.FechaInicio,
+                        Fin = x.FechaFin
+                    }).ToList();
+
+                    return Ok(listaObra);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    return InternalServerError(ex.InnerException);
+                }
+                return InternalServerError(ex);
+            }
+        }
         // GET api/<controller>/5
         public string Get(int id)
         {

@@ -132,18 +132,20 @@ namespace VisorObraCFI
         [Route("api/Obra/BuscarObrasFiltradas")]
         [System.Web.Http.ActionName("BuscarObrasFiltradas")]
         [System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, int? selectOrganismo)
+        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, int? selectOrganismo, int page = 1, int pageSize = 10)
         {
             List<ObraGrilla> listaObra = new List<ObraGrilla>();
             try
             {
                 using (var context = new MySqlDbContext())
                 {
-                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras.Where(x=>x.IdEstado == 1);
-                    if (!(string.IsNullOrEmpty(nombreObra)))
+                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras;
+
+                    if (!string.IsNullOrEmpty(nombreObra))
                     {
-                        tmp = tmp.Where(x=>x.Nombre.Contains(nombreObra));
+                        tmp = tmp.Where(x => x.Nombre.Contains(nombreObra));
                     }
+
                     if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
                     {
                         tmp = tmp.Where(x => x.IdDepartamento == selectDepartamento.Value);
@@ -154,7 +156,12 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
 
-                    var obrasFiltradas = await tmp.ToListAsync();
+                    var totalItems = await tmp.CountAsync();
+                    var obrasFiltradas = await tmp
+                        .OrderBy(x => x.PryProyecto_Id) // Ordenar por el campo que consideres adecuado
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToListAsync();
 
                     listaObra = obrasFiltradas.Select(x => new ObraGrilla
                     {
@@ -170,6 +177,68 @@ namespace VisorObraCFI
                         Fin = x.FechaFin
                     }).ToList();
 
+                    var result = new
+                    {
+                        TotalItems = totalItems,
+                        Items = listaObra
+                    };
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    return InternalServerError(ex.InnerException);
+                }
+                return InternalServerError(ex);
+            }
+        }
+        
+        [Route("api/Obra/BuscarObrasMapa")]
+        [System.Web.Http.ActionName("BuscarObrasMapa")]
+        [System.Web.Http.HttpGet]
+        public async Task<IHttpActionResult> BuscarObrasMapa(string nombreObra, int? selectDepartamento, int? selectOrganismo)
+        {
+            List<ObraMapa> listaObra = new List<ObraMapa>();
+            try
+            {
+                using (var context = new MySqlDbContext())
+                {
+                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.Latitud.HasValue && x.Longitud.HasValue);
+                    if (!(string.IsNullOrEmpty(nombreObra)))
+                    {
+                        tmp = tmp.Where(x => x.Nombre.Contains(nombreObra));
+                    }
+                    if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.IdDepartamento == selectDepartamento.Value);
+                    }
+
+                    if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
+                    }
+
+                    var obrasFiltradas = await tmp.ToListAsync();
+
+                    listaObra = obrasFiltradas.Select(x => new ObraMapa
+                    {
+                        IdObra = x.PryProyecto_Id,
+                        Nombre = x.Nombre,
+                        Estado = x.Estado,
+                        Dependencia = x.Dependencia,
+                        Departamento = x.Departamento,
+                        Contrato = x.MontoContratado,
+                        TotalPagado = x.OB_MontoPagado,
+                        Avance = x.OB_AvanceReal,
+                        Inicio = x.FechaInicio,
+                        Fin = x.FechaFin,
+                        Latitud = x.Latitud,
+                        Longitud =x.Longitud
+                    }).ToList();
+
                     return Ok(listaObra);
                 }
             }
@@ -182,10 +251,6 @@ namespace VisorObraCFI
                 return InternalServerError(ex);
             }
         }
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
+
     }
 }

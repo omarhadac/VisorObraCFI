@@ -225,6 +225,7 @@
         .info-box:hover .popup-content {
             display: block;
         }
+
         #loading {
             position: fixed;
             top: 50%;
@@ -237,10 +238,11 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        #loading img {
-            width: 150px; /* Ajusta el tamaño del gif de carga */
-            height: 150px;
-        }
+
+            #loading img {
+                width: 150px; /* Ajusta el tamaño del gif de carga */
+                height: 150px;
+            }
     </style>
 </head>
 <body>
@@ -251,7 +253,6 @@
         </div>
     </header>
     <div class="container-fluid">
-
         <!-- Primer sector: Resumen -->
         <div class="row justify-content-center">
             <div class="wrap-dashNumber">
@@ -280,14 +281,11 @@
 
         <!-- Primer sector: Agrupación -->
         <div class="row">
-            <div class="col-md-2">
-
-            </div>
+            <div class="col-md-2"></div>
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/agua-y-cloacas.svg"
-                         alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 60%;">
                     <div class="info-box-content">
                         <span class="info-box-text">AySAM</span>
                         <span class="info-box-number" id="totalAySAM">0</span>
@@ -300,13 +298,11 @@
                         <p id="totalMontoAySAMLic">Monto: 0</p>
                     </div>
                 </div>
-                <!-- /.info-box -->
             </div>
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/arquitectura.svg"
-                         alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 60%;">
                     <div class="info-box-content">
                         <span class="info-box-text">Infraestructura</span>
                         <span class="info-box-number" id="totalInfra">0</span>
@@ -323,8 +319,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/vivienda.svg"
-                         alt="icono representativo a obras publicas" style="width: 50%;">
+                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 50%;">
                     <div class="info-box-content">
                         <span class="info-box-text">IPV</span>
                         <span class="info-box-number" id="totalIPV">0</span>
@@ -334,15 +329,14 @@
                         <p id="totalObrasIPV">Obras en Ejecución: 0</p>
                         <p id="totalMontoIPV">Monto: 0</p>
                         <p id="totalIPVLic">Obras en Licitación: 0</p>
-                        <p id="totalMontoIPVLic">Monto:  0</p>
+                        <p id="totalMontoIPVLic">Monto: 0</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/obras-viales.svg"
-                         alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 60%;">
                     <div class="info-box-content">
                         <span class="info-box-text">DPV</span>
                         <span class="info-box-number" id="totalVialidad">0</span>
@@ -378,15 +372,17 @@
                     <option value="2">Dirección de Obras Públicas</option>
                 </select>
                 <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
-
             </div>
         </div>
+
         <!-- Tercer sector: Mapa de Google -->
         <div class="row">
             <div class="col-12">
                 <div id="map"></div>
             </div>
         </div>
+
+
         <!-- Cuarto sector: Grilla -->
         <div class="row">
             <div class="col-12">
@@ -418,9 +414,15 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- Paginación -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí se generarán los elementos de paginación dinámicamente -->
+                    </ul>
+                </nav>
             </div>
         </div>
-        <img src="~/Content/Iconos/agua-y-cloacas.svg" />
+
         <!-- Modal de Bootstrap -->
         <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -443,11 +445,15 @@
 
     </div>
 
+
+
     <script>
-
         document.addEventListener('DOMContentLoaded', function () {
-
             var loadingElement = document.getElementById('loading');
+            /*var errorMessageElement = document.getElementById('error-message');*/
+            var currentPage = 1;
+            var pageSize = 10;
+            var maxVisiblePages = 10; // Número máximo de páginas visibles en la paginación
 
             // Mostrar el indicador de carga
             loadingElement.style.display = 'block';
@@ -461,7 +467,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    //console.log(data);
                     var totalObra = data.cantidadObraEjecucion;
                     var totalLicitacion = data.cantidadObraLicitacion;
                     document.getElementById('totalObra').textContent = totalObra;
@@ -517,686 +523,258 @@
                 })
                 .finally(() => {
                     // Ocultar el indicador de carga
-                    loadingElement.style.display = 'none';
+                    //loadingElement.style.display = 'none';
                 });
-        // Añadir evento click al botón Buscar
-        document.getElementById('btnBuscar').addEventListener('click', function () {
-            var nombreObra = document.getElementById('nombreObra').value;
-            var selectDepartamento = document.getElementById('selectDepartamento').value;
-            var selectOrganismo = document.getElementById('selectOrganismo').value;
 
-            // Mostrar el indicador de carga
-            loadingElement.style.display = 'block';
 
-            // Realizar la llamada fetch al endpoint BuscarObrasFiltradas
-            fetch(`@Url.Content("~/api/Obra/BuscarObrasFiltradas")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error de Red');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    //console.log(data);
-                    // Limpiar la tabla existente
-                    var tbody = document.querySelector('#obrasTable tbody');
-                    tbody.innerHTML = '';
+            function fetchObras(page) {
+                var nombreObra = document.getElementById('nombreObra').value;
+                var selectDepartamento = document.getElementById('selectDepartamento').value;
+                var selectOrganismo = document.getElementById('selectOrganismo').value;
 
-                    // Llenar la tabla con los datos recibidos
-                    data.forEach(obra => {
-                        
-                        var row = document.createElement('tr');
-                        row.innerHTML = `
-                        <td class="small-column">${obra.nombreFormatted}</td>
-                        <td>${obra.estadoFormatted}</td>
-                        <td>${obra.dependenciaFormatted}</td>
-                        <td>${obra.departamentoFormatted}</td>
-                        <td>${obra.contratoFormatted}</td>
-                        <td>${obra.totalPagadoFormatted}</td>
-                        <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
-                        <td>${obra.inicioFormatted}</td>
-                        <td>${obra.finFormatted}</td>
-                    `   ;
-                        row.addEventListener('click', function () {
-                            showModal(obra);
+                // Mostrar el indicador de carga
+                loadingElement.style.display = 'block';
+                //errorMessageElement.style.display = 'none';
+
+                // Realizar la llamada fetch al endpoint BuscarObrasFiltradas
+                fetch(`@Url.Content("~/api/Obra/BuscarObrasFiltradas")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&page=${page}&pageSize=${pageSize}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error de Red');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data.items);
+                        // Limpiar la tabla existente
+                        var tbody = document.querySelector('#obrasTable tbody');
+                        tbody.innerHTML = '';
+
+                        // Llenar la tabla con los datos recibidos
+                        data.items.forEach(obra => {
+                            var row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td class="small-column">${obra.nombreFormatted}</td>
+                                <td>${obra.estadoFormatted}</td>
+                                <td>${obra.dependenciaFormatted}</td>
+                                <td>${obra.departamentoFormatted}</td>
+                                <td>${obra.contratoFormatted}</td>
+                                <td>${obra.totalPagadoFormatted}</td>
+                                <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
+                                <td>${obra.inicioFormatted}</td>
+                                <td>${obra.finFormatted}</td>
+                            `;
+                            row.addEventListener('click', function () {
+                                showModal(obra);
+                            });
+                            tbody.appendChild(row);
                         });
-                        tbody.appendChild(row);
+
+                        // Actualizar controles de paginación
+                        updatePagination(data.totalItems, page, pageSize);
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener los datos:', error);
+                        //errorMessageElement.textContent = 'Error al obtener los datos de obras filtradas.';
+                        //errorMessageElement.style.display = 'block';
+                    })
+                    .finally(() => {
+                        // Ocultar el indicador de carga
+                        loadingElement.style.display = 'none';
                     });
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos:', error);
-                    errorMessageElement.textContent = 'Error al obtener los datos de obras filtradas.';
-                    errorMessageElement.style.display = 'block';
-                })
-                .finally(() => {
-                    // Ocultar el indicador de carga
-                    loadingElement.style.display = 'none';
-                });
-            });
-        });
+            }
 
-        $(document).ready(function () {
-            // Manejar el clic en los renglones de la tabla
-            $('table tbody tr').on('click', function () {
-                // Obtener la información de la obra
-                var obraInfo = $(this).children('td').map(function () {
-                    return $(this).text();
-                }).get();
+            function updatePagination(totalItems, currentPage, pageSize) {
+                var totalPages = Math.ceil(totalItems / pageSize);
+                var paginationElement = document.getElementById('pagination');
+                paginationElement.innerHTML = '';
 
-                // Llenar el contenido del modal con la información de la obra
-                var modalBody = $('#infoModal .modal-body');
-                modalBody.html(`
-                        <p><strong>Nombre de Obra:</strong> ${obraInfo[0]}</p>
-                        <p><strong>Estado:</strong> ${obraInfo[1]}</p>
-                        <p><strong>Dependencia:</strong> ${obraInfo[2]}</p>
-                        <p><strong>Departamento:</strong> ${obraInfo[3]}</p>
-                        <p><strong>Contrato:</strong> ${obraInfo[4]}</p>
-                        <p><strong>Total Pagado:</strong> ${obraInfo[5]}</p>
-                        <p><strong>Avance:</strong> ${obraInfo[6]}</p>
-                        <p><strong>Inicio:</strong> ${obraInfo[7]}</p>
-                        <p><strong>Fin:</strong> ${obraInfo[8]}</p>
-                    `);
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-                // Mostrar el modal
+                if (startPage > 1) {
+                    var firstPageItem = document.createElement('li');
+                    firstPageItem.className = 'page-item';
+                    firstPageItem.innerHTML = `<a class="page-link" href="#">Primera</a>`;
+                    firstPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(1);
+                    });
+                    paginationElement.appendChild(firstPageItem);
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var pageItem = document.createElement('li');
+                    pageItem.className = 'page-item' + (i === currentPage ? ' active' : '');
+                    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    pageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(parseInt(this.textContent));
+                    });
+                    paginationElement.appendChild(pageItem);
+                }
+
+                if (endPage < totalPages) {
+                    var lastPageItem = document.createElement('li');
+                    lastPageItem.className = 'page-item';
+                    lastPageItem.innerHTML = `<a class="page-link" href="#">Última</a>`;
+                    lastPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(totalPages);
+                    });
+                    paginationElement.appendChild(lastPageItem);
+                }
+            }
+
+            function showModal(obra) {
+                var modalBody = document.querySelector('#infoModal .modal-body');
+                modalBody.innerHTML = `
+                    <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
+                    <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
+                    <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
+                    <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
+                    <p><strong>Contrato:</strong> ${obra.contratoFormatted}</p>
+                    <p><strong>Total Pagado:</strong> ${obra.totalPagadoFormatted}</p>
+                    <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
+                    <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
+                    <p><strong>Fin:</strong> ${obra.finFormatted}</p>
+                `;
                 $('#infoModal').modal('show');
+            }
+
+            function fetchObrasMapa() {
+                var nombreObra = document.getElementById('nombreObra').value;
+                var selectDepartamento = document.getElementById('selectDepartamento').value;
+                var selectOrganismo = document.getElementById('selectOrganismo').value;
+
+                // Realizar la llamada fetch al endpoint BuscarObrasMapa
+                fetch(`@Url.Content("~/api/Obra/BuscarObrasMapa")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error de Red');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        var obras = data.map(obra => ({
+                            position: { lat: parseFloat(obra.LatitudFormatted), lng: parseFloat(obra.LongitudFormatted) },
+                            nombre: obra.NombreFormatted,
+                            estado: obra.EstadoFormatted,
+                            departamento: obra.DepartamentoFormatted,
+                            montoContratado: obra.ContratoFormatted,
+                            montoPagado: obra.TotalPagadoFormatted,
+                            avance: obra.AvanceFormatted,
+                            fechaInicio: obra.InicioFormatted,
+                            fechaFin: obra.FinFormatted,
+                            icon: '/Content/Iconos/infraestructura.png', // Ajusta el icono según sea necesario
+                            archivos: [] // Ajusta los archivos según sea necesario
+                        }));
+
+                        initMap(obras);
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener los datos:', error);
+                    });
+            }
+
+            function initMap(obras) {
+                var mendoza = { lat: -32.889458, lng: -68.845839 };
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 7,
+                    center: mendoza,
+                    mapTypeId: 'satellite'
+                });
+
+                obras.forEach(function (obra) {
+                    var archivosHtml = obra.archivos.map(function (archivo) {
+                        return `<li><a href="${archivo.url}" target="_blank">${archivo.nombre}</a></li>`;
+                    }).join('');
+
+                    var contentString = `
+                        <div class="custom-popup">
+                            <p><span class="badge badge-primary">${obra.nombre}</span></p>
+                            <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
+                            <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
+                            <p><strong>Monto Contratado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
+                            <p><strong>Monto Pagado:</strong><span class="badge badge-secondary"> ${obra.montoPagado}</span></p>
+                            <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
+                            <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
+                            <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                            <p><strong>Anexos:</strong></p>
+                            <ul>${archivosHtml}</ul>
+                            <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
+                        </div>
+                    `;
+
+                    var infowindow = new google.maps.InfoWindow({
+                        content: contentString
+                    });
+
+                    var marker = new google.maps.Marker({
+                        position: obra.position,
+                        map: map,
+                        title: obra.nombre,
+                        icon: obra.icon
+                    });
+
+                    marker.addListener('click', function () {
+                        infowindow.open(map, marker);
+
+                        // Espera a que el popup se haya abierto completamente
+                        google.maps.event.addListenerOnce(infowindow, 'domready', function () {
+                            // Inicializa el gráfico de líneas cuando se abre el popup
+                            var ctx = document.getElementById(`lineChart-${obra.nombre.replace(/\s+/g, '')}`).getContext('2d');
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: obra.chartData.labels,
+                                    datasets: [{
+                                        label: 'Avance',
+                                        data: obra.chartData.data,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    });
+                });
+            }
+
+            // Añadir evento click al botón Buscar
+            document.getElementById('btnBuscar').addEventListener('click', function () {
+                currentPage = 1;
+                fetchObras(currentPage);
+                fetchObrasMapa();
             });
+
+            // Inicializar la primera carga de datos
+            fetchObras(currentPage);
+            fetchObrasMapa();
         });
 
-        function showModal(obra) {
-            var modalBody = document.querySelector('#infoModal .modal-body');
-            modalBody.innerHTML = `
-            <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
-            <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
-            <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
-            <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-            <p><strong>Contrato:</strong> ${obra.contratoFormatted}</p>
-            <p><strong>Total Pagado:</strong> ${obra.totalPagadoFormatted}</p>
-            <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
-            <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
-            <p><strong>Fin:</strong> ${obra.finFormatted}</p>
-        `;
-            $('#infoModal').modal('show');
+        function showPopup(element) {
+            const popup = element.querySelector('.popup-content');
+            popup.style.display = 'block';
         }
 
         function hidePopup(element) {
             const popup = element.querySelector('.popup-content');
             popup.style.display = 'none';
         }
-
-        // Inicializar gráficos
-        //var ctx1 = document.getElementById('barChart1').getContext('2d');
-        //var barChart1 = new Chart(ctx1, {
-        //    type: 'bar',
-        //    data: {
-        //        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-        //        datasets: [
-        //            {
-        //                label: '2024',
-        //                data: [1, 2, 0, 4, 3, 0, 5, 10, 4, 3, 2, 6],
-        //                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        //                borderColor: 'rgba(75, 192, 192, 1)',
-        //                borderWidth: 1
-        //            },
-        //            {
-        //                label: '2023', // Nueva columna de datos
-        //                data: [2, 3, 1, 5, 4, 1, 6, 9, 5, 4, 3, 7],
-        //                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        //                borderColor: 'rgba(153, 102, 255, 1)',
-        //                borderWidth: 1
-        //            }
-        //        ]
-        //    },
-        //    options: {
-        //        //onClick: function (event, elements) {
-        //        //    if (elements.length > 0) {
-        //        //        var element = elements[0];
-        //        //        console.log('Label: ' + element.label);
-        //        //        console.log('Value: ' + element.raw);
-        //        //    }
-        //        //},
-        //        animation: {
-        //            duration: 2000, // Duración de la animación en milisegundos
-        //            easing: 'easeInOutBounce' // Tipo de animación
-        //        },
-        //        responsive: true,
-        //        maintainAspectRatio: false,
-        //        scales: {
-        //            x: {
-        //                ticks: {
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje X
-        //                    }
-        //                }
-        //            },
-        //            y: {
-        //                beginAtZero: true,
-        //                min: 0, // Ajusta el valor mínimo del eje Y
-        //                max: 10, // Ajusta el valor máximo del eje Y
-        //                ticks: {
-        //                    stepSize: 5, // Ajusta el intervalo de los valores del eje Y
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje Y
-        //                    }
-        //                }
-        //            }
-        //        },
-        //        plugins: {
-        //            title: {
-        //                display: true,
-        //                text: 'Inicio Obra', // Título del gráfico
-        //                font: {
-        //                    size: 11 // Tamaño de la fuente del título
-        //                },
-        //                align: 'center' // Alinea el título al centro
-        //            }
-        //        }
-        //    }
-        //});
-
-        //var ctx2 = document.getElementById('barChart2').getContext('2d');
-        //var barChart2 = new Chart(ctx2, {
-        //    type: 'bar',
-        //    data: {
-        //        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-        //        datasets: [
-        //            {
-        //                label: '2024',
-        //                data: [5, 1, 3, 6, 12, 10, 9, 7, 6, 2, 1, 6],
-        //                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        //                borderColor: 'rgba(75, 192, 192, 1)',
-        //                borderWidth: 1
-        //            },
-        //            {
-        //                label: '2023', // Nueva columna de datos
-        //                data: [2, 3, 1, 5, 4, 1, 6, 9, 5, 4, 3, 7],
-        //                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        //                borderColor: 'rgba(153, 102, 255, 1)',
-        //                borderWidth: 1
-        //            }
-        //        ]
-        //    },
-        //    options: {
-        //        animation: {
-        //            duration: 2000, // Duración de la animación en milisegundos
-        //            easing: 'easeInOutBounce' // Tipo de animación
-        //        },
-        //        responsive: true,
-        //        maintainAspectRatio: false,
-        //        scales: {
-        //            x: {
-        //                ticks: {
-        //                    stepSize: 5, // Ajusta el intervalo de los valores del eje X
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje X
-        //                    }
-        //                }
-        //            },
-        //            y: {
-        //                beginAtZero: true,
-        //                min: 0, // Ajusta el valor mínimo del eje Y
-        //                max: 15, // Ajusta el valor máximo del eje Y
-        //                ticks: {
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje Y
-        //                    }
-        //                }
-        //            }
-        //        },
-        //        plugins: {
-        //            title: {
-        //                display: true,
-        //                text: 'Fin Obra', // Título del gráfico
-        //                font: {
-        //                    size: 11 // Tamaño de la fuente del título
-        //                },
-        //                align: 'center' // Alinea el título al centro
-        //            }
-        //        }
-        //    }
-        //});
-
-        //var ctx6 = document.getElementById('barChart3').getContext('2d');
-        //var barChart3 = new Chart(ctx6, {
-        //    type: 'bar',
-        //    data: {
-        //        labels: ['Ciudad', 'Godoy Cruz', 'Maipú', 'San Rafael', 'Las Heras', 'Luján', 'Gral Alvear', 'Guaymallén', 'San Martín', 'Lavalle', 'Junín', 'Otros'],
-        //        datasets: [
-        //            {
-        //                label: '2024',
-        //                data: [10, 1, 3, 6, 12, 10, 9, 7, 6, 2, 1, 6],
-        //                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        //                borderColor: 'rgba(75, 192, 192, 1)',
-        //                borderWidth: 1
-        //            }
-        //        ]
-        //    },
-        //    options: {
-        //        animation: {
-        //            duration: 2000, // Duración de la animación en milisegundos
-        //            easing: 'easeInOutBounce' // Tipo de animación
-        //        },
-        //        responsive: true,
-        //        maintainAspectRatio: false,
-        //        scales: {
-        //            x: {
-        //                ticks: {
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje X
-        //                    }
-        //                }
-        //            },
-        //            y: {
-        //                beginAtZero: true,
-        //                min: 0, // Ajusta el valor mínimo del eje Y
-        //                max: 15, // Ajusta el valor máximo del eje Y
-        //                ticks: {
-        //                    stepSize: 5, // Ajusta el intervalo de los valores del eje Y
-        //                    font: {
-        //                        size: 9 // Cambia el tamaño de la letra del eje Y
-        //                    }
-        //                }
-        //            }
-        //        },
-        //        plugins: {
-        //            title: {
-        //                display: true,
-        //                text: 'Obras por Departamento', // Título del gráfico
-        //                font: {
-        //                    size: 11 // Tamaño de la fuente del título
-        //                },
-        //                align: 'center' // Alinea el título al centro
-        //            }
-        //        }
-        //    }
-        //});
-
-        //var ctx3 = document.getElementById('pieChart1').getContext('2d');
-        //var pieChart1 = new Chart(ctx3, {
-        //    type: 'pie',
-        //    data: {
-        //        labels: ['Aysam', 'Vialidad', 'IPV', 'Infraestructura'],
-        //        datasets: [{
-        //            /*label: 'Dataset 1',*/
-        //            data: [17, 5, 134, 28],
-        //            backgroundColor: [
-        //                'rgba(255, 99, 132, 0.2)',
-        //                'rgba(54, 162, 235, 0.2)',
-        //                'rgba(255, 206, 86, 0.2)',
-        //                'rgba(67, 39, 245, 0.8)'
-        //            ],
-        //            borderColor: [
-        //                'rgba(255, 99, 132, 1)',
-        //                'rgba(54, 162, 235, 1)',
-        //                'rgba(255, 206, 86, 1)',
-        //                'rgba(67, 39, 245, 1)'
-        //            ],
-        //            borderWidth: 1
-        //        }]
-        //    },
-        //    options: {
-        //        animation: {
-        //            duration: 2000, // Duración de la animación en milisegundos
-        //            easing: 'easeInOutBounce' // Tipo de animación
-        //        },
-        //        responsive: true,
-        //        maintainAspectRatio: false,
-        //        plugins: {
-        //            legend: {
-        //                position: 'right',
-        //                align: 'start',
-        //                labels: {
-        //                    boxWidth: 20,
-        //                    padding: 20,
-        //                    font: {
-        //                        size: 10 // Ajusta el tamaño de la fuente aquí
-        //                    }
-        //                }
-        //            },
-        //            title: {
-        //                display: true,
-        //                text: 'Obras por Dependencia', // Título del gráfico
-        //                font: {
-        //                    size: 11 // Tamaño de la fuente del título
-        //                },
-        //                align: 'start'
-        //            }
-        //        }
-        //    }
-        //});
-
-        //var ctx4 = document.getElementById('pieChart2').getContext('2d');
-        //var pieChart2 = new Chart(ctx4, {
-        //    type: 'pie',
-        //    data: {
-        //        labels: ['Aysam', 'Vialidad', 'IPV', 'Infraestructura'],
-        //        datasets: [{
-        //            /*label: 'Dataset 1',*/
-        //            data: [5, 9, 4, 3],
-        //            backgroundColor: [
-        //                'rgba(255, 99, 132, 0.2)',
-        //                'rgba(54, 162, 235, 0.2)',
-        //                'rgba(255, 206, 86, 0.2)',
-        //                'rgba(67, 39, 245, 0.8)'
-        //            ],
-        //            borderColor: [
-        //                'rgba(255, 99, 132, 1)',
-        //                'rgba(54, 162, 235, 1)',
-        //                'rgba(255, 206, 86, 1)',
-        //                'rgba(67, 39, 245, 1)'
-        //            ],
-        //            borderWidth: 1
-        //        }]
-        //    },
-        //    options: {
-        //        animation: {
-        //            duration: 2000, // Duración de la animación en milisegundos
-        //            easing: 'easeInOutBounce' // Tipo de animación
-        //        },
-        //        responsive: true,
-        //        maintainAspectRatio: false,
-        //        plugins: {
-        //            legend: {
-        //                position: 'right',
-        //                align: 'start',
-        //                labels: {
-        //                    boxWidth: 20,
-        //                    padding: 20,
-        //                    font: {
-        //                        size: 10 // Ajusta el tamaño de la fuente aquí
-        //                    }
-        //                }
-        //            },
-        //            title: {
-        //                display: true,
-        //                text: 'Obras en Licitación', // Título del gráfico
-        //                font: {
-        //                    size: 11 // Tamaño de la fuente del título
-        //                },
-        //                align: 'start'
-        //            }
-        //        }
-        //    }
-        //});
-
-        function initMap() {
-            var mendoza = { lat: -32.889458, lng: -68.845839 };
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 7,
-                center: mendoza,
-                mapTypeId: 'satellite'
-            });
-
-            // Información de las obras
-            var obras = [
-                {
-                    position: { lat: -33.016666666667, lng: -68.866666666667 },
-                    nombre: 'Nuevo complejo penitenciario provincial Almafuerte II',
-                    estado: 'En ejecución',
-                    departamento: 'Luján',
-                    montoContratado: '$ 1.320.512.000',
-                    montoPagado: '$ 2.526.321.187',
-                    avance: '86.62%',
-                    fechaInicio: '01-02-2018',
-                    fechaFin: '31-01-2020',
-                    icon: '/Content/Iconos/infraestructura.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Ene-18', 'Feb-18', 'Mar-18', 'Abr-18', 'May-18', 'Jun-18', 'Jul-18', 'Ago-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dic-18', 'Ene-19', 'Feb-19'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 78, 82, 86]
-                    }
-                },
-                {
-                    position: { lat: -32.85, lng: -68.816666666667 },
-                    nombre: 'Nuevo edificio Hospital Dr. Hector E. Gailhac - Primera Etapa',
-                    estado: 'En ejecución',
-                    departamento: 'Las Heras',
-                    montoContratado: '$ 743.228.764',
-                    montoPagado: '$ 2.526.321.187',
-                    avance: '59,67%',
-                    fechaInicio: '18-04-2022',
-                    fechaFin: '19-06-2023',
-                    icon: '/Content/Iconos/infraestructura.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Abr-22', 'May-22', 'Jun-22', 'Jul-22', 'Ago-22', 'Oct-22', 'Nov-22', 'Dic-22', 'Ene-23', 'Feb-23', 'Mar-23', 'Abr-23', 'May-23', 'Jun-23'],
-                        data: [0, 3, 5, 12, 21, 25, 30, 33, 36, 39, 43, 49, 51, 59]
-                    }
-                },
-                {
-                    position: { lat: -33.16666666667, lng: -68.866666666667 },
-                    nombre: 'ACCESO A RIVADAVIA - TRAMO I: CALLE FALUCHO',
-                    estado: 'En ejecución',
-                    departamento: 'Junín',
-                    montoContratado: '$ 1.978.089.202',
-                    montoPagado: '$ 4.240.827.569',
-                    avance: '63,08%',
-                    fechaInicio: '23-01-2023',
-                    fechaFin: '23-01-2024',
-                    icon: '/Content/Iconos/vialidad.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Ene-23', 'Feb-23', 'Mar-23', 'Abr-23', 'May-23', 'Jun-23', 'Jul-23', 'Ago-23', 'Sep-23', 'Oct-23', 'Nov-23', 'Dic-23', 'Ene-24'],
-                        data: [0, 3, 5, 17, 23, 24, 28, 32, 48, 52, 57, 60, 63]
-                    }
-                },
-                {
-                    position: { lat: -33.133333333333, lng: -68.466666666667 },
-                    nombre: 'Proyecto Integral Costa del Rio Atuel',
-                    estado: 'En ejecución',
-                    departamento: 'Gral Alvear',
-                    montoContratado: '$ 137.207.723',
-                    montoPagado: '$ 220.323.656',
-                    avance: '100%',
-                    fechaInicio: '01/06/2022',
-                    fechaFin: '01/12/2022',
-                    icon: '/Content/Iconos/vialidad.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Ene-18', 'Feb-18', 'Mar-18', 'Abr-18', 'May-18', 'Jun-18', 'Jul-18', 'Ago-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dic-18', 'Ene-19', 'Feb-19'],
-                        data: [0, 3, 5, 17, 23, 21, 31, 35, 48, 56, 65, 78, 82, 87]
-                    }
-                },
-                {
-                    position: { lat: -34.966666666667, lng: -67.7 },
-                    nombre: 'Mejoramiento Integral de Rutas Turísticas Provinciales',
-                    estado: 'En ejecución',
-                    departamento: 'Gral Alvear',
-                    montoContratado: '$ 1.135.304.514',
-                    montoPagado: '$ 1.163.333.389',
-                    avance: '82,33%',
-                    fechaInicio: '01-03-2023',
-                    fechaFin: '01-12-2023',
-                    icon: '/Content/Iconos/ipv.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Ene-23', 'Feb-23', 'Mar-23', 'Abr-23', 'May-23', 'Jun-23', 'Jul-23', 'Ago-23', 'Sep-23', 'Oct-23', 'Nov-23', 'Dic-23', 'Ene-24'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 78, 87]
-                    }
-                },
-                {
-                    position: { lat: -35.066666666667, lng: -67.7 },
-                    nombre: 'Alcaldía Nº3 de Regímenes Especiales - Tunuyán',
-                    estado: 'En ejecución',
-                    departamento: 'Tunuyán',
-                    montoContratado: '$ 23.314.24',
-                    montoPagado: '$ 42.371.204',
-                    avance: '98,45%',
-                    fechaInicio: '16-07-2018',
-                    fechaFin: '14-10-2019',
-                    icon: '/Content/Iconos/vialidad.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Jul-18', 'Ago-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dic-18', 'Ene-19', 'Feb-19', 'Mar-19', 'Abr-19', 'May-19', 'Jun-19', 'Jul-19', 'Ago-19'],
-                        data: [0, 3, 5, 17, 20, 25, 30, 46, 53, 65, 78, 81, 90, 98]
-                    }
-                },
-                {
-                    position: { lat: -33.603512, lng: -69.383594 },
-                    nombre: 'Grupo 1 ( MEJORO MI CASA )',
-                    estado: 'En ejecución',
-                    departamento: 'Ciudad',
-                    montoContratado: '$ 157.620.968',
-                    montoPagado: '$ 293.755.857',
-                    avance: '100,00%',
-                    fechaInicio: '27-06-2022',
-                    fechaFin: '27-04-2024',
-                    icon: '/Content/Iconos/aysam.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Jun-22', 'Jul-22', 'Ago-22', 'Sep-22', 'Oct-22', 'Nov-22', 'Dic-22', 'Ene-23', 'Feb-23', 'Mar-23', 'Abr-23', 'May-23', 'Jun-23', 'Jul-23'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 78, 82, 100]
-                    }
-                },
-                {
-                    position: { lat: -32.889458, lng: -68.845839 },
-                    nombre: 'Grupo 2 ( MEJORO MI CASA )',
-                    estado: 'En ejecución',
-                    departamento: 'Gral Alvear',
-                    montoContratado: '$ 284.066.821',
-                    montoPagado: '$ 360.142.259',
-                    avance: '99,67%',
-                    fechaInicio: '23-02-2022',
-                    fechaFin: '23-05-2023',
-                    icon: '/Content/Iconos/ipv.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Feb-22', 'Mar-22', 'Abr-22', 'May-22', 'Jun-22', 'Jul-22', 'Ago-22', 'Sep-22', 'Oct-22', 'Nov-22', 'Dic-22', 'Ene-23', 'Feb-23', 'Mar-23'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 78, 82, 99]
-                    }
-                },
-                {
-                    position: { lat: -34.966666666667, lng: -67.7 },
-                    nombre: 'Grupo 3 ( MEJORO MI CASA )',
-                    estado: 'En ejecución',
-                    departamento: 'Junín',
-                    montoContratado: '$ 320.416.491',
-                    montoPagado: '$ 327.412.372',
-                    avance: '78,40%',
-                    fechaInicio: '01-03-2022',
-                    fechaFin: '01-04-2024',
-                    icon: '/Content/Iconos/ipv.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Mar-22', 'Abr-22', 'May-22', 'Jun-22', 'Jul-22', 'Ago-22', 'Sep-22', 'Oct-22', 'Nov-22', 'Dic-22', 'Ene-23', 'Feb-23', 'Mar-23', 'Abr-23'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 69, 72, 78]
-                    }
-                },
-                {
-                    position: { lat: -34.133333333333, lng: -68.466666666667 },
-                    nombre: 'Obra 5',
-                    estado: 'Completada',
-                    departamento: 'Junín',
-                    montoContratado: '$500,000',
-                    montoPagado: '$500,000',
-                    avance: '100%',
-                    fechaInicio: '01/06/2022',
-                    fechaFin: '01/12/2022',
-                    icon: '/Content/Iconos/ipv.png',
-                    archivos: [
-                        { nombre: 'Archivo 1', url: '#' },
-                        { nombre: 'Archivo 2', url: '#' }
-                    ],
-                    chartData: {
-                        labels: ['Ene-18', 'Feb-18', 'Mar-18', 'Abr-18', 'May-18', 'Jun-18', 'Jul-18', 'Ago-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dic-18', 'Ene-19', 'Feb-19'],
-                        data: [0, 3, 5, 17, 23, 25, 30, 35, 48, 56, 65, 78, 82, 86]
-                    }
-                }
-            ];
-
-            obras.forEach(function (obra) {
-                var archivosHtml = obra.archivos.map(function (archivo) {
-                    return `<li><a href="${archivo.url}" target="_blank">${archivo.nombre}</a></li>`;
-                }).join('');
-
-                var contentString = `
-                <div class="custom-popup">
-                    <p><span class="badge badge-primary">${obra.nombre}</span></p>
-                    <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
-                    <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
-                    <p><strong>Monto Contratado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
-                    <p><strong>Monto Pagado:</strong><span class="badge badge-secondary"> ${obra.montoPagado}</span></p>
-                    <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
-                    <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
-                    <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
-                    <p><strong>Anexos:</strong></p>
-                    <ul>${archivosHtml}</ul>
-                    <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
-                </div>
-                `;
-
-                var infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
-
-                var marker = new google.maps.Marker({
-                    position: obra.position,
-                    map: map,
-                    title: obra.nombre,
-                    icon: obra.icon
-                });
-
-                marker.addListener('click', function () {
-                    infowindow.open(map, marker);
-
-                    // Espera a que el popup se haya abierto completamente
-                    google.maps.event.addListenerOnce(infowindow, 'domready', function () {
-                        // Inicializa el gráfico de líneas cuando se abre el popup
-                        var ctx = document.getElementById(`lineChart-${obra.nombre.replace(/\s+/g, '')}`).getContext('2d');
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: obra.chartData.labels,
-                                datasets: [{
-                                    label: 'Avance',
-                                    data: obra.chartData.data,
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    });
-                });
-            });
-        }
-
-
-        window.onload = initMap;
     </script>
+
+
 </body>
 </html>
+

@@ -143,6 +143,7 @@
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\ContadorObra.cs" />
     <Compile Include="DTO\ObraGrilla.cs" />
+    <Compile Include="DTO\ObraMapa.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

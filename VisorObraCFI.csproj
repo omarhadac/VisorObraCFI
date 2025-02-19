@@ -141,6 +141,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\ContadorObra.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -166,6 +167,17 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Iconos\agua-y-cloacas.svg" />
+    <Content Include="Content\Iconos\arquitectura.svg" />
+    <Content Include="Content\Iconos\aysam.png" />
+    <Content Include="Content\Iconos\ic-home-obras.svg" />
+    <Content Include="Content\Iconos\ic-home-proy.svg" />
+    <Content Include="Content\Iconos\infraestructura.png" />
+    <Content Include="Content\Iconos\ipv.png" />
+    <Content Include="Content\Iconos\MARCA_MINISTERIO2.png" />
+    <Content Include="Content\Iconos\obras-viales.svg" />
+    <Content Include="Content\Iconos\vialidad.png" />
+    <Content Include="Content\Iconos\vivienda.svg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />

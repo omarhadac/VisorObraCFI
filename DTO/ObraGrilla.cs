@@ -12,6 +12,7 @@ namespace VisorObraCFI.DTO
         public string Nombre { get; set; }
         public string Estado { get; set; }
         public string Dependencia { get; set; }
+        public string Empresa { get; set; }
         public string Departamento { get; set; }
         public decimal? Contrato { get; set; }
         public decimal? TotalPagado { get; set; }
@@ -22,6 +23,7 @@ namespace VisorObraCFI.DTO
         // Propiedades calculadas para formatear los valores
         public string NombreFormatted => Nombre ?? string.Empty;
         public string EstadoFormatted => Estado ?? string.Empty;
+        public string EmpresaFormatted => Empresa ?? string.Empty;
         public string DependenciaFormatted => Dependencia ?? string.Empty;
         public string DepartamentoFormatted => Departamento ?? string.Empty;
         public string ContratoFormatted => Contrato.HasValue ? $"${Contrato.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";

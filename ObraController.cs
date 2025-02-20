@@ -244,7 +244,17 @@ namespace VisorObraCFI
                             .Where(a => a.IdProyecto == x.PryProyecto_Id)
                             .ToList() // Materializar los datos en memoria
                             .Select(a => a.Url)
-                            .ToList()
+                            .ToList(),
+                        ChartData = context.PryAvance
+                        .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false)
+                        .OrderBy(a => a.Mes)
+                        .Select(a => new AvanceGrafico
+                        {
+                            Mes = a.Mes,
+                            AvanceReal = a.AvanceReal,
+                            AvanceTeorico = a.AvanceTeorico
+                        })
+                        .ToList()
                     }).ToList();
 
                     return Ok(listaObra);

@@ -141,6 +141,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\AvanceGrafico.cs" />
     <Compile Include="DTO\ContadorObra.cs" />
     <Compile Include="DTO\ObraGrilla.cs" />
     <Compile Include="DTO\ObraMapa.cs" />
@@ -149,6 +150,7 @@
     </Compile>
     <Compile Include="Models\MySqlDbContext.cs" />
     <Compile Include="Models\PryArchivosObra.cs" />
+    <Compile Include="Models\PryAvance.cs" />
     <Compile Include="Models\vw_looker_obras.cs" />
     <Compile Include="ObraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

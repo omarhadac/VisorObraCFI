@@ -22,6 +22,7 @@ namespace VisorObraCFI.DTO
         public decimal? Latitud { get;set; }
         public decimal? Longitud { get; set; }
         public List<string> ListaArchivos { get; set; }
+        public List<AvanceGrafico> ChartData { get; set; } 
         // Propiedades calculadas para formatear los valores
         public string NombreFormatted => Nombre ?? string.Empty;
         public string EstadoFormatted => Estado ?? string.Empty;

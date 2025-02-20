@@ -448,8 +448,6 @@
 
     </div>
 
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var loadingElement = document.getElementById('loading');
@@ -671,8 +669,11 @@
                             fechaInicio: obra.inicioFormatted,
                             fechaFin: obra.finFormatted,
                             icon: obra.icono,
-                            //archivos: [] // Ajusta los archivos según sea necesario
-                            archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop() })) // Asignar ListaArchivos a archivos
+                            archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop() })),
+                            chartData: {
+                                labels: obra.chartData.map(avance => avance.mesFormatted),
+                                data: obra.chartData.map(avance => avance.avanceReal)
+                            }
                         }));
                         //console.log('obras');
                         //console.log(obras);
@@ -708,7 +709,7 @@
                             <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                             <p><strong>Anexos:</strong></p>
                             <ul>${archivosHtml}</ul>
-                            
+                            <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
                         </div>
                     `;
 

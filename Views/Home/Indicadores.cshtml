@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .sector {
-            background-color: #0d369d; /* Fondo azul */
+            background-color: #0d369d;
             color: white;
             padding: 20px;
             margin-bottom: 20px; /* Aumentar el margen inferior */
@@ -28,6 +28,7 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            cursor: pointer; 
         }
 
             .info-box img {
@@ -69,28 +70,70 @@
         .chart-container canvas {
             max-width: 50%;
             height: 300px; /* Ajusta la altura según sea necesario */
-           
+            /* margin-right: 10px; /* Reducir el espacio entre el gráfico y la leyenda */
         }
+
         .chart-legend {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start; /* Alinear a la izquierda */
             color: black; /* Color del texto negro */
-            
+            margin-left: 10px; /* Reducir el espacio entre el gráfico y la leyenda */
+            font-size: smaller;
+            cursor: pointer;
         }
 
         .chart-legend div {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
-            font-size: small;
         }
+
         .chart-legend span {
             width: 20px;
             height: 20px;
             display: inline-block;
             margin-right: 10px;
+        }
+
+        .white-box {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .white-box .row > div {
+            border-right: 1px solid #d3d3d3; /* Barra divisoria gris claro */
+        }
+
+        .white-box .row > div:last-child {
+            border-right: none; /* Sin barra divisoria en la última columna */
+        }
+
+        .icon-circle {
+            background-color: #007bff; /* Fondo azul */
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-circle img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .column-title {
+            
+            margin-bottom: 5px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -116,7 +159,7 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="info-box">
+                    <div class="info-box" id="infoInfraestructura">
                         <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas">
                         <div class="info-box-content">
                             <span class="info-box-text">Infraestructura</span>
@@ -145,26 +188,120 @@
             </div>
         </div>
     </div>
-    <div class="sector">
+    <div class="sector hidden" id="sector2">
         <h2>Objetivos Estratégicos</h2>
         <div class="chart-container">
             <canvas id="donutChart"></canvas>
             <div class="chart-legend" id="chartLegend"></div>
         </div>
     </div>
-    <div class="sector">
+    <div class="sector hidden" id="sector3">
         <h2>Objetivos Operativos</h2>
         <div class="chart-container">
             <canvas id="donutChart2"></canvas>
             <div class="chart-legend" id="chartLegend2"></div>
         </div>
     </div>
-    <div class="sector">
+    <div class="sector hidden" id="sector4">
         <h2>Historial Objetivo</h2>
+        <div class="white-box">
+            <span style="font-size: x-large;"><strong>Cantidad de escuelas construidas</strong></span>
+            <div class="row">
+                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                    <div class="icon-circle">
+                        <img src="~/Content/Iconos/escuela.png" alt="Escuela">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="column-title">Meta</div>
+                    <div style="font-weight: bold;">12</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Valor actual</div>
+                    <div style="font-weight: bold;color:green;">6</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Unidad de Medida</div>
+                    <div>Escuelas</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Periodicidad</div>
+                    <div>Trimestral</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Medido al</div>
+                    <div>03/06/2025</div>
+                </div>
+                <div class="col-md-1">
+                    <div class="column-title">Cumplimiento</div>
+                    <div style="font-weight: bold;">50%</div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                    <div class="icon-circle">
+                        <img src="~/Content/Iconos/escuela.png" alt="Escuela">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="column-title">Meta</div>
+                    <div style="font-weight: bold;">10</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Valor actual</div>
+                    <div style="font-weight: bold;color:red;">3</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Unidad de Medida</div>
+                    <div>Escuelas</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Periodicidad</div>
+                    <div>Trimestral</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Medido al</div>
+                    <div>03/01/2025</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="column-title">Cumplimiento</div>
+                    <div style="font-weight: bold;">30%</div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="sector">
+    <div class="sector hidden" id="sector5">
         <h2>Detalle Objetivo</h2>
+        <div class="white-box">
+            <div class="row mb-3">
+                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                    <div class="icon-circle">
+                        <img src="~/Content/Iconos/escuela.png" alt="Escuela">
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <span style="font-weight: bold;">Cantidad de escuelas construidas</span><br>
+                    <span>El presente indicador mide el total de escuelas construidas durante el año 2025 considerando los proyectos ejecutados y concluidos</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2"><span style="font-weight: bold;">Meta:</span> <span>12 Escuelas</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Valor actual:</span> <span>6 Escuelas</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Frecuencia de medición:</span> <span>Trimestral</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Fórmula:</span> <span>(Q Escuelas Construidas/Q Escuelas a construir)*100</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Medido al:</span> <span>03/06/2025</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Cumplimiento actual:</span> <span>40%</span></div>
+                    <div class="mb-2"><span style="font-weight: bold;">Responsable:</span> <span>XXXXXX</span></div>
+                </div>
+                <div class="col-md-6">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var ctx = document.getElementById('donutChart').getContext('2d');
@@ -175,7 +312,8 @@
                     datasets: [{
                         data: [25, 25, 25, 25],
                         backgroundColor: ['#9722a9', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                        hoverBackgroundColor: ['#9722a9', '#36A2EB', '#FFCE56', '#4BC0C0']
+                        hoverBackgroundColor: ['#9722a9', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                        offset: [0, 0, 0, 0] // Inicialmente sin desplazamiento
                     }]
                 },
                 options: {
@@ -184,6 +322,16 @@
                     plugins: {
                         legend: {
                             display: false
+                        }
+                    },
+                    onClick: function (evt, item) {
+                        if (item.length > 0) {
+                            var index = item[0].index;
+                            if (index === 0) { // Índice de 'Incrementar y amplicar la infraestructura pública'
+                                document.getElementById('sector3').classList.remove('hidden');
+                                donutChart.data.datasets[0].offset = [20, 0, 0, 0]; // Desplazar la porción seleccionada
+                                donutChart.update();
+                            }
                         }
                     }
                 }
@@ -194,6 +342,11 @@
             donutChart.data.labels.forEach(function (label, index) {
                 var legendItem = document.createElement('div');
                 legendItem.innerHTML = `<span style="background-color:${donutChart.data.datasets[0].backgroundColor[index]};"></span>${label}`;
+                legendItem.addEventListener('click', function () {
+                    if (index === 0) { // Índice de 'Incrementar y amplicar la infraestructura pública'
+                        document.getElementById('sector3').classList.remove('hidden');
+                    }
+                });
                 legendContainer.appendChild(legendItem);
             });
 
@@ -228,11 +381,66 @@
                 legendContainer2.appendChild(legendItem2);
             });
 
+            // Gráfico de líneas
+            var ctxLine = document.getElementById('lineChart').getContext('2d');
+            var lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['Trim1', 'Trim2', 'Trim3', 'Trim4'],
+                    datasets: [
+                        {
+                            label: 'Meta',
+                            data: [10, 12, 14, 16],
+                            borderColor: 'red',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            pointBackgroundColor: 'red',
+                            pointBorderColor: 'red',
+                            pointRadius: 2,
+                            fill: true
+                        },
+                        {
+                            label: 'Valor actual',
+                            data: [3, 6],
+                            borderColor: 'blue',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            pointBackgroundColor: 'blue',
+                            pointBorderColor: 'blue',
+                            pointRadius: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 18
+                        }
+                    }
+                }
+            });
 
+            // Mostrar el segundo sector al hacer clic en el info-box de Infraestructura
+            document.getElementById('infoInfraestructura').addEventListener('click', function () {
+                document.getElementById('sector2').classList.remove('hidden');
+            });
         });
+
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 
 

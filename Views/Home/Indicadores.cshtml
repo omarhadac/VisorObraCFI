@@ -69,7 +69,7 @@
 
         .chart-container canvas {
             max-width: 50%;
-            height: 300px; /* Ajusta la altura según sea necesario */
+            height: 200px !important; /* Ajusta la altura según sea necesario */
             /* margin-right: 10px; /* Reducir el espacio entre el gráfico y la leyenda */
         }
 
@@ -191,14 +191,14 @@
     <div class="sector hidden" id="sector2">
         <h2>Objetivos Estratégicos</h2>
         <div class="chart-container">
-            <canvas id="donutChart"></canvas>
+            <canvas id="donutChart" height="200"></canvas>
             <div class="chart-legend" id="chartLegend"></div>
         </div>
     </div>
     <div class="sector hidden" id="sector3">
         <h2>Objetivos Operativos</h2>
         <div class="chart-container">
-            <canvas id="donutChart2"></canvas>
+            <canvas id="donutChart2" height="200"></canvas>
             <div class="chart-legend" id="chartLegend2"></div>
         </div>
     </div>
@@ -359,7 +359,8 @@
                     datasets: [{
                         data: [50, 50],
                         backgroundColor: ['#FF6384', '#36A2EB'],
-                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                        hoverBackgroundColor: ['#FF6384', '#36A2EB'],
+                        offset: [0, 0] // Inicialmente sin desplazamiento
                     }]
                 },
                 options: {
@@ -368,6 +369,17 @@
                     plugins: {
                         legend: {
                             display: false
+                        }
+                    },
+                    onClick: function (evt, item) {
+                        if (item.length > 0) {
+                            var index = item[0].index;
+                            if (index === 0) { // Índice de 'Completar la construcción de 12 escuelas'
+                                document.getElementById('sector4').classList.remove('hidden');
+                                document.getElementById('sector5').classList.remove('hidden');
+                                donutChart2.data.datasets[0].offset = [20, 0]; // Desplazar la porción seleccionada
+                                donutChart2.update();
+                            }
                         }
                     }
                 }
@@ -378,6 +390,14 @@
             donutChart2.data.labels.forEach(function (label, index) {
                 var legendItem2 = document.createElement('div');
                 legendItem2.innerHTML = `<span style="background-color:${donutChart2.data.datasets[0].backgroundColor[index]};"></span>${label}`;
+                legendItem2.addEventListener('click', function () {
+                    if (index === 0) { // Índice de 'Completar la construcción de 12 escuelas'
+                        document.getElementById('sector4').classList.remove('hidden');
+                        document.getElementById('sector5').classList.remove('hidden');
+                        donutChart2.data.datasets[0].offset = [20, 0]; // Desplazar la porción seleccionada
+                        donutChart2.update();
+                    }
+                });
                 legendContainer2.appendChild(legendItem2);
             });
 

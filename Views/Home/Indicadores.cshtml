@@ -1,0 +1,244 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicadores</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sector {
+            background-color: #0d369d; /* Fondo azul */
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px; /* Aumentar el margen inferior */
+            border-radius: 10px; /* Esquinas redondeadas */
+            text-align: center;
+        }
+
+        .info-box {
+            background-color: gray;
+            color: #333;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+            .info-box img {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+
+            .info-box .info-box-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .info-box .info-box-text {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: white;
+            }
+
+            .info-box .info-box-number {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: white;
+            }
+
+        .h2, h2 {
+            font-size: 27px;
+        }
+
+        .chart-container {
+            background-color: #f0f0f0; /* Fondo gris claro */
+            padding: 20px;
+            border-radius: 10px; /* Esquinas redondeadas */
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-container canvas {
+            max-width: 50%;
+            height: 300px; /* Ajusta la altura según sea necesario */
+           
+        }
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start; /* Alinear a la izquierda */
+            color: black; /* Color del texto negro */
+            
+        }
+
+        .chart-legend div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: small;
+        }
+        .chart-legend span {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-light py-3 mb-4">
+        <div class="container d-flex align-items-center">
+            <img src="~/Content/Iconos/MARCA_MINISTERIO2.png" alt="Logo" style="height: 50px; width: auto;" class="mr-3">
+            <h2 class="m-0">Prototipo Indicadores</h2>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sector">
+            <h2>Indicadores por Organismo</h2>
+
+            <div class="row justify-content-center">
+                <div class="col-md-2">
+                    <div class="info-box">
+                        <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas">
+                        <div class="info-box-content">
+                            <span class="info-box-text">AySAM</span>
+                            <span class="info-box-number" id="totalAySAM">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="info-box">
+                        <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas">
+                        <div class="info-box-content">
+                            <span class="info-box-text">Infraestructura</span>
+                            <span class="info-box-number" id="totalInfra">4</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="info-box">
+                        <img src="~/Content/Iconos/vivienda.svg" style="margin-bottom: 0px;" alt="icono representativo a obras publicas">
+                        <div class="info-box-content">
+                            <span class="info-box-text">IPV</span>
+                            <span class="info-box-number" id="totalIPV">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="info-box">
+                        <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas">
+                        <div class="info-box-content">
+                            <span class="info-box-text">DPV</span>
+                            <span class="info-box-number" id="totalVialidad">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sector">
+        <h2>Objetivos Estratégicos</h2>
+        <div class="chart-container">
+            <canvas id="donutChart"></canvas>
+            <div class="chart-legend" id="chartLegend"></div>
+        </div>
+    </div>
+    <div class="sector">
+        <h2>Objetivos Operativos</h2>
+        <div class="chart-container">
+            <canvas id="donutChart2"></canvas>
+            <div class="chart-legend" id="chartLegend2"></div>
+        </div>
+    </div>
+    <div class="sector">
+        <h2>Historial Objetivo</h2>
+    </div>
+    <div class="sector">
+        <h2>Detalle Objetivo</h2>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('donutChart').getContext('2d');
+            var donutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Incrementar y amplicar la infraestructura pública', 'Planeación , proyectos y gestión administrativa', 'Garantizar el derecho de acceso a la información pública y la protección de datos personales', 'Promoción de la cultura de la transparencia'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: ['#9722a9', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                        hoverBackgroundColor: ['#9722a9', '#36A2EB', '#FFCE56', '#4BC0C0']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Generar la leyenda manualmente
+            var legendContainer = document.getElementById('chartLegend');
+            donutChart.data.labels.forEach(function (label, index) {
+                var legendItem = document.createElement('div');
+                legendItem.innerHTML = `<span style="background-color:${donutChart.data.datasets[0].backgroundColor[index]};"></span>${label}`;
+                legendContainer.appendChild(legendItem);
+            });
+
+            // Segundo gráfico de dona
+            var ctx2 = document.getElementById('donutChart2').getContext('2d');
+            var donutChart2 = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completar la construcción de 12 escuelas', 'Completar la construcción de 10 hospitales'],
+                    datasets: [{
+                        data: [50, 50],
+                        backgroundColor: ['#FF6384', '#36A2EB'],
+                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Generar la leyenda manualmente para el segundo gráfico
+            var legendContainer2 = document.getElementById('chartLegend2');
+            donutChart2.data.labels.forEach(function (label, index) {
+                var legendItem2 = document.createElement('div');
+                legendItem2.innerHTML = `<span style="background-color:${donutChart2.data.datasets[0].backgroundColor[index]};"></span>${label}`;
+                legendContainer2.appendChild(legendItem2);
+            });
+
+
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

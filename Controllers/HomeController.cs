@@ -16,7 +16,7 @@ namespace VisorObraCFI.Controllers
         }
         public ActionResult Indicadores()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Indicadores";
 
             return View();
         }

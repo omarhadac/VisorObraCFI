@@ -140,7 +140,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\AvanceGrafico.cs" />
     <Compile Include="DTO\ContadorObra.cs" />
     <Compile Include="DTO\ObraGrilla.cs" />
@@ -175,10 +174,12 @@
     <Content Include="Content\Iconos\agua-y-cloacas.svg" />
     <Content Include="Content\Iconos\arquitectura.svg" />
     <Content Include="Content\Iconos\aysam.png" />
+    <Content Include="Content\Iconos\escuela.png" />
     <Content Include="Content\Iconos\ic-home-obras.svg" />
     <Content Include="Content\Iconos\ic-home-proy.svg" />
     <Content Include="Content\Iconos\infraestructura.png" />
     <Content Include="Content\Iconos\ipv.png" />
+    <Content Include="Content\Iconos\loading.gif" />
     <Content Include="Content\Iconos\MARCA_MINISTERIO2.png" />
     <Content Include="Content\Iconos\obras-viales.svg" />
     <Content Include="Content\Iconos\vialidad.png" />
@@ -210,6 +211,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Indicadores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

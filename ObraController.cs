@@ -277,7 +277,7 @@ namespace VisorObraCFI
                         //    .Select(a => a.Url)
                         //    .ToList(),
                         ListaArchivos = context.PryArchivosObra
-                            .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1)
+                            .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 0)
                             .OrderByDescending(a => a.FechaCarga)
                             .Take(5)
                             //.Union(context.PryArchivosObra

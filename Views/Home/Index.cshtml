@@ -415,11 +415,11 @@
                             <th>Publicación</th>
                             <th>Apertura</th>
                             <th>Departamento</th>
-                            <th>Contrato</th>
+                            <th>Monto Contrato Básico</th>
                             <th>Avance</th>
                             <th>Contratista</th>
                             <th>Inicio</th>
-                            <th>Fin</th>
+                            <th>Fecha Estimada Fin</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -645,11 +645,11 @@
                     <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Contrato:</strong> ${obra.contratoFormatted}</p>
+                    <p><strong>Monto Contrato Básico:</strong> ${obra.contratoFormatted}</p>
                     <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                     <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                     <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
-                    <p><strong>Fin:</strong> ${obra.finFormatted}</p>
+                    <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>
                 `;
                 $('#infoModal').modal('show');
             }
@@ -718,10 +718,10 @@
                         <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
                         <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
                         <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
-                        <p><strong>Monto Contratado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>                            
+                        <p><strong>Monto Contrato Básico:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>                            
                         <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
                         <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
-                        <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
                         <div id="carousel-${obra.nombre.replace(/\s+/g, '')}" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">

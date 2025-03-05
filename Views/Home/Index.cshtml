@@ -18,7 +18,7 @@
         }
 
         #map {
-            height: 400px;
+            height: 750px;
             width: 100%;
         }
 
@@ -203,7 +203,7 @@
         .info-box-number {
             display: block;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 25px;
         }
 
         .popup-content {
@@ -238,18 +238,20 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-
-            #loading img {
-                width: 150px; /* Ajusta el tamaño del gif de carga */
-                height: 150px;
-            }
+        #loading img {
+            width: 150px; /* Ajusta el tamaño del gif de carga */
+            height: 150px;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <header class="bg-light py-3 mb-4">
         <div class="container d-flex align-items-center">
             <img src="~/Content/Iconos/MARCA_MINISTERIO2.png" alt="Logo" style="height: 50px; width: auto;" class="mr-3">
-            <h2 class="m-0">Visor de Obras</h2>
+            <h2 class="m-0">Visor de Obras Púbicas de la Provincia de Mendoza</h2>
         </div>
     </header>
     <div class="container-fluid">
@@ -285,7 +287,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 40%;">
                     <div class="info-box-content">
                         <span class="info-box-text">AySAM</span>
                         <span class="info-box-number" id="totalAySAM">0</span>
@@ -302,7 +304,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 40%;">
                     <div class="info-box-content">
                         <span class="info-box-text">Infraestructura</span>
                         <span class="info-box-number" id="totalInfra">0</span>
@@ -319,7 +321,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 50%;">
+                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 30%;">
                     <div class="info-box-content">
                         <span class="info-box-text">IPV</span>
                         <span class="info-box-number" id="totalIPV">0</span>
@@ -336,7 +338,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 60%;">
+                    <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 40%;">
                     <div class="info-box-content">
                         <span class="info-box-text">DPV</span>
                         <span class="info-box-number" id="totalVialidad">0</span>
@@ -385,6 +387,11 @@
                     <option value="9">Dirección Provincial Vialidad</option>
                     <option value="2">Infraestructura</option>
                 </select>
+                <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
+                <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
+                    <option value="1">En Obra</option>
+                    <option value="2">Licitacion</option>
+                </select>
                 <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
             </div>
         </div>
@@ -396,7 +403,6 @@
             </div>
         </div>
 
-
         <!-- Cuarto sector: Grilla -->
         <div class="row">
             <div class="col-12">
@@ -406,10 +412,12 @@
                             <th class="small-column">Nombre de Obra</th>
                             <th>Estado</th>
                             <th>Dependencia</th>
+                            <th>Publicación</th>
+                            <th>Apertura</th>
                             <th>Departamento</th>
                             <th>Contrato</th>
-                            <th>Total Pagado</th>
                             <th>Avance</th>
+                            <th>Contratista</th>
                             <th>Inicio</th>
                             <th>Fin</th>
                         </tr>
@@ -532,13 +540,13 @@
                 var nombreObra = document.getElementById('nombreObra').value;
                 var selectDepartamento = document.getElementById('selectDepartamento').value;
                 var selectOrganismo = document.getElementById('selectOrganismo').value;
-
+                var selectEstado = document.getElementById('selectEstado').value;
                 // Mostrar el indicador de carga
                 loadingElement.style.display = 'block';
                 //errorMessageElement.style.display = 'none';
 
                 // Realizar la llamada fetch al endpoint BuscarObrasFiltradas
-                fetch(`@Url.Content("~/api/Obra/BuscarObrasFiltradas")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&page=${page}&pageSize=${pageSize}`)
+                fetch(`@Url.Content("~/api/Obra/BuscarObrasFiltradas")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&selectEstado=${selectEstado}&page=${page}&pageSize=${pageSize}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error de Red');
@@ -554,14 +562,17 @@
                         // Llenar la tabla con los datos recibidos
                         data.items.forEach(obra => {
                             var row = document.createElement('tr');
+                            row.classList.add('cursor-pointer');
                             row.innerHTML = `
                                 <td class="small-column">${obra.nombreFormatted}</td>
                                 <td>${obra.estadoFormatted}</td>
                                 <td>${obra.dependenciaFormatted}</td>
+                                <td>${obra.publicacionFormatted}</td>
+                                <td>${obra.aperturaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
                                 <td>${obra.contratoFormatted}</td>
-                                <td>${obra.totalPagadoFormatted}</td>
                                 <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
+                                <td>${obra.empresaFormatted}</td>
                                 <td>${obra.inicioFormatted}</td>
                                 <td>${obra.finFormatted}</td>
                             `;
@@ -635,8 +646,8 @@
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
                     <p><strong>Contrato:</strong> ${obra.contratoFormatted}</p>
-                    <p><strong>Total Pagado:</strong> ${obra.totalPagadoFormatted}</p>
                     <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
+                    <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                     <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
                     <p><strong>Fin:</strong> ${obra.finFormatted}</p>
                 `;
@@ -664,6 +675,7 @@
                             estado: obra.estadoFormatted,
                             departamento: obra.departamentoFormatted,
                             montoContratado: obra.contratoFormatted,
+                            domicilio: obra.direccionFormatted,
                             montoPagado: obra.totalPagadoFormatted,
                             avance: obra.avanceFormatted,
                             fechaInicio: obra.inicioFormatted,
@@ -693,25 +705,45 @@
                 });
 
                 obras.forEach(function (obra) {
+                    //var archivosHtml = obra.archivos.map(function (archivo) {
+                    //    return `<li><a href="${archivo.url}" target="_blank">${archivo.nombre}</a></li>`;
+                    //}).join('');
                     var archivosHtml = obra.archivos.map(function (archivo) {
-                        return `<li><a href="${archivo.url}" target="_blank">${archivo.nombre}</a></li>`;
-                    }).join('');
+                        return { url: archivo.url, nombre: archivo.nombre };
+                    });
 
                     var contentString = `
-                        <div class="custom-popup">
-                            <p><span class="badge badge-primary">${obra.nombre}</span></p>
-                            <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
-                            <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
-                            <p><strong>Monto Contratado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
-                            <p><strong>Monto Pagado:</strong><span class="badge badge-secondary"> ${obra.montoPagado}</span></p>
-                            <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
-                            <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
-                            <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
-                            <p><strong>Anexos:</strong></p>
-                            <ul>${archivosHtml}</ul>
-                            <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
+                    <div class="custom-popup">
+                        <p><span class="badge badge-primary">${obra.nombre}</span></p>
+                        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
+                        <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
+                        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
+                        <p><strong>Monto Contratado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>                            
+                        <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
+                        <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
+                        <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
+                        <div id="carousel-${obra.nombre.replace(/\s+/g, '')}" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                ${archivosHtml.map((archivo, index) => `
+                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                    <img src="${archivo.url}" class="d-block w-100" alt="${archivo.nombre}">
+                                </div>
+                                `).join('')}
+                            </div>
+                            <a class="carousel-control-prev" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Próximo</span>
+                            </a>
                         </div>
-                    `;
+                        ` : '<p><span class="badge badge-secondary">No hay fotos</span></p>'}
+                        <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
+                    </div>
+                `;
 
                     var infowindow = new google.maps.InfoWindow({
                         content: contentString

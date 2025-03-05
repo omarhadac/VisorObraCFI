@@ -13,6 +13,7 @@ namespace VisorObraCFI.DTO
         public string Estado { get; set; }
         public string Dependencia { get; set; }
         public string Departamento { get; set; }
+        public string Direccion { get; set; }
         public int? IdOrganismo { get; set; }
         public decimal? Contrato { get; set; }
         public decimal? TotalPagado { get; set; }
@@ -28,6 +29,7 @@ namespace VisorObraCFI.DTO
         public string EstadoFormatted => Estado ?? string.Empty;
         public string DependenciaFormatted => Dependencia ?? string.Empty;
         public string DepartamentoFormatted => Departamento ?? string.Empty;
+        public string DireccionFormatted => Direccion ?? string.Empty;
         public string ContratoFormatted => Contrato.HasValue ? $"${Contrato.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string TotalPagadoFormatted => TotalPagado.HasValue ? $"${TotalPagado.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string AvanceFormatted => Avance.HasValue ? $"{Avance.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-ES"))}%" : "0.00%";

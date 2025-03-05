@@ -147,6 +147,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LicProyectoFecha.cs" />
     <Compile Include="Models\MySqlDbContext.cs" />
     <Compile Include="Models\PryArchivosObra.cs" />
     <Compile Include="Models\PryAvance.cs" />

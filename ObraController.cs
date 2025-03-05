@@ -132,14 +132,23 @@ namespace VisorObraCFI
         [Route("api/Obra/BuscarObrasFiltradas")]
         [System.Web.Http.ActionName("BuscarObrasFiltradas")]
         [System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, int? selectOrganismo, int page = 1, int pageSize = 10)
+        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, 
+            int? selectOrganismo, int? selectEstado, int page = 1, int pageSize = 10)
         {
             List<ObraGrilla> listaObra = new List<ObraGrilla>();
             try
             {
                 using (var context = new MySqlDbContext())
                 {
-                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras;
+                    IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
+                    if (selectEstado == 1)
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                    }
+                    else
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado != 5);
+                    }
 
                     if (!string.IsNullOrEmpty(nombreObra))
                     {
@@ -156,25 +165,39 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
 
-                    var totalItems = await tmp.CountAsync();
-                    var obrasFiltradas = await tmp
-                        .OrderBy(x => x.PryProyecto_Id) // Ordenar por el campo que consideres adecuado
+                    var query = from obra in tmp
+                                join licitacion in context.LicProyectoFecha
+                                    .GroupBy(l => l.idProyecto)
+                                    .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                                    on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
+                                from licitacion in obraLicitacion.DefaultIfEmpty()
+                                select new { obra, licitacion };
+
+
+
+                    var totalItems = await query.CountAsync();
+                    var obrasFiltradas = await query
+                        .OrderBy(x => x.obra.PryProyecto_Id) // Ordenar por el campo que consideres adecuado
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
                         .ToListAsync();
 
                     listaObra = obrasFiltradas.Select(x => new ObraGrilla
                     {
-                        IdObra = x.PryProyecto_Id,
-                        Nombre = x.Nombre,
-                        Estado = x.Estado,
-                        Dependencia = x.Dependencia,
-                        Departamento = x.Departamento,
-                        Contrato = x.MontoContratado,
-                        TotalPagado = x.OB_MontoPagado,
-                        Avance = x.OB_AvanceReal,
-                        Inicio = x.FechaInicio,
-                        Fin = x.FechaFin
+                        IdObra = x.obra.PryProyecto_Id,
+                        Nombre = x.obra.Nombre,
+                        Estado = x.obra.Estado,
+                        Dependencia = x.obra.Dependencia,
+                        Departamento = x.obra.Departamento,
+                        Contrato = x.obra.MontoContratado,
+                        TotalPagado = x.obra.OB_MontoPagado,
+                        Empresa = x.obra.Empresa,
+                        Avance = x.obra.OB_AvanceReal,
+                        Inicio = x.obra.FechaInicio,
+                        Apertura = x.licitacion?.fechaApertura,
+                        Publicacion = x.licitacion?.fechaPublicacion,
+                        Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                        // Agrega aquí los campos de PryLicitacion que necesites
                     }).ToList();
 
                     var result = new
@@ -237,12 +260,29 @@ namespace VisorObraCFI
                         TotalPagado = x.OB_MontoPagado,
                         Avance = x.OB_AvanceReal,
                         Inicio = x.FechaInicio,
-                        Fin = x.FechaFin,
+                        Fin = x.FechaFinActualizada ?? x.FechaFin, // Usar FechaFinActualizada si tiene valor, sino FechaFin
                         Latitud = x.Latitud,
                         Longitud = x.Longitud,
+                        Direccion = x.Domicilio,
+                        //ListaArchivos = context.PryArchivosObra
+                        //    .Where(a => a.IdProyecto == x.PryProyecto_Id)
+                        //    .ToList() // Materializar los datos en memoria
+                        //    .Select(a => a.Url)
+                        //    .ToList(),
+                        //ListaArchivos = context.PryArchivosObra
+                        //    .Where(a => a.IdProyecto == x.PryProyecto_Id)
+                        //    .OrderByDescending(a => a.FechaCarga) // Ordenar por fechaSubida (FechaCarga)
+                        //    .Take(5) // Tomar los dos últimos archivos
+                        //    .ToList() // Materializar los datos en memoria
+                        //    .Select(a => a.Url)
+                        //    .ToList(),
                         ListaArchivos = context.PryArchivosObra
-                            .Where(a => a.IdProyecto == x.PryProyecto_Id)
-                            .ToList() // Materializar los datos en memoria
+                            .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1)
+                            .OrderByDescending(a => a.FechaCarga)
+                            .Take(5)
+                            //.Union(context.PryArchivosObra
+                            //    .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo != 1))
+                            .ToList() 
                             .Select(a => a.Url)
                             .ToList(),
                         ChartData = context.PryAvance

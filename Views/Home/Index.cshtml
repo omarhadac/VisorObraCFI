@@ -250,13 +250,20 @@
             height: 200px; /* Ajusta la altura según sea necesario */
             object-fit: cover; /* Ajusta la imagen para que cubra el contenedor */
         }
+        th {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
     <header class="bg-light py-3 mb-4">
         <div class="container d-flex align-items-center">
             <img src="~/Content/Iconos/MARCA_MINISTERIO2.png" alt="Logo" style="height: 50px; width: auto;" class="mr-3">
-            <h2 class="m-0">Visor de Obras Públicas de la Provincia de Mendoza</h2>
+            <h2 class="m-0">Visor de Obra Pública de la Provincia de Mendoza</h2>
         </div>
     </header>
     <div class="container-fluid">
@@ -398,6 +405,7 @@
                     <option value="2">Licitacion</option>
                 </select>
                 <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
+                <button id="btnExportar" class="btn btn-info rounded-custom text-white">Exportar</button>
             </div>
         </div>
 
@@ -417,13 +425,13 @@
                             <th class="small-column">Nombre de Obra</th>
                             <th>Estado</th>
                             <th>Dependencia</th>
-                            <th>Publicación</th>
-                            <th>Apertura</th>
+                            <th>Fecha Publicación</th>
+                            <th>Fecha Apertura</th>
                             <th>Departamento</th>
                             <th>Monto Contrato Básico</th>
                             <th>Avance</th>
-                            <th>Contratista</th>
-                            <th>Inicio</th>
+                            <th>Empresa Contratista</th>
+                            <th>Fecha Inicio</th>
                             <th>Fecha Estimada Fin</th>
                         </tr>
                     </thead>
@@ -710,45 +718,42 @@
                 });
 
                 obras.forEach(function (obra) {
-                    //var archivosHtml = obra.archivos.map(function (archivo) {
-                    //    return `<li><a href="${archivo.url}" target="_blank">${archivo.nombre}</a></li>`;
-                    //}).join('');
                     var archivosHtml = obra.archivos.map(function (archivo) {
                         return { url: archivo.url, nombre: archivo.nombre };
                     });
 
                     var contentString = `
-                    <div class="custom-popup">
-                        <p><span class="badge badge-primary">${obra.nombre}</span></p>
-                        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
-                        <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
-                        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
-                        <p><strong>Monto Contrato Básico:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>                            
-                        <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
-                        <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
-                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
-                        <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
-                        <div id="carousel-${obra.nombre.replace(/\s+/g, '')}" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                ${archivosHtml.map((archivo, index) => `
-                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                    <img src="${archivo.url}" class="d-block w-100" alt="${archivo.nombre}">
-                                </div>
-                                `).join('')}
-                            </div>
-                            <a class="carousel-control-prev" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Anterior</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Próximo</span>
-                            </a>
-                        </div>
-                        ` : '<p><span class="badge badge-secondary">No hay fotos</span></p>'}
-                        <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
-                    </div>
-                `;
+    <div class="custom-popup">
+        <p><span class="badge badge-primary">${obra.nombre}</span></p>
+        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
+        <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
+        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
+        <p><strong>Monto Contrato Básico:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
+        <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance}</span></p>
+        <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
+        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+        <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
+        <div id="carousel-${obra.nombre.replace(/\s+/g, '')}" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                ${archivosHtml.map((archivo, index) => `
+                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                    <img src="${archivo.url}" class="d-block w-100" alt="${archivo.nombre}">
+                </div>
+                `).join('')}
+            </div>
+            <a class="carousel-control-prev" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Anterior</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-${obra.nombre.replace(/\s+/g, '')}" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Próximo</span>
+            </a>
+        </div>
+        ` : '<p><span class="badge badge-secondary">No hay fotos</span></p>'}
+        <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
+    </div>
+    `;
 
                     var infowindow = new google.maps.InfoWindow({
                         content: contentString
@@ -784,15 +789,57 @@
                                     responsive: true,
                                     scales: {
                                         y: {
-                                            beginAtZero: true
+                                            beginAtZero: true,
+                                            min: 0,
+                                            max: 100
                                         }
                                     }
                                 }
                             });
+
+                            // Inicializa el carrusel manualmente
+                            $(`#carousel-${obra.nombre.replace(/\s+/g, '')}`).carousel();
                         });
                     });
                 });
+
+
+
+
             }
+
+            function fetchObrasExportar() {
+                var nombreObra = document.getElementById('nombreObra').value;
+                var selectDepartamento = document.getElementById('selectDepartamento').value;
+                var selectOrganismo = document.getElementById('selectOrganismo').value;
+                var selectEstado = document.getElementById('selectEstado').value;
+
+                // Construir la URL con los parámetros
+                var url = `@Url.Content("~/api/Obra/ExportarObrasFiltradas")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&selectEstado=${selectEstado}`;
+
+                // Realizar la llamada fetch al endpoint ExportarObrasFiltradas
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error de Red');
+                        }
+                        return response.blob(); // Obtener la respuesta como un Blob
+                    })
+                    .then(blob => {
+                        // Crear un enlace para descargar el archivo
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'ObrasFiltradas.xlsx'; // Nombre del archivo
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    })
+                    .catch(error => {
+                        console.error('Error al exportar los datos:', error);
+                    });
+            }
+
 
             // Añadir evento click al botón Buscar
             document.getElementById('btnBuscar').addEventListener('click', function () {
@@ -801,6 +848,9 @@
                 fetchObrasMapa();
             });
 
+            document.getElementById('btnExportar').addEventListener('click', function () {
+                fetchObrasExportar();
+            });
             // Inicializar la primera carga de datos
             fetchObras(currentPage);
             fetchObrasMapa();

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using OfficeOpenXml;
 using VisorObraCFI.DTO;
 using VisorObraCFI.Models;
 
@@ -60,11 +63,11 @@ namespace VisorObraCFI
                 {
                     var listaEjecucion = await context.vw_looker_obras
                         .Where(x => x.IdEstado == 1)
-                        .ToListAsync();
+                        .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
                         .Where(x => x.PryStage_Id == 49 && x.IdEstado != 5)
-                        .ToListAsync();
+                        .Distinct().ToListAsync();
 
                     var lista = new List<ContadorObra>();
 
@@ -286,7 +289,8 @@ namespace VisorObraCFI
                             .Select(a => a.Url)
                             .ToList(),
                         ChartData = context.PryAvance
-                        .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false)
+                        .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false
+                         && a.PryCertificacionesMensuales_Id != null && a.AvanceReal > 0)
                         .OrderBy(a => a.Mes)
                         .Select(a => new AvanceGrafico
                         {
@@ -309,5 +313,129 @@ namespace VisorObraCFI
                 return InternalServerError(ex);
             }
         }
+
+        [Route("api/Obra/ExportarObrasFiltradas")]
+        [System.Web.Http.ActionName("ExportarObrasFiltradas")]
+        [System.Web.Http.HttpGet]
+        public async Task<HttpResponseMessage> ExportarObrasFiltradas(string nombreObra, int? selectDepartamento, int? selectOrganismo, int? selectEstado)
+        {
+            try
+            {
+                using (var context = new MySqlDbContext())
+                {
+                    IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
+                    if (selectEstado == 1)
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                    }
+                    else
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado != 5);
+                    }
+
+                    if (!string.IsNullOrEmpty(nombreObra))
+                    {
+                        tmp = tmp.Where(x => x.Nombre.Contains(nombreObra));
+                    }
+
+                    if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.IdDepartamento == selectDepartamento.Value);
+                    }
+
+                    if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
+                    {
+                        tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
+                    }
+
+                    var query = from obra in tmp
+                                join licitacion in context.LicProyectoFecha
+                                    .GroupBy(l => l.idProyecto)
+                                    .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                                    on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
+                                from licitacion in obraLicitacion.DefaultIfEmpty()
+                                select new { obra, licitacion };
+
+                    var obrasFiltradas = await query
+                        .OrderBy(x => x.obra.PryProyecto_Id)
+                        .ToListAsync();
+
+                    var listaObra = obrasFiltradas.Select(x => new ObraGrilla
+                    {
+                        IdObra = x.obra.PryProyecto_Id,
+                        Nombre = x.obra.Nombre,
+                        Estado = x.obra.Estado,
+                        Dependencia = x.obra.Dependencia,
+                        Departamento = x.obra.Departamento,
+                        Contrato = x.obra.MontoContratado,
+                        TotalPagado = x.obra.OB_MontoPagado,
+                        Empresa = x.obra.Empresa,
+                        Avance = x.obra.OB_AvanceReal,
+                        Inicio = x.obra.FechaInicio,
+                        Apertura = x.licitacion?.fechaApertura,
+                        Publicacion = x.licitacion?.fechaPublicacion,
+                        Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                    }).ToList();
+
+                    // Establecer la propiedad LicenseContext
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                    using (var package = new ExcelPackage())
+                    {
+                        var worksheet = package.Workbook.Worksheets.Add("Obras Filtradas");
+                        worksheet.Cells["A1"].Value = "ID Obra";
+                        worksheet.Cells["B1"].Value = "Nombre";
+                        worksheet.Cells["C1"].Value = "Estado";
+                        worksheet.Cells["D1"].Value = "Dependencia";
+                        worksheet.Cells["E1"].Value = "Departamento";
+                        worksheet.Cells["F1"].Value = "Contrato";
+                        worksheet.Cells["G1"].Value = "Total Pagado";
+                        worksheet.Cells["H1"].Value = "Empresa";
+                        worksheet.Cells["I1"].Value = "Avance";
+                        worksheet.Cells["J1"].Value = "Inicio";
+                        worksheet.Cells["K1"].Value = "Apertura";
+                        worksheet.Cells["L1"].Value = "Publicación";
+                        worksheet.Cells["M1"].Value = "Fin";
+
+                        for (int i = 0; i < listaObra.Count; i++)
+                        {
+                            var obra = listaObra[i];
+                            worksheet.Cells[i + 2, 1].Value = obra.IdObra;
+                            worksheet.Cells[i + 2, 2].Value = obra.Nombre;
+                            worksheet.Cells[i + 2, 3].Value = obra.Estado;
+                            worksheet.Cells[i + 2, 4].Value = obra.Dependencia;
+                            worksheet.Cells[i + 2, 5].Value = obra.Departamento;
+                            worksheet.Cells[i + 2, 6].Value = obra.Contrato;
+                            worksheet.Cells[i + 2, 7].Value = obra.TotalPagado;
+                            worksheet.Cells[i + 2, 8].Value = obra.Empresa;
+                            worksheet.Cells[i + 2, 9].Value = obra.Avance;
+                            worksheet.Cells[i + 2, 10].Value = obra.Inicio?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 11].Value = obra.Apertura?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 12].Value = obra.Publicacion?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 13].Value = obra.Fin?.ToString("dd/MM/yyyy");
+                        }
+
+                        var stream = new MemoryStream(package.GetAsByteArray());
+                        var result = new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new ByteArrayContent(stream.ToArray())
+                        };
+                        result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                        {
+                            FileName = "ObrasFiltradas.xlsx"
+                        };
+                        result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+                        return result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+
     }
 }

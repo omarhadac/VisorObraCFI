@@ -51,6 +51,8 @@ namespace VisorObraCFI.DTO
                         return "/Content/Iconos/vialidad.png";
                     case 14:
                         return "/Content/Iconos/aysam.png";
+                    case 20:
+                        return "/Content/Iconos/irrigacion.png";
                     default:
                         return "/Content/Iconos/aysam.png";
                 }

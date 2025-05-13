@@ -33,7 +33,7 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && x.IdEstado != 5 && (x.OrganismoId == 2 
+                        .Where(x => x.PryStage_Id == 49 && x.IdEstado == 6 && (x.OrganismoId == 2 
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
@@ -69,7 +69,7 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && x.IdEstado != 5 && (x.OrganismoId == 2
+                        .Where(x => x.PryStage_Id == 49 && x.IdEstado == 6 && (x.OrganismoId == 2
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
@@ -173,7 +173,7 @@ namespace VisorObraCFI
                     }
                     else
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado != 5);
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -284,7 +284,7 @@ namespace VisorObraCFI
                         IdOrganismo = x.OrganismoId,
                         Contrato = x.MontoContratado,
                         TotalPagado = x.OB_MontoPagado,
-                        Avance = x.OB_AvanceReal,
+                        Avance = x.OB_AcumuladoMensual,
                         Inicio = x.FechaInicio,
                         Fin = x.FechaFinActualizada ?? x.FechaFin, // Usar FechaFinActualizada si tiene valor, sino FechaFin
                         Latitud = x.Latitud,
@@ -353,7 +353,7 @@ namespace VisorObraCFI
                     }
                     else
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado != 5);
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -458,7 +458,5 @@ namespace VisorObraCFI
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
-
-
     }
 }

@@ -218,7 +218,7 @@ namespace VisorObraCFI
                         Contrato = x.obra.MontoContratado,
                         TotalPagado = x.obra.OB_MontoPagado,
                         Empresa = x.obra.Empresa,
-                        Avance = x.obra.OB_AvanceReal,
+                        Avance = x.obra.OB_AcumuladoMensual,
                         Inicio = x.obra.FechaInicio,
                         Apertura = x.licitacion?.fechaApertura,
                         Publicacion = x.licitacion?.fechaPublicacion,
@@ -248,7 +248,7 @@ namespace VisorObraCFI
         [Route("api/Obra/BuscarObrasMapa")]
         [System.Web.Http.ActionName("BuscarObrasMapa")]
         [System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> BuscarObrasMapa(string nombreObra, int? selectDepartamento, int? selectOrganismo)
+        public async Task<IHttpActionResult> BuscarObrasMapa(string nombreObra, int? selectDepartamento, int? selectOrganismo, int? selectEstado)
         {
             List<ObraMapa> listaObra = new List<ObraMapa>();
             try
@@ -256,7 +256,7 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     IQueryable<vw_looker_obras> tmp = context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && x.Latitud.HasValue && x.Longitud.HasValue);
+                        .Where(x => x.IdEstado == selectEstado && x.Latitud.HasValue && x.Longitud.HasValue);
 
                     if (!(string.IsNullOrEmpty(nombreObra)))
                     {
@@ -274,57 +274,65 @@ namespace VisorObraCFI
 
                     var obrasFiltradas = await tmp.ToListAsync();
 
-                    listaObra = obrasFiltradas.Select(x => new ObraMapa
-                    {
-                        IdObra = x.PryProyecto_Id,
-                        Nombre = x.Nombre,
-                        Estado = x.Estado,
-                        Dependencia = x.Dependencia,
-                        Departamento = x.Departamento,
-                        IdOrganismo = x.OrganismoId,
-                        Contrato = x.MontoContratado,
-                        TotalPagado = x.OB_MontoPagado,
-                        Avance = x.OB_AcumuladoMensual,
-                        Inicio = x.FechaInicio,
-                        Fin = x.FechaFinActualizada ?? x.FechaFin, // Usar FechaFinActualizada si tiene valor, sino FechaFin
-                        Latitud = x.Latitud,
-                        Longitud = x.Longitud,
-                        Direccion = x.Domicilio,
-                        //ListaArchivos = context.PryArchivosObra
-                        //    .Where(a => a.IdProyecto == x.PryProyecto_Id)
-                        //    .ToList() // Materializar los datos en memoria
-                        //    .Select(a => a.Url)
-                        //    .ToList(),
-                        //ListaArchivos = context.PryArchivosObra
-                        //    .Where(a => a.IdProyecto == x.PryProyecto_Id)
-                        //    .OrderByDescending(a => a.FechaCarga) // Ordenar por fechaSubida (FechaCarga)
-                        //    .Take(5) // Tomar los dos últimos archivos
-                        //    .ToList() // Materializar los datos en memoria
-                        //    .Select(a => a.Url)
-                        //    .ToList(),
-                        ListaArchivos = context.PryArchivosObra
-                            .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 0)
-                            .OrderByDescending(a => a.FechaCarga)
-                            .Take(5)
-                            //.Union(context.PryArchivosObra
-                            //    .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo != 1))
-                            .ToList() 
-                            .Select(a => a.Url)
-                            .ToList(),
-                        ChartData = context.PryAvance
-                        .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false
-                         && a.PryCertificacionesMensuales_Id != null && a.AvanceReal > 0)
-                        .OrderBy(a => a.Mes)
-                        .Select(a => new AvanceGrafico
+                    listaObra = obrasFiltradas.Select(x => {
+                        // Traer los avances a memoria
+                        var avances = context.PryAvance
+                            .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false
+                                && a.PryCertificacionesMensuales_Id != null && a.AvanceReal > 0) //&& a.AvanceRealMensual > 0)
+                            .ToList() // Trae a memoria para poder agrupar
+                            .GroupBy(a => a.Mes)
+                            .Select(g => g.OrderByDescending(a => a.AvanceReal ?? 0).FirstOrDefault())
+                            .OrderBy(a => a.Mes)
+                            .Select(a => new AvanceGrafico
+                            {
+                                Mes = a.Mes,
+                                AvanceReal = a.AvanceReal,
+                                AvanceTeorico = a.AvanceTeorico
+                            })
+                            .ToList();
+
+                        return new ObraMapa
                         {
-                            Mes = a.Mes,
-                            AvanceReal = a.AvanceReal,
-                            AvanceTeorico = a.AvanceTeorico
-                        })
-                        .ToList()
+                            IdObra = x.PryProyecto_Id,
+                            Nombre = x.Nombre,
+                            Estado = x.Estado,
+                            Dependencia = x.Dependencia,
+                            Departamento = x.Departamento,
+                            IdOrganismo = x.OrganismoId,
+                            Contrato = x.MontoContratado,
+                            TotalPagado = x.OB_MontoPagado,
+                            Avance = x.OB_AcumuladoMensual,
+                            Inicio = x.FechaInicio,
+                            Fin = x.FechaFinActualizada ?? x.FechaFin,
+                            Latitud = x.Latitud,
+                            Longitud = x.Longitud,
+                            Direccion = x.Domicilio,
+                            Empresa = x.Empresa ?? "",
+                            MesCertificado = x.OB_UltMesCert.HasValue
+                                ? x.OB_UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                                : string.Empty,
+                            //ListaArchivos = context.PryArchivosObra
+                            //    .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
+                            //    .OrderByDescending(a => a.FechaCarga)
+                            //    .Take(5)
+                            //    .ToList()
+                            //    .Select(a => a.Url)
+                            //    .ToList(),
+                            ListaArchivos = context.PryArchivosObra
+                                .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
+                                .OrderByDescending(a => a.FechaCarga)
+                                .Take(5)
+                                .ToList()
+                                .Select(a => new ArchivoObraInfo
+                                {
+                                    Url = a.Url,
+                                    FechaImagen = a.FechaImagen.HasValue ? a.FechaImagen.Value.ToString("dd/MM/yyyy") : "No hay fecha"
+                                })
+                                .ToList(),
+                            ChartData = avances
+                        };
                     }).ToList();
 
-                    return Ok(listaObra);
                 }
             }
             catch (Exception ex)
@@ -335,6 +343,7 @@ namespace VisorObraCFI
                 }
                 return InternalServerError(ex);
             }
+            return Ok(listaObra);
         }
 
         [Route("api/Obra/ExportarObrasFiltradas")]
@@ -393,7 +402,7 @@ namespace VisorObraCFI
                         Contrato = x.obra.MontoContratado,
                         TotalPagado = x.obra.OB_MontoPagado,
                         Empresa = x.obra.Empresa,
-                        Avance = x.obra.OB_AvanceReal,
+                        Avance = x.obra.OB_AcumuladoMensual,
                         Inicio = x.obra.FechaInicio,
                         Apertura = x.licitacion?.fechaApertura,
                         Publicacion = x.licitacion?.fechaPublicacion,

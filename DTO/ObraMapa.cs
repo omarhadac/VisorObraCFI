@@ -14,6 +14,8 @@ namespace VisorObraCFI.DTO
         public string Dependencia { get; set; }
         public string Departamento { get; set; }
         public string Direccion { get; set; }
+        public string Empresa { get; set; }
+        public string MesCertificado { get; set; }
         public int? IdOrganismo { get; set; }
         public decimal? Contrato { get; set; }
         public decimal? TotalPagado { get; set; }
@@ -22,7 +24,7 @@ namespace VisorObraCFI.DTO
         public DateTime? Fin { get; set; }
         public decimal? Latitud { get;set; }
         public decimal? Longitud { get; set; }
-        public List<string> ListaArchivos { get; set; }
+        public List<ArchivoObraInfo> ListaArchivos { get; set; }
         public List<AvanceGrafico> ChartData { get; set; } 
         // Propiedades calculadas para formatear los valores
         public string NombreFormatted => Nombre ?? string.Empty;
@@ -58,5 +60,10 @@ namespace VisorObraCFI.DTO
                 }
             }
         }
+    }
+    public class ArchivoObraInfo
+    {
+        public string Url { get; set; }
+        public string FechaImagen { get; set; }
     }
 }

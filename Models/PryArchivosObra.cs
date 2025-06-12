@@ -16,9 +16,12 @@ namespace VisorObraCFI.Models
         public string NombreArchivo { get; set; }
         public int? Estado { get; set; }
         public DateTime? FechaCarga { get; set; }
+        public DateTime? FechaImagen { get; set; }
         public int? IdTipoArchivo { get; set; }
         [NotMapped]
         public string Url => $"https://buhogestion.mendoza.gov.ar/Files/PryArchivosObra/{NombreArchivo}";
+        [NotMapped]
+        public string fechaImagenString => FechaImagen.HasValue ? FechaImagen.Value.ToString("dd/MM/yyyy") : "Sin fecha";
 
     }
 }

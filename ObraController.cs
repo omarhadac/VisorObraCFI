@@ -256,8 +256,16 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     IQueryable<vw_looker_obras> tmp = context.vw_looker_obras
-                        .Where(x => x.IdEstado == selectEstado && x.Latitud.HasValue && x.Longitud.HasValue);
+                        .Where(x => x.Latitud.HasValue && x.Longitud.HasValue);
 
+                    if (selectEstado == 1)
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                    }
+                    else
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
+                    }
                     if (!(string.IsNullOrEmpty(nombreObra)))
                     {
                         tmp = tmp.Where(x => x.Nombre.Contains(nombreObra));

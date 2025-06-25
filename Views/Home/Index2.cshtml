@@ -527,6 +527,7 @@
                 </div>
             </div>
 
+            <input type="hidden" id="nombreObraHidden" value="XX" />
         </div>
 
     <script>
@@ -701,7 +702,6 @@
                     .finally(() => {
                         // Ocultar el indicador de carga
                         loadingElement.style.display = 'none';
-                        document.getElementById('nombreObra').value = '';
                     });
             }
 
@@ -765,17 +765,18 @@
             }
 
             function setFiltrosYBuscar(nombreObra) {
+                //document.getElementById('nombreObraHidden').value = nombreObra;
                 document.getElementById('nombreObra').value = nombreObra;
                 //document.getElementById('selectDepartamento').value = departamento;
                 //document.getElementById('selectOrganismo').value = organismo;
                 //document.getElementById('selectEstado').value = estado;
                 fetchObrasMapa();
-                document.getElementById('nombreObra').value = '';
+                //document.getElementById('nombreObra').value = ''; 
             }
 
-
             function fetchObrasMapa() {
-                var nombreObra = document.getElementById('nombreObra').value;
+                //var nombreObra = document.getElementById('nombreObra').value;
+                var nombreObra = document.getElementById('nombreObraHidden').value;
                 var selectDepartamento = document.getElementById('selectDepartamento').value;
                 var selectOrganismo = document.getElementById('selectOrganismo').value;
                 var selectEstado = document.getElementById('selectEstado').value;
@@ -789,8 +790,7 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('*** OBRAS MAPA ***');
-						console.log(data);
+                        //console.log(data);
                         var obras = data.map(obra => ({
                             idObra: obra.idObra,
                             position: { lat: parseFloat(obra.latitudFormatted), lng: parseFloat(obra.longitudFormatted) },
@@ -976,6 +976,7 @@
                 currentPage = 1;
                 fetchObras(currentPage);
                 fetchObrasMapa();
+                //document.getElementById('nombreObra').value = ''; 
             });
 
             document.getElementById('btnExportar').addEventListener('click', function () {

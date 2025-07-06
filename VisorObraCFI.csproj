@@ -184,7 +184,9 @@
     <Compile Include="Models\MySqlDbContext.cs" />
     <Compile Include="Models\PryArchivosObra.cs" />
     <Compile Include="Models\PryAvance.cs" />
+    <Compile Include="Models\PryProyecto.cs" />
     <Compile Include="Models\vw_looker_obras.cs" />
+    <Compile Include="Models\vw_looker_obras_totales.cs" />
     <Compile Include="ObraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

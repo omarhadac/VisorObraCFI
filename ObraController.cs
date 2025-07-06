@@ -166,6 +166,7 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
+                    context.Database.CommandTimeout = 360;
                     IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
                     if (selectEstado == 1)
                     {
@@ -191,19 +192,31 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
 
+                    //var query = from obra in tmp
+                    //            join licitacion in context.LicProyectoFecha
+                    //                .GroupBy(l => l.idProyecto)
+                    //                .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                    //                on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
+                    //            from licitacion in obraLicitacion.DefaultIfEmpty()
+                    //            join proyecto in context.PryProyecto
+                    //                on obra.PryProyecto_Id equals proyecto.Id
+                    //            join totales in context.vw_looker_obras_totales
+                    //                on obra.PryProyecto_Id equals totales.PryProyecto_Id
+                    //            select new { obra, licitacion, proyecto, totales };
+
                     var query = from obra in tmp
                                 join licitacion in context.LicProyectoFecha
                                     .GroupBy(l => l.idProyecto)
                                     .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
                                     on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
                                 from licitacion in obraLicitacion.DefaultIfEmpty()
-                                select new { obra, licitacion };
-
-
+                                join proyecto in context.PryProyecto
+                                    on obra.PryProyecto_Id equals proyecto.Id
+                                select new { obra, licitacion, proyecto};
 
                     var totalItems = await query.CountAsync();
                     var obrasFiltradas = await query
-                        .OrderBy(x => x.obra.PryProyecto_Id) // Ordenar por el campo que consideres adecuado
+                        .OrderBy(x => x.obra.PryProyecto_Id)
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
                         .ToListAsync();
@@ -213,17 +226,24 @@ namespace VisorObraCFI
                         IdObra = x.obra.PryProyecto_Id,
                         Nombre = x.obra.Nombre,
                         Estado = x.obra.Estado,
+                        idEstado = x.obra.IdEstado,
                         Dependencia = x.obra.Dependencia,
                         Departamento = x.obra.Departamento,
                         Contrato = x.obra.MontoContratado,
                         TotalPagado = x.obra.OB_MontoPagado,
+                        //TotalAlteraciones = x.totales.TotalAlteraciones,
+                        //TotalVariaciones = x.totales.TotalVariaciones,
+                        MontoContratado = x.obra.MontoContratado,
                         Empresa = x.obra.Empresa,
                         Avance = x.obra.OB_AcumuladoMensual,
                         Inicio = x.obra.FechaInicio,
                         Apertura = x.licitacion?.fechaApertura,
                         Publicacion = x.licitacion?.fechaPublicacion,
                         Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
-                        // Agrega aquí los campos de PryLicitacion que necesites
+                        Financiamiento = x.proyecto.PryFinanciacion_Id
+                        // Ejemplo de uso de PryProyecto:
+                        // Financiamiento = x.proyecto.PryFinanciacion_Id,
+                        // Puedes agregar aquí los campos de PryProyecto que necesites
                     }).ToList();
 
                     var result = new
@@ -255,7 +275,8 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
-                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras
+                    context.Database.CommandTimeout = 360;
+                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras                        
                         .Where(x => x.Latitud.HasValue && x.Longitud.HasValue);
 
                     if (selectEstado == 1)
@@ -280,14 +301,32 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
 
-                    var obrasFiltradas = await tmp.ToListAsync();
+                    // Realiza el join con PryProyecto
+                    //var query = from obra in tmp
+                    //            join proyecto in context.PryProyecto
+                    //                on obra.PryProyecto_Id equals proyecto.Id
+                    //            join totales in context.vw_looker_obras_totales
+                    //                on obra.PryProyecto_Id equals totales.PryProyecto_Id
+                    //            select new { obra, proyecto, totales };
+
+                    var query = from obra in tmp
+                                join licitacion in context.LicProyectoFecha
+                                    .GroupBy(l => l.idProyecto)
+                                    .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                                    on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
+                                from licitacion in obraLicitacion.DefaultIfEmpty()
+                                join proyecto in context.PryProyecto
+                                    on obra.PryProyecto_Id equals proyecto.Id
+                                select new { obra, licitacion, proyecto };
+
+                    var obrasFiltradas = await query.ToListAsync();
 
                     listaObra = obrasFiltradas.Select(x => {
                         // Traer los avances a memoria
                         var avances = context.PryAvance
-                            .Where(a => a.PryProyectoPlanificacion_Id == x.PryProyectoPlanificacion_Id && a.Eliminado == false
-                                && a.PryCertificacionesMensuales_Id != null && a.AvanceReal > 0) //&& a.AvanceRealMensual > 0)
-                            .ToList() // Trae a memoria para poder agrupar
+                            .Where(a => a.PryProyectoPlanificacion_Id == x.obra.PryProyectoPlanificacion_Id && a.Eliminado == false
+                                && a.PryCertificacionesMensuales_Id != null && a.AvanceReal > 0)
+                            .ToList()
                             .GroupBy(a => a.Mes)
                             .Select(g => g.OrderByDescending(a => a.AvanceReal ?? 0).FirstOrDefault())
                             .OrderBy(a => a.Mes)
@@ -301,33 +340,33 @@ namespace VisorObraCFI
 
                         return new ObraMapa
                         {
-                            IdObra = x.PryProyecto_Id,
-                            Nombre = x.Nombre,
-                            Estado = x.Estado,
-                            Dependencia = x.Dependencia,
-                            Departamento = x.Departamento,
-                            IdOrganismo = x.OrganismoId,
-                            Contrato = x.MontoContratado,
-                            TotalPagado = x.OB_MontoPagado,
-                            Avance = x.OB_AcumuladoMensual,
-                            Inicio = x.FechaInicio,
-                            Fin = x.FechaFinActualizada ?? x.FechaFin,
-                            Latitud = x.Latitud,
-                            Longitud = x.Longitud,
-                            Direccion = x.Domicilio,
-                            Empresa = x.Empresa ?? "",
-                            MesCertificado = x.OB_UltMesCert.HasValue
-                                ? x.OB_UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                            IdObra = x.obra.PryProyecto_Id,
+                            Nombre = x.obra.Nombre,
+                            Estado = x.obra.Estado,
+                            Dependencia = x.obra.Dependencia,
+                            Departamento = x.obra.Departamento,
+                            idEstado = x.obra.IdEstado,
+                            IdOrganismo = x.obra.OrganismoId,
+                            Contrato = x.obra.MontoContratado,
+                            TotalPagado = x.obra.OB_MontoPagado,
+                            Avance = x.obra.OB_AcumuladoMensual,
+                            Inicio = x.obra.FechaInicio,
+                            Apertura = x.licitacion?.fechaApertura,
+                            Publicacion = x.licitacion?.fechaPublicacion,
+                            Financiamiento = x.proyecto.PryFinanciacion_Id,
+                            Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                            Latitud = x.obra.Latitud,
+                            Longitud = x.obra.Longitud,
+                            Direccion = x.obra.Domicilio,
+                            Empresa = x.obra.Empresa ?? "",
+                            //TotalAlteraciones = x.totales.TotalAlteraciones,
+                            //TotalVariaciones = x.totales.TotalVariaciones,
+                            MontoContratado = x.obra.MontoContratado,
+                            MesCertificado = x.obra.OB_UltMesCert.HasValue
+                                ? x.obra.OB_UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
                                 : string.Empty,
-                            //ListaArchivos = context.PryArchivosObra
-                            //    .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
-                            //    .OrderByDescending(a => a.FechaCarga)
-                            //    .Take(5)
-                            //    .ToList()
-                            //    .Select(a => a.Url)
-                            //    .ToList(),
                             ListaArchivos = context.PryArchivosObra
-                                .Where(a => a.IdProyecto == x.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
+                                .Where(a => a.IdProyecto == x.obra.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
                                 .OrderByDescending(a => a.FechaCarga)
                                 .Take(5)
                                 .ToList()
@@ -338,8 +377,12 @@ namespace VisorObraCFI
                                 })
                                 .ToList(),
                             ChartData = avances
+                            // Puedes agregar aquí campos de x.proyecto si los necesitas, por ejemplo:
+                            // CodigoObra = x.proyecto.codigoObra,
+                            // NormaContrato = x.proyecto.normaContrato,
                         };
                     }).ToList();
+
 
                 }
             }
@@ -363,6 +406,7 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
+                    context.Database.CommandTimeout = 360;
                     IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
                     if (selectEstado == 1)
                     {

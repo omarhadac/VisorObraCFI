@@ -460,6 +460,7 @@
                             <tr>
                                 <th class="small-column">Nombre de Obra</th>
                                 <th>Estado</th>
+                                <th>Resarcimiento</th>
                                 <th>Dependencia</th>
                                 <th>Departamento</th>
                                 <th>Monto Contrato Básico</th>
@@ -654,9 +655,10 @@
                             row.innerHTML = `
                                 <td class="small-column">${obra.nombreFormatted}</td>
                                 <td>${obra.estadoFormatted}</td>
+                                <td>${obra.esResarcimiento}</td>
                                 <td>${obra.dependenciaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.contratoFormatted}</td>
+                                <td>${obra.totalObraFormatted}</td>
                                 <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
                                 <td>${obra.empresaFormatted}</td>
                                 <td>${obra.inicioFormatted}</td>
@@ -682,7 +684,7 @@
                                 <td>${obra.publicacionFormatted}</td>
                                 <td>${obra.aperturaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.contratoFormatted}</td>
+                                <td>${obra.totalObraFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -753,14 +755,22 @@
                 modalBody.innerHTML = `
                     <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
                     <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
+                    <p><strong>Es Resarcimiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Monto Contrato Básico:</strong> ${obra.contratoFormatted}</p>
-                    <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
-                    <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
-                    <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
-                    <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>
-                `;
+                    <p><strong>Monto Contrato Básico:</strong> ${obra.totalObraFormatted}</p>`;
+                if (obra.idEstado == 1) {
+                    modalBody.innerHTML +=
+                        `<p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
+                        <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
+                        <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
+                        <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                }
+                else {
+                    modalBody.innerHTML +=
+                        `<p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
+                        <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
+                }
                 $('#infoModal').modal('show');
             }
 
@@ -794,15 +804,20 @@
                         var obras = data.map(obra => ({
                             idObra: obra.idObra,
                             position: { lat: parseFloat(obra.latitudFormatted), lng: parseFloat(obra.longitudFormatted) },
+                            esResarcimiento: obra.esResarcimiento,
                             nombre: obra.nombreFormatted,
                             estado: obra.estadoFormatted,
+                            idEstado: obra.idEstado,
                             departamento: obra.departamentoFormatted,
-                            montoContratado: obra.contratoFormatted,
+                            //montoContratado: obra.contratoFormatted,
+                            montoContratado: obra.totalObraFormatted,
                             domicilio: obra.direccionFormatted,
                             montoPagado: obra.totalPagadoFormatted,
                             avance: obra.avanceFormatted,
                             fechaInicio: obra.inicioFormatted,
                             fechaFin: obra.finFormatted,
+                            publicacionFormatted: obra.publicacionFormatted,
+                            aperturaFormatted: obra.aperturaFormatted,
                             icon: obra.icono,
                             empresa: obra.empresa,
                             mesCertificado: obra.mesCertificado,
@@ -817,8 +832,8 @@
                                 data: obra.chartData.map(avance => avance.avanceReal)
                             }
                         }));
-                        //console.log('obras');
-                        //console.log(obras);
+                        console.log('obras');
+                        console.log(obras);
                         initMap(obras);
                     })
                     .catch(error => {
@@ -843,9 +858,12 @@
                     var contentString = `
                     <div class="custom-popup">
                         <p><span class="badge badge-primary">${obra.nombre}</span></p>
+                        <p><strong>Es Resarcimiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
                         <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
                         <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
-                        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>
+                        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
+                    if (obra.idEstado == 1) {
+                        contentString += `
                         <p><strong>Monto Contrato Básico:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
                         <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
                         <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
@@ -874,6 +892,13 @@
                         <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
                     </div>
                     `;
+                    } else {
+                        contentString += `
+                        <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
+                        <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
+                    </div>
+                    `;
+                    }
 
                     var infowindow = new google.maps.InfoWindow({
                         content: contentString

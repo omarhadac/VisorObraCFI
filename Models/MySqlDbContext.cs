@@ -23,5 +23,7 @@ namespace VisorObraCFI.Models
         public DbSet<PryArchivosObra> PryArchivosObra { get; set; }
         public DbSet<PryAvance> PryAvance { get; set; }
         public DbSet<LicProyectoFecha> LicProyectoFecha { get; set; }
+        public DbSet<PryProyecto> PryProyecto { get; set; }
+        public DbSet<vw_looker_obras_totales> vw_looker_obras_totales { get; set; }
     }
 }

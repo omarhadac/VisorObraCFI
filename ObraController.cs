@@ -244,9 +244,6 @@ namespace VisorObraCFI
                         Publicacion = x.licitacion?.fechaPublicacion,
                         Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
                         Financiamiento = x.proyecto.PryFinanciacion_Id
-                        // Ejemplo de uso de PryProyecto:
-                        // Financiamiento = x.proyecto.PryFinanciacion_Id,
-                        // Puedes agregar aquí los campos de PryProyecto que necesites
                     }).ToList();
 
                     var result = new
@@ -383,9 +380,6 @@ namespace VisorObraCFI
                                 })
                                 .ToList(),
                             ChartData = avances
-                            // Puedes agregar aquí campos de x.proyecto si los necesitas, por ejemplo:
-                            // CodigoObra = x.proyecto.codigoObra,
-                            // NormaContrato = x.proyecto.normaContrato,
                         };
                     }).ToList();
 

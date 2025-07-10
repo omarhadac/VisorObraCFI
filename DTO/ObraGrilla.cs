@@ -34,7 +34,7 @@ namespace VisorObraCFI.DTO
         public DateTime? Apertura { get; set; }
         public DateTime? Publicacion { get; set; }
         public int? Financiamiento { get; set; }
-        // Propiedades calculadas para formatear los valores
+        
         public string NombreFormatted => Nombre ?? string.Empty;
         public string EstadoFormatted => Estado ?? string.Empty;
         public string EmpresaFormatted => Empresa ?? string.Empty;
@@ -63,7 +63,7 @@ namespace VisorObraCFI.DTO
                 if (Financiamiento.Value == 3)
                     return "Nacional";
                 if (Financiamiento.Value == 4)
-                    return "Internacinal";
+                    return "Internacional";
                 if (Financiamiento.Value == 5)
                     return "Nacional/Provincial";
                 if (Financiamiento.Value == 6)
@@ -76,8 +76,7 @@ namespace VisorObraCFI.DTO
                     return "Resarcimiento";
                 if (Financiamiento.Value == 10)
                     return "Municipal";
-                // Agrega más condiciones según tus necesidades
-                return "No";
+                return "Sin datos";
             }
         }
         public decimal? MontoTotal

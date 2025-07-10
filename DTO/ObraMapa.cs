@@ -52,7 +52,7 @@ namespace VisorObraCFI.DTO
             get
             {
                 if (!Financiamiento.HasValue)
-                    return "Sin dato";
+                    return "Sin datos";
                 if (Financiamiento.Value == 1)
                     return "Sin Financiamiento";
                 if (Financiamiento.Value == 2)
@@ -60,7 +60,7 @@ namespace VisorObraCFI.DTO
                 if (Financiamiento.Value == 3)
                     return "Nacional";
                 if (Financiamiento.Value == 4)
-                    return "Internacinal";
+                    return "Internacional";
                 if (Financiamiento.Value == 5)
                     return "Nacional/Provincial";
                 if (Financiamiento.Value == 6)
@@ -74,7 +74,7 @@ namespace VisorObraCFI.DTO
                 if (Financiamiento.Value == 10)
                     return "Municipal";
                 // Agrega más condiciones según tus necesidades
-                return "No";
+                return "Sin datos";
             }
         }
         public decimal? MontoTotal

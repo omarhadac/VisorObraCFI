@@ -44,11 +44,55 @@ namespace VisorObraCFI.DTO
         // Propiedades calculadas para formatear los valores
         public string NombreFormatted => Nombre ?? string.Empty;
         public string EstadoFormatted => Estado ?? string.Empty;
-        public string EsResarcimiento => Financiamiento.Value == 9 ? "Si" : "No";
+        public decimal? MontoAdicional { get; set; }
+        public decimal? MontoContratacionDirecta { get; set; }
+        public decimal? OB_VarPrecio { get; set; }
+        public string EsResarcimiento
+        {
+            get
+            {
+                if (!Financiamiento.HasValue)
+                    return "Sin dato";
+                if (Financiamiento.Value == 1)
+                    return "Sin Financiamiento";
+                if (Financiamiento.Value == 2)
+                    return "Provincial";
+                if (Financiamiento.Value == 3)
+                    return "Nacional";
+                if (Financiamiento.Value == 4)
+                    return "Internacinal";
+                if (Financiamiento.Value == 5)
+                    return "Nacional/Provincial";
+                if (Financiamiento.Value == 6)
+                    return "Internacional/Provincial";
+                if (Financiamiento.Value == 7)
+                    return "Internacional/Nacional";
+                if (Financiamiento.Value == 8)
+                    return "Internacional/Nacional/Provincial";
+                if (Financiamiento.Value == 9)
+                    return "Resarcimiento";
+                if (Financiamiento.Value == 10)
+                    return "Municipal";
+                // Agrega más condiciones según tus necesidades
+                return "No";
+            }
+        }
+        public decimal? MontoTotal
+        {
+            get
+            {
+                if (MontoContratado == null && MontoAdicional == null && MontoContratacionDirecta == null && OB_VarPrecio == null)
+                    return null;
+                return (MontoContratado ?? 0)
+                     + (MontoAdicional ?? 0)
+                     + (MontoContratacionDirecta ?? 0)
+                     + (OB_VarPrecio ?? 0);
+            }
+        }
+        public string ContratoFormatted => MontoTotal.HasValue ? $"${MontoTotal.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string DependenciaFormatted => Dependencia ?? string.Empty;
         public string DepartamentoFormatted => Departamento ?? string.Empty;
         public string DireccionFormatted => Direccion ?? string.Empty;
-        public string ContratoFormatted => Contrato.HasValue ? $"${Contrato.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string TotalPagadoFormatted => TotalPagado.HasValue ? $"${TotalPagado.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string MontoTotalFormatted => TotalPagado.HasValue ? $"${TotalPagado.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string AvanceFormatted => Avance.HasValue ? $"{Avance.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-ES"))}%" : "0.00%";

@@ -236,6 +236,9 @@ namespace VisorObraCFI
                         MontoContratado = x.obra.MontoContratado,
                         Empresa = x.obra.Empresa,
                         Avance = x.obra.OB_AcumuladoMensual,
+                        MontoAdicional = x.obra.MontoAdicional,
+                        MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                        OB_VarPrecio = x.obra.OB_VarPrecio,
                         Inicio = x.obra.FechaInicio,
                         Apertura = x.licitacion?.fechaApertura,
                         Publicacion = x.licitacion?.fechaPublicacion,
@@ -358,6 +361,9 @@ namespace VisorObraCFI
                             Latitud = x.obra.Latitud,
                             Longitud = x.obra.Longitud,
                             Direccion = x.obra.Domicilio,
+                            MontoAdicional = x.obra.MontoAdicional,
+                            MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                            OB_VarPrecio = x.obra.OB_VarPrecio,
                             Empresa = x.obra.Empresa ?? "",
                             //TotalAlteraciones = x.totales.TotalAlteraciones,
                             //TotalVariaciones = x.totales.TotalVariaciones,
@@ -453,6 +459,9 @@ namespace VisorObraCFI
                         Departamento = x.obra.Departamento,
                         Contrato = x.obra.MontoContratado,
                         TotalPagado = x.obra.OB_MontoPagado,
+                        MontoAdicional = x.obra.MontoAdicional,
+                        MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                        OB_VarPrecio = x.obra.OB_VarPrecio,
                         Empresa = x.obra.Empresa,
                         Avance = x.obra.OB_AcumuladoMensual,
                         Inicio = x.obra.FechaInicio,
@@ -473,7 +482,7 @@ namespace VisorObraCFI
                         worksheet.Cells["D1"].Value = "Dependencia";
                         worksheet.Cells["E1"].Value = "Departamento";
                         worksheet.Cells["F1"].Value = "Contrato";
-                        worksheet.Cells["G1"].Value = "Total Pagado";
+                        worksheet.Cells["G1"].Value = "Financiamiento";
                         worksheet.Cells["H1"].Value = "Empresa";
                         worksheet.Cells["I1"].Value = "Avance";
                         worksheet.Cells["J1"].Value = "Inicio";
@@ -489,8 +498,8 @@ namespace VisorObraCFI
                             worksheet.Cells[i + 2, 3].Value = obra.Estado;
                             worksheet.Cells[i + 2, 4].Value = obra.Dependencia;
                             worksheet.Cells[i + 2, 5].Value = obra.Departamento;
-                            worksheet.Cells[i + 2, 6].Value = obra.Contrato;
-                            worksheet.Cells[i + 2, 7].Value = obra.TotalPagado;
+                            worksheet.Cells[i + 2, 6].Value = obra.ContratoFormatted;
+                            worksheet.Cells[i + 2, 7].Value = obra.EsResarcimiento;
                             worksheet.Cells[i + 2, 8].Value = obra.Empresa;
                             worksheet.Cells[i + 2, 9].Value = obra.Avance;
                             worksheet.Cells[i + 2, 10].Value = obra.Inicio?.ToString("dd/MM/yyyy");

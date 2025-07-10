@@ -460,10 +460,10 @@
                             <tr>
                                 <th class="small-column">Nombre de Obra</th>
                                 <th>Estado</th>
-                                <th>Resarcimiento</th>
+                                <th>Financiamiento</th>
                                 <th>Dependencia</th>
                                 <th>Departamento</th>
-                                <th>Monto Contrato Básico</th>
+                                <th>Monto Contrato Actualizado</th>
                                 <th>Avance</th>
                                 <th>Empresa Contratista</th>
                                 <th>Fecha Inicio</th>
@@ -493,7 +493,7 @@
                                 <th>Fecha Publicación</th>
                                 <th>Fecha Apertura</th>
                                 <th>Departamento</th>
-                                <th>Monto Contrato Básico</th>
+                                <th>Monto Contrato Actualizado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -658,7 +658,7 @@
                                 <td>${obra.esResarcimiento}</td>
                                 <td>${obra.dependenciaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.totalObraFormatted}</td>
+                                <td>${obra.contratoFormatted}</td>
                                 <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
                                 <td>${obra.empresaFormatted}</td>
                                 <td>${obra.inicioFormatted}</td>
@@ -684,7 +684,7 @@
                                 <td>${obra.publicacionFormatted}</td>
                                 <td>${obra.aperturaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.totalObraFormatted}</td>
+                                <td>${obra.contratoFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -755,10 +755,10 @@
                 modalBody.innerHTML = `
                     <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
                     <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
-                    <p><strong>Es Resarcimiento:</strong> ${obra.esResarcimiento}</p>
+                    <p><strong>Financiamiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Monto Contrato Básico:</strong> ${obra.totalObraFormatted}</p>`;
+                    <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>`;
                 if (obra.idEstado == 1) {
                     modalBody.innerHTML +=
                         `<p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
@@ -809,8 +809,8 @@
                             estado: obra.estadoFormatted,
                             idEstado: obra.idEstado,
                             departamento: obra.departamentoFormatted,
-                            //montoContratado: obra.contratoFormatted,
-                            montoContratado: obra.totalObraFormatted,
+                            montoContratado: obra.contratoFormatted,
+                            //montoContratado: obra.totalObraFormatted,
                             domicilio: obra.direccionFormatted,
                             montoPagado: obra.totalPagadoFormatted,
                             avance: obra.avanceFormatted,
@@ -858,13 +858,13 @@
                     var contentString = `
                     <div class="custom-popup">
                         <p><span class="badge badge-primary">${obra.nombre}</span></p>
-                        <p><strong>Es Resarcimiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
+                        <p><strong>Financiamiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
                         <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
                         <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
                         <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
                     if (obra.idEstado == 1) {
                         contentString += `
-                        <p><strong>Monto Contrato Básico:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
+                        <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
                         <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
                         <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
                         <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>

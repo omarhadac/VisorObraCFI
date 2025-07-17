@@ -791,7 +791,8 @@
                 var selectEstado = document.getElementById('selectEstado').value;
 
                 // Realizar la llamada fetch al endpoint BuscarObrasMapa
-                fetch(`@Url.Content("~/api/Obra/BuscarObrasMapa")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&selectEstado=${selectEstado}`)
+                //fetch(`@Url.Content("~/api/Obra/BuscarObrasMapa")?nombreObra=${nombreObra}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&selectEstado=${selectEstado}`)
+                fetch(`@Url.Content("~/api/Obra/BuscarObrasMapa")?nombreObra=${encodeURIComponent(nombreObra)}&selectDepartamento=${selectDepartamento}&selectOrganismo=${selectOrganismo}&selectEstado=${selectEstado}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error de Red');

@@ -228,7 +228,7 @@ namespace VisorObraCFI
                         Estado = x.obra.Estado,
                         idEstado = x.obra.IdEstado,
                         Dependencia = x.obra.Dependencia,
-                        Departamento = x.obra.Departamento,
+                        Departamento = x.obra.departamentoString,
                         Contrato = x.obra.MontoContratado,
                         TotalPagado = x.obra.OB_MontoPagado,
                         //TotalAlteraciones = x.totales.TotalAlteraciones,

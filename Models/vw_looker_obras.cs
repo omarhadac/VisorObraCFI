@@ -14,6 +14,8 @@ namespace VisorObraCFI.Models
         public int? PryProyectoPlanificacion_Id { get; set; }
         public int? IdDepartamento { get; set; }
         public string Departamento { get; set; }
+        public string departamentoString { get; set; }
+
         public string Nombre { get; set; }
         public string Expediente { get; set; }
         public string Domicilio { get; set; }

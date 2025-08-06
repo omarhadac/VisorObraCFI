@@ -305,6 +305,15 @@
                     <span class="h3">LICITACIONES</span>
                 </div>
             </div>
+            <div class="wrap-dashNumber">
+                <div class="ic-wrap-container">
+                    <img src="~/Content/Iconos/iconizer-finalizadas-check.svg" alt="icono">
+                </div>
+                <div class="desc-wrap">
+                    <span class="DashBignumber" id="totalFinalizadas">0</span><br>
+                    <span class="h3">EJECUTADAS</span>
+                </div>
+            </div>
         </div>
         <br />
         <div id="loading" style="display: none;">
@@ -314,221 +323,252 @@
         <!-- Primer sector: Agrupación -->
         <div class="row">
             <div class="col-md-1"></div>
-                <div class="col-md-2">
-                    <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                        <span class="info-box-icon bg-green"></span>
-                        <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 40%;">
-                        <div class="info-box-content">
-                            <span class="info-box-text">AySAM</span>
-                            <span class="info-box-number" id="totalAySAM">0</span>
-                        </div>
-                        <div class="popup-content">
-                            <h4>AySAM</h4>
-                            <p id="totalObrasAySAM">Obras en Ejecución: 0</p>
-                            <p id="totalMontoAySAM">Monto: 0</p>
-                            <p id="totalAySAMLic">Obras en Licitación: 0</p>
-                            <p id="totalMontoAySAMLic">Monto: 0</p>
-                        </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">AySAM</span>
+                        <span class="info-box-number" id="totalAySAM">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>AySAM</h4>
+                        <p id="totalObrasAySAM">Obras en Ejecución: 0</p>
+                        <p id="totalMontoAySAM">Monto: 0</p>
+                        <p id="totalAySAMLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoAySAMLic">Monto: 0</p>
+                        <p id="totalAySAMFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                        <span class="info-box-icon bg-green"></span>
-                        <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 40%;">
-                        <div class="info-box-content">
-                            <span class="info-box-text">Infraestructura</span>
-                            <span class="info-box-number" id="totalInfra">0</span>
-                        </div>
-                        <div class="popup-content">
-                            <h4>Infraestructura</h4>
-                            <p id="totalObrasInfra">Obras en Ejecución: 0</p>
-                            <p id="totalMontoInfra">Monto: 0</p>
-                            <p id="totalInfraLic">Obras en Licitación: 0</p>
-                            <p id="totalMontoInfraLic">Monto: 0</p>
-                        </div>
+            </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">Infraestructura</span>
+                        <span class="info-box-number" id="totalInfra">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>Infraestructura</h4>
+                        <p id="totalObrasInfra">Obras en Ejecución: 0</p>
+                        <p id="totalMontoInfra">Monto: 0</p>
+                        <p id="totalInfraLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoInfraLic">Monto: 0</p>
+                        <p id="totalInfraFin">Obras Ejecutadas: 0</p>
+
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                        <span class="info-box-icon bg-green"></span>
-                        <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 30%;">
-                        <div class="info-box-content">
-                            <span class="info-box-text">IPV</span>
-                            <span class="info-box-number" id="totalIPV">0</span>
-                        </div>
-                        <div class="popup-content">
-                            <h4>IPV</h4>
-                            <p id="totalObrasIPV">Obras en Ejecución: 0</p>
-                            <p id="totalMontoIPV">Monto: 0</p>
-                            <p id="totalIPVLic">Obras en Licitación: 0</p>
-                            <p id="totalMontoIPVLic">Monto: 0</p>
-                        </div>
+            </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 30%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">IPV</span>
+                        <span class="info-box-number" id="totalIPV">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>IPV</h4>
+                        <p id="totalObrasIPV">Obras en Ejecución: 0</p>
+                        <p id="totalMontoIPV">Monto: 0</p>
+                        <p id="totalIPVLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoIPVLic">Monto: 0</p>
+                        <p id="totalIPVFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                        <span class="info-box-icon bg-green"></span>
-                        <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 40%;">
-                        <div class="info-box-content">
-                            <span class="info-box-text">DPV</span>
-                            <span class="info-box-number" id="totalVialidad">0</span>
-                        </div>
-                        <div class="popup-content">
-                            <h4>DPV</h4>
-                            <p id="totalObrasVialidad">Obras en Ejecución: 0</p>
-                            <p id="totalMontoVialidad">Monto: 0</p>
-                            <p id="totalVialidadLic">Obras en Licitación: 0</p>
-                            <p id="totalMontoVialidadLic">Monto: 0</p>
-                        </div>
+            </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">DPV</span>
+                        <span class="info-box-number" id="totalVialidad">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>DPV</h4>
+                        <p id="totalObrasVialidad">Obras en Ejecución: 0</p>
+                        <p id="totalMontoVialidad">Monto: 0</p>
+                        <p id="totalVialidadLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoVialidadLic">Monto: 0</p>
+                        <p id="totalVialidadFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
-                        <span class="info-box-icon bg-green"></span>
-                        <img src="~/Content/Iconos/iconoIrrigacion.png" alt="icono representativo a obras publicas" style="width: 40%;">
-                        <div class="info-box-content">
-                            <span class="info-box-text">Irrigación</span>
-                            <span class="info-box-number" id="totalIrrigacion">0</span>
-                        </div>
-                        <div class="popup-content">
-                            <h4>Irrigación</h4>
-                            <p id="totalObrasIrrigacion">Obras en Ejecución: 0</p>
-                            <p id="totalMontoIrrigacion">Monto: 0</p>
-                            <p id="totalIrrigacionLic">Obras en Licitación: 0</p>
-                            <p id="totalMontoIrrigacionLic">Monto: 0</p>
-                        </div>
+            </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/iconoIrrigacion.png" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">Irrigación</span>
+                        <span class="info-box-number" id="totalIrrigacion">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>Irrigación</h4>
+                        <p id="totalObrasIrrigacion">Obras en Ejecución: 0</p>
+                        <p id="totalMontoIrrigacion">Monto: 0</p>
+                        <p id="totalIrrigacionLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoIrrigacionLic">Monto: 0</p>
+                        <p id="totalIrrigacionFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
+            </div>
         </div>
-            <!-- Segundo sector: Buscador -->
-            <div class="row mb-3">
-                <div class="col-12 d-flex justify-content-center">
-                    <input type="text" id="nombreObra" class="form-control rounded-custom mr-2" placeholder="Ingrese el nombre de la obra" style="width: 300px;">
-                    <label for="selectDepartamento" class="mr-2 bold-label mb-0">Departamento</label>
-                    <select id="selectDepartamento" class="form-control rounded-custom mr-2" style="width: 150px;">
-                        <option value="0">Todos</option>
-                        <option value="1">Ciudad</option>
-                        <option value="2">Godoy Cruz</option>
-                        <option value="3">Guaymallén</option>
-                        <option value="4">Gral Alvear</option>
-                        <option value="5">Junín</option>
-                        <option value="6">La Paz</option>
-                        <option value="7">Las Heras</option>
-                        <option value="8">Lavalle</option>
-                        <option value="9">Luján</option>
-                        <option value="10">Maipú</option>
-                        <option value="11">Malargüe</option>
-                        <option value="12">Rivadavia</option>
-                        <option value="13">San Carlos</option>
-                        <option value="14">San Martín</option>
-                        <option value="15">San Rafael</option>
-                        <option value="16">Santa Rosa</option>
-                        <option value="17">Tunuyan</option>
-                        <option value="18">Tupungato</option>
-                    </select>
-                    <label for="selectOrganismo" class="mr-2 bold-label mb-0">Dependencia</label>
-                    <select id="selectOrganismo" class="form-control rounded-custom mr-2" style="width: 150px;">
-                        <option value="0">Todos</option>
-                        <option value="4">IPV</option>
-                        <option value="14">Aysam</option>
-                        <option value="9">Dirección Provincial Vialidad</option>
-                        <option value="2">Infraestructura</option>
-                        <option value="20">Irrigación</option>
-                    </select>
-                    <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
-                    <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
-                        <option value="1">En Obra</option>
-                        <option value="2">Licitacion</option>
-                    </select>
-                    <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
-                    <button id="btnExportar" class="btn btn-info rounded-custom text-white">Exportar</button>
-                </div>
-            </div>
+        <!-- Segundo sector: Buscador -->
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-center">
+                <input type="text" id="nombreObra" class="form-control rounded-custom mr-2" placeholder="Ingrese el nombre de la obra" style="width: 300px;">
+                <label for="selectDepartamento" class="mr-2 bold-label mb-0">Departamento</label>
+                <select id="selectDepartamento" class="form-control rounded-custom mr-2" style="width: 150px;">
+                    <option value="0">Todos</option>
+                    <option value="1">Ciudad</option>
+                    <option value="2">Godoy Cruz</option>
+                    <option value="3">Guaymallén</option>
+                    <option value="4">Gral Alvear</option>
+                    <option value="5">Junín</option>
+                    <option value="6">La Paz</option>
+                    <option value="7">Las Heras</option>
+                    <option value="8">Lavalle</option>
+                    <option value="9">Luján</option>
+                    <option value="10">Maipú</option>
+                    <option value="11">Malargüe</option>
+                    <option value="12">Rivadavia</option>
+                    <option value="13">San Carlos</option>
+                    <option value="14">San Martín</option>
+                    <option value="15">San Rafael</option>
+                    <option value="16">Santa Rosa</option>
+                    <option value="17">Tunuyan</option>
+                    <option value="18">Tupungato</option>
+                </select>
+                <label for="selectOrganismo" class="mr-2 bold-label mb-0">Dependencia</label>
+                <select id="selectOrganismo" class="form-control rounded-custom mr-2" style="width: 150px;">
+                    <option value="0">Todos</option>
+                    <option value="4">IPV</option>
+                    <option value="14">Aysam</option>
+                    <option value="9">Dirección Provincial Vialidad</option>
+                    <option value="2">Infraestructura</option>
+                    <option value="20">Irrigación</option>
+                </select>
+                <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
+                <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
+                    <option value="1">En Obra</option>
+                    <option value="2">Licitacion</option>
+                    <option value="3">Ejecutadas</option>
 
-            <!-- Tercer sector: Mapa de Google -->
-            <div class="row">
-                <div class="col-12">
-                    <div id="map"></div>
-                </div>
+                </select>
+                <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
+                <button id="btnExportar" class="btn btn-info rounded-custom text-white">Exportar</button>
             </div>
+        </div>
 
-            <!-- Cuarto sector: Grilla -->
-            <div class="row" style="display:block" id="mostrarTablaObra">
-                <div class="col-12">
-                    <table class="table table-striped" id="obrasTable">
-                        <thead>
-                            <tr>
-                                <th class="small-column">Nombre de Obra</th>
-                                <th>Estado</th>
-                                <th>Financiamiento</th>
-                                <th>Dependencia</th>
-                                <th>Departamento</th>
-                                <th>Monto Contrato Actualizado</th>
-                                <th>Avance</th>
-                                <th>Empresa Contratista</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Estimada Fin</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <!-- Paginación -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <!-- Aquí se generarán los elementos de paginación dinámicamente -->
-                        </ul>
-                    </nav>
-                </div>
+        <!-- Tercer sector: Mapa de Google -->
+        <div class="row">
+            <div class="col-12">
+                <div id="map"></div>
             </div>
+        </div>
 
-            <div class="row" style="display:none" id="mostrarTablaLicitacon">
-                <div class="col-10 offset-1">
-                    <table class="table table-striped" id="LicitacionTable">
-                        <thead>
-                            <tr>
-                                <th class="small-column">Nombre de Obra</th>
-                                <th>Estado</th>
-                                <th>Dependencia</th>
-                                <th>Fecha Publicación</th>
-                                <th>Fecha Apertura</th>
-                                <th>Departamento</th>
-                                <th>Monto Contrato Actualizado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <!-- Paginación -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <!-- Aquí se generarán los elementos de paginación dinámicamente -->
-                        </ul>
-                    </nav>
-                </div>
+        <!-- Cuarto sector: Grilla -->
+        <div class="row" style="display:block" id="mostrarTablaObra">
+            <div class="col-12">
+                <table class="table table-striped" id="obrasTable">
+                    <thead>
+                        <tr>
+                            <th class="small-column">Nombre de Obra</th>
+                            <th>Estado</th>
+                            <th>Financiamiento</th>
+                            <th>Dependencia</th>
+                            <th>Departamento</th>
+                            <th>Monto Contrato Actualizado</th>
+                            <th>Avance</th>
+                            <th>Empresa Contratista</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Estimada Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- Paginación -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí se generarán los elementos de paginación dinámicamente -->
+                    </ul>
+                </nav>
             </div>
+        </div>
 
-            <!-- Modal de Bootstrap -->
-            <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="infoModalLabel">Información de la Obra</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Aquí se llenará la información de la obra -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
+        <div class="row" style="display:none" id="mostrarTablaLicitacon">
+            <div class="col-10 offset-1">
+                <table class="table table-striped" id="LicitacionTable">
+                    <thead>
+                        <tr>
+                            <th class="small-column">Nombre de Obra</th>
+                            <th>Estado</th>
+                            <th>Dependencia</th>
+                            <th>Fecha Publicación</th>
+                            <th>Fecha Apertura</th>
+                            <th>Departamento</th>
+                            <th>Monto Contrato Actualizado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- Paginación -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí se generarán los elementos de paginación dinámicamente -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row" style="display:none" id="mostrarTablaFinalizadas">
+            <div class="col-10 offset-1">
+                <table class="table table-striped" id="FinalizadasTable">
+                    <thead>
+                        <tr>
+                            <th class="small-column">Nombre de Obra</th>
+                            <th>Estado</th>
+                            <th>Dependencia</th>
+                            <th>Departamento</th>
+                            <th>Fecha Fin Actualizada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- Paginación -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí se generarán los elementos de paginación dinámicamente -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Modal de Bootstrap -->
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">Información de la Obra</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Aquí se llenará la información de la obra -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
-
         </div>
+
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -553,8 +593,10 @@
                     //console.log(data);
                     var totalObra = data.cantidadObraEjecucion;
                     var totalLicitacion = data.cantidadObraLicitacion;
+                    var totalFinalizadas = data.cantidadObraFinalizada;
                     document.getElementById('totalObra').textContent = totalObra;
                     document.getElementById('totalLicitacion').textContent = totalLicitacion;
+                    document.getElementById('totalFinalizadas').textContent = totalFinalizadas;
                 })
                 .catch(error => {
                     console.error('Error al obtener los datos:', error);
@@ -573,10 +615,11 @@
                         console.log(item);
                         if (item.idOrganismo === 14) {
                             document.getElementById('totalAySAM').textContent = item.cantidadObraEjecucion;
-                            document.getElementById('totalObrasAySAM').textContent ='Obras en Ejecución: '+ item.cantidadObraEjecucion;
+                            document.getElementById('totalObrasAySAM').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
                             document.getElementById('totalMontoAySAM').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalAySAMLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoAySAMLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalAySAMFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 4) {
                             document.getElementById('totalIPV').textContent = item.cantidadObraEjecucion;
@@ -584,6 +627,7 @@
                             document.getElementById('totalMontoIPV').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIPVLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIPVLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalIPVFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 2) {
                             document.getElementById('totalInfra').textContent = item.cantidadObraEjecucion;
@@ -591,6 +635,7 @@
                             document.getElementById('totalMontoInfra').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalInfraLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoInfraLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalInfraFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 9) {
                             document.getElementById('totalVialidad').textContent = item.cantidadObraEjecucion;
@@ -598,6 +643,7 @@
                             document.getElementById('totalMontoVialidad').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalVialidadLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoVialidadLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalVialidadFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 20) {
                             document.getElementById('totalIrrigacion').textContent = item.cantidadObraEjecucion;
@@ -605,6 +651,7 @@
                             document.getElementById('totalMontoIrrigacion').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIrrigacionLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIrrigacionLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalIrrigacionFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })
@@ -615,7 +662,6 @@
                     // Ocultar el indicador de carga
                     //loadingElement.style.display = 'none';
                 });
-
 
             function fetchObras(page) {
                 var nombreObra = document.getElementById('nombreObra').value;
@@ -639,8 +685,10 @@
 
                         if (document.getElementById('selectEstado').value === "1") {
                             mostrarTablaObra();
-                        } else {
+                        } else if (document.getElementById('selectEstado').value === "2") {
                             mostrarTablaLicitacion();
+                        } else {
+                            mostrarTablaFinalizadas();
                         }
 
 
@@ -677,6 +725,7 @@
                         data.items.forEach(obra => {
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
+                            let estadoMostrar = obra.estadoFormatted;
                             row.innerHTML = `
                                 <td class="small-column">${obra.nombreFormatted}</td>
                                 <td>${obra.estadoFormatted}</td>
@@ -691,6 +740,29 @@
                             });
                             tbody2.appendChild(row);
                         });
+
+                        var tbody3 = document.querySelector('#FinalizadasTable tbody');
+                        tbody3.innerHTML = '';
+
+                        data.items.forEach(obra => {
+                            var row = document.createElement('tr');
+                            row.classList.add('cursor-pointer');
+                            let estadoMostrar = obra.estadoFormatted;
+                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                                estadoMostrar = 'Ejecutada';
+                            }
+                            row.innerHTML = `
+                            <td class="small-column">${obra.nombreFormatted}</td>
+                            <td>${estadoMostrar}</td>
+                            <td>${obra.departamentoFormatted}</td>
+                            <td>${obra.dependenciaFormatted}</td>
+                            <td>${obra.finFormatted}</td>
+                            `;
+                            row.addEventListener('click', function () {
+                                showModal(obra);
+                            });
+                            tbody3.appendChild(row);
+                        })
 
                         // Actualizar controles de paginación
                         updatePagination(data.totalItems, page, pageSize);
@@ -754,21 +826,28 @@
                 var modalBody = document.querySelector('#infoModal .modal-body');
                 modalBody.innerHTML = `
                     <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
-                    <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
+                    <p><strong>Estadoo:</strong> ${obra.estadoFormatted}</p>
                     <p><strong>Financiamiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>`;
+                    `;
                 if (obra.idEstado == 1) {
                     modalBody.innerHTML +=
-                        `<p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
+                        `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                        <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                         <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                         <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
-                        <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                        <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>
+                        `;
+                } else if (obra.idEstado == 18) {
+                    modalBody.innerHTML +=
+                    `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
                 }
                 else {
                     modalBody.innerHTML +=
-                        `<p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
+                        `
+                        <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                        <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
                 $('#infoModal').modal('show');
@@ -822,7 +901,7 @@
                             icon: obra.icono,
                             empresa: obra.empresa,
                             mesCertificado: obra.mesCertificado,
-                            //archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop() })),
+                            //archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop()())),
                             archivos: obra.listaArchivos.map(archivo => ({
                                 url: archivo.url,
                                 nombre: archivo.url.split('/').pop(),
@@ -893,7 +972,12 @@
                         <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
                     </div>
                     `;
-                    } else {
+                    } else if (obra.idEstado == 18) {
+                        contentString += `
+                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        `;
+                    }
+                    else {
                         contentString += `
                         <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
                         <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
@@ -956,12 +1040,23 @@
             function mostrarTablaObra() {
                 document.getElementById('mostrarTablaObra').style.display = 'block';
                 document.getElementById('mostrarTablaLicitacon').style.display = 'none';
+                document.getElementById('mostrarTablaFinalizadas').style.display = 'none';
+
             }
 
             // Para mostrar la tabla de licitaciones
             function mostrarTablaLicitacion() {
                 document.getElementById('mostrarTablaObra').style.display = 'none';
                 document.getElementById('mostrarTablaLicitacon').style.display = 'block';
+                document.getElementById('mostrarTablaFinalizadas').style.display = 'none';
+
+            }
+
+            function mostrarTablaFinalizadas() {
+                document.getElementById('mostrarTablaObra').style.display = 'none';
+                document.getElementById('mostrarTablaLicitacon').style.display = 'none';
+                document.getElementById('mostrarTablaFinalizadas').style.display = 'block';
+
             }
 
             function fetchObrasExportar() {

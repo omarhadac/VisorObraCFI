@@ -24,7 +24,7 @@ namespace VisorObraCFI.Models
         public int? PryStage_Id { get; set; }
         public string Etapa { get; set; }
         public decimal MontoContratado { get; set; }
-        public decimal MontoOficial { get; set; }
+        public decimal? MontoOficial { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public DateTime? FechaFinActualizada { get; set; }

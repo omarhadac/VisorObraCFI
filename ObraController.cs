@@ -16,7 +16,7 @@ namespace VisorObraCFI
 {
     public class ObraController : ApiController
     {
-       
+
 
         [Route("api/Obra/BuscarTotalesObras")]
         [System.Web.Http.ActionName("BuscarTotalesObras")]
@@ -28,12 +28,12 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     var listaEjecucion = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
+                        .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
                             || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && x.IdEstado == 6 && (x.OrganismoId == 2 
+                        .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
@@ -69,7 +69,7 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && x.IdEstado == 6 && (x.OrganismoId == 2
+                        .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
@@ -158,7 +158,7 @@ namespace VisorObraCFI
         [Route("api/Obra/BuscarObrasFiltradas")]
         [System.Web.Http.ActionName("BuscarObrasFiltradas")]
         [System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento, 
+        public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento,
             int? selectOrganismo, int? selectEstado, int page = 1, int pageSize = 10)
         {
             List<ObraGrilla> listaObra = new List<ObraGrilla>();
@@ -174,7 +174,7 @@ namespace VisorObraCFI
                     }
                     else
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -212,7 +212,7 @@ namespace VisorObraCFI
                                 from licitacion in obraLicitacion.DefaultIfEmpty()
                                 join proyecto in context.PryProyecto
                                     on obra.PryProyecto_Id equals proyecto.Id
-                                select new { obra, licitacion, proyecto};
+                                select new { obra, licitacion, proyecto };
 
                     var totalItems = await query.CountAsync();
                     var obrasFiltradas = await query
@@ -264,7 +264,7 @@ namespace VisorObraCFI
                 return InternalServerError(ex);
             }
         }
-        
+
         [Route("api/Obra/BuscarObrasMapa")]
         [System.Web.Http.ActionName("BuscarObrasMapa")]
         [System.Web.Http.HttpGet]
@@ -276,7 +276,7 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     context.Database.CommandTimeout = 360;
-                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras                        
+                    IQueryable<vw_looker_obras> tmp = context.vw_looker_obras
                         .Where(x => x.Latitud.HasValue && x.Longitud.HasValue);
 
                     if (selectEstado == 1)
@@ -285,7 +285,7 @@ namespace VisorObraCFI
                     }
                     else
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
                     }
                     if (!(string.IsNullOrEmpty(nombreObra)))
                     {
@@ -414,7 +414,7 @@ namespace VisorObraCFI
                     }
                     else
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && x.IdEstado == 6);
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))

@@ -213,6 +213,7 @@
     <Content Include="Content\Iconos\escuela.png" />
     <Content Include="Content\Iconos\ic-home-obras.svg" />
     <Content Include="Content\Iconos\ic-home-proy.svg" />
+    <Content Include="Content\Iconos\iconizer-finalizadas-check.svg" />
     <Content Include="Content\Iconos\iconoIrrigacion.png" />
     <Content Include="Content\Iconos\infraestructura.png" />
     <Content Include="Content\Iconos\ipv.png" />

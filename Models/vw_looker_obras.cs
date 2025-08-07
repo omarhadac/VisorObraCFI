@@ -81,5 +81,6 @@ namespace VisorObraCFI.Models
         public int? IdOrgano { get; set; }
         public string NombreOrgano { get; set; }
         public string ObservacionSubetapa { get; set; }
+        public string departamentoString { get; set; }
     }
 }

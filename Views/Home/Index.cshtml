@@ -356,7 +356,6 @@
                         <p id="totalInfraLic">Obras en Licitación: 0</p>
                         <p id="totalMontoInfraLic">Monto: 0</p>
                         <p id="totalInfraFin">Obras Ejecutadas: 0</p>
-
                     </div>
                 </div>
             </div>
@@ -374,6 +373,7 @@
                         <p id="totalMontoIPV">Monto: 0</p>
                         <p id="totalIPVLic">Obras en Licitación: 0</p>
                         <p id="totalMontoIPVLic">Monto: 0</p>
+                        <p id="totalIPVFin">Obras Ejecutadas: 0</p>
                         <p id="totalIPVFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
@@ -455,7 +455,6 @@
                     <option value="1">En Obra</option>
                     <option value="2">Licitacion</option>
                     <option value="3">Ejecutadas</option>
-
                 </select>
                 <button id="btnBuscar" class="btn btn-success rounded-custom text-white">Buscar</button>
                 <button id="btnExportar" class="btn btn-info rounded-custom text-white">Exportar</button>
@@ -518,12 +517,13 @@
                 </table>
                 <!-- Paginación -->
                 <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center" id="pagination">
+                    <ul class="pagination justify-content-center" id="paginationLicitacion">
                         <!-- Aquí se generarán los elementos de paginación dinámicamente -->
                     </ul>
                 </nav>
             </div>
         </div>
+
         <div class="row" style="display:none" id="mostrarTablaFinalizadas">
             <div class="col-10 offset-1">
                 <table class="table table-striped" id="FinalizadasTable">
@@ -541,7 +541,7 @@
                 </table>
                 <!-- Paginación -->
                 <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center" id="pagination">
+                    <ul class="pagination justify-content-center" id="paginationFinalizadas">
                         <!-- Aquí se generarán los elementos de paginación dinámicamente -->
                     </ul>
                 </nav>
@@ -627,7 +627,7 @@
                             document.getElementById('totalMontoIPV').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIPVLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIPVLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalIPVFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalIPVFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 2) {
                             document.getElementById('totalInfra').textContent = item.cantidadObraEjecucion;
@@ -635,7 +635,7 @@
                             document.getElementById('totalMontoInfra').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalInfraLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoInfraLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalInfraFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalInfraFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 9) {
                             document.getElementById('totalVialidad').textContent = item.cantidadObraEjecucion;
@@ -643,7 +643,7 @@
                             document.getElementById('totalMontoVialidad').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalVialidadLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoVialidadLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalVialidadFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalVialidadFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 20) {
                             document.getElementById('totalIrrigacion').textContent = item.cantidadObraEjecucion;
@@ -651,7 +651,7 @@
                             document.getElementById('totalMontoIrrigacion').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIrrigacionLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIrrigacionLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalIrrigacionFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalIrrigacionFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })
@@ -696,7 +696,7 @@
                         var tbody = document.querySelector('#obrasTable tbody');
                         tbody.innerHTML = '';
 
-                        // Llenar la tabla con los datos recibidos
+                        // Llenar la tabla de En Ejecucion con los datos recibidos
                         data.items.forEach(obra => {
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
@@ -721,7 +721,7 @@
                         var tbody2 = document.querySelector('#LicitacionTable tbody');
                         tbody2.innerHTML = '';
 
-                        // Llenar la tabla con los datos recibidos
+                        // Llenar la tabla de Licitaciones con los datos recibidos
                         data.items.forEach(obra => {
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
@@ -740,6 +740,30 @@
                             });
                             tbody2.appendChild(row);
                         });
+
+                        // Llenar la tabla de Finalizadas con los datos recibidos
+                        var tbody3 = document.querySelector('#FinalizadasTable tbody');
+                        tbody3.innerHTML = '';
+
+                        data.items.forEach(obra => {
+                            var row = document.createElement('tr');
+                            row.classList.add('cursor-pointer');
+                            let estadoMostrar = obra.estadoFormatted;
+                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                                estadoMostrar = 'Ejecutada';
+                            }
+                            row.innerHTML = `
+                            <td class="small-column">${obra.nombreFormatted}</td>
+                            <td>${estadoMostrar}</td>
+                            <td>${obra.dependenciaFormatted}</td>
+                            <td>${obra.departamentoFormatted}</td>
+                            <td>${obra.finFormatted}</td>
+                            `;
+                            row.addEventListener('click', function () {
+                                showModal(obra);
+                            });
+                            tbody3.appendChild(row);
+                        })
 
                         var tbody3 = document.querySelector('#FinalizadasTable tbody');
                         tbody3.innerHTML = '';
@@ -765,7 +789,14 @@
                         })
 
                         // Actualizar controles de paginación
-                        updatePagination(data.totalItems, page, pageSize);
+                        if (document.getElementById('selectEstado').value === "1") {
+                            updatePagination(data.totalItems, page, pageSize);
+                        } else if (document.getElementById('selectEstado').value === "2") {
+                            updatePaginationLicitacion(data.totalItems, page, pageSize);
+                        } else {
+                            updatePaginationFinalizadas(data.totalItems, page, pageSize);
+                        }
+                        
                     })
                     .catch(error => {
                         console.error('Error al obtener los datos:', error);
@@ -782,6 +813,90 @@
             function updatePagination(totalItems, currentPage, pageSize) {
                 var totalPages = Math.ceil(totalItems / pageSize);
                 var paginationElement = document.getElementById('pagination');
+                paginationElement.innerHTML = '';
+
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+                if (startPage > 1) {
+                    var firstPageItem = document.createElement('li');
+                    firstPageItem.className = 'page-item';
+                    firstPageItem.innerHTML = `<a class="page-link" href="#">Primera</a>`;
+                    firstPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(1);
+                    });
+                    paginationElement.appendChild(firstPageItem);
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var pageItem = document.createElement('li');
+                    pageItem.className = 'page-item' + (i === currentPage ? ' active' : '');
+                    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    pageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(parseInt(this.textContent));
+                    });
+                    paginationElement.appendChild(pageItem);
+                }
+
+                if (endPage < totalPages) {
+                    var lastPageItem = document.createElement('li');
+                    lastPageItem.className = 'page-item';
+                    lastPageItem.innerHTML = `<a class="page-link" href="#">Última</a>`;
+                    lastPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(totalPages);
+                    });
+                    paginationElement.appendChild(lastPageItem);
+                }
+            }
+
+            function updatePaginationLicitacion(totalItems, currentPage, pageSize) {
+                var totalPages = Math.ceil(totalItems / pageSize);
+                var paginationElement = document.getElementById('paginationLicitacion');
+                paginationElement.innerHTML = '';
+
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+                if (startPage > 1) {
+                    var firstPageItem = document.createElement('li');
+                    firstPageItem.className = 'page-item';
+                    firstPageItem.innerHTML = `<a class="page-link" href="#">Primera</a>`;
+                    firstPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(1);
+                    });
+                    paginationElement.appendChild(firstPageItem);
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var pageItem = document.createElement('li');
+                    pageItem.className = 'page-item' + (i === currentPage ? ' active' : '');
+                    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    pageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(parseInt(this.textContent));
+                    });
+                    paginationElement.appendChild(pageItem);
+                }
+
+                if (endPage < totalPages) {
+                    var lastPageItem = document.createElement('li');
+                    lastPageItem.className = 'page-item';
+                    lastPageItem.innerHTML = `<a class="page-link" href="#">Última</a>`;
+                    lastPageItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fetchObras(totalPages);
+                    });
+                    paginationElement.appendChild(lastPageItem);
+                }
+            }
+
+            function updatePaginationFinalizadas(totalItems, currentPage, pageSize) {
+                var totalPages = Math.ceil(totalItems / pageSize);
+                var paginationElement = document.getElementById('paginationFinalizadas');
                 paginationElement.innerHTML = '';
 
                 var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
@@ -841,7 +956,7 @@
                         `;
                 } else if (obra.idEstado == 18) {
                     modalBody.innerHTML +=
-                    `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                        `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
                 }
                 else {
                     modalBody.innerHTML +=
@@ -1041,7 +1156,6 @@
                 document.getElementById('mostrarTablaObra').style.display = 'block';
                 document.getElementById('mostrarTablaLicitacon').style.display = 'none';
                 document.getElementById('mostrarTablaFinalizadas').style.display = 'none';
-
             }
 
             // Para mostrar la tabla de licitaciones
@@ -1049,14 +1163,13 @@
                 document.getElementById('mostrarTablaObra').style.display = 'none';
                 document.getElementById('mostrarTablaLicitacon').style.display = 'block';
                 document.getElementById('mostrarTablaFinalizadas').style.display = 'none';
-
             }
 
+            // Para mostrar la tabla de Finalizadas
             function mostrarTablaFinalizadas() {
                 document.getElementById('mostrarTablaObra').style.display = 'none';
                 document.getElementById('mostrarTablaLicitacon').style.display = 'none';
                 document.getElementById('mostrarTablaFinalizadas').style.display = 'block';
-
             }
 
             function fetchObrasExportar() {
@@ -1090,7 +1203,6 @@
                         console.error('Error al exportar los datos:', error);
                     });
             }
-
 
             // Añadir evento click al botón Buscar
             document.getElementById('btnBuscar').addEventListener('click', function () {

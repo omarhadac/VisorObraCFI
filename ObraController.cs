@@ -28,6 +28,7 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     var listaEjecucion = await context.vw_looker_obras
+                        //.Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
                         .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
                             || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
@@ -48,7 +49,7 @@ namespace VisorObraCFI
                         MontoObraEjecucion = Convert.ToInt64(listaEjecucion.Sum(x => (decimal?)x.MontoContratado) ?? 0),
                         CantidadObraLicitacion = listaLicitacion.Count,
                         MontoObraLicitacion = Convert.ToInt64(listaLicitacion.Sum(x => (decimal?)x.MontoContratado) ?? 0),
-                        CantidadObraFinalizada = listaFinalizadas.Count,
+                        CantidadObraFinalizada = listaFinalizadas.Count
                     };
 
                     return Ok(tmp);
@@ -116,6 +117,7 @@ namespace VisorObraCFI
                     unItemAysam.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 14).Count();
                     unItemAysam.IdOrganismo = 14;
                     unItemAysam.Organismo = "AySAM";
+                    unItemAysam.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 14).Count();
                     lista.Add(unItemAysam);
 
                     var unItemIPV = new ContadorObra();
@@ -135,6 +137,7 @@ namespace VisorObraCFI
                     unItemVialidad.MontoObraLicitacion = Convert.ToInt64(listaLicitacionVialidad.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemVialidad.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 9).Count();
                     unItemVialidad.IdOrganismo = 9;
+                    unItemVialidad.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 9).Count();
                     unItemVialidad.Organismo = "Vialidad";
                     lista.Add(unItemVialidad);
 
@@ -145,6 +148,7 @@ namespace VisorObraCFI
                     unItemInfra.MontoObraLicitacion = Convert.ToInt64(listaLicitacionInfra.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemInfra.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 2).Count();
                     unItemInfra.IdOrganismo = 2;
+                    unItemInfra.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 2).Count();
                     unItemInfra.Organismo = "Infraestructura";
                     lista.Add(unItemInfra);
 
@@ -155,6 +159,7 @@ namespace VisorObraCFI
                     unItemIrrig.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIrrigacion.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemIrrig.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 20).Count();
                     unItemIrrig.IdOrganismo = 20;
+                    unItemIrrig.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 20).Count();
                     unItemIrrig.Organismo = "Irrigación";
                     lista.Add(unItemIrrig);
 
@@ -213,18 +218,6 @@ namespace VisorObraCFI
                     {
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
-
-                    //var query = from obra in tmp
-                    //            join licitacion in context.LicProyectoFecha
-                    //                .GroupBy(l => l.idProyecto)
-                    //                .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
-                    //                on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
-                    //            from licitacion in obraLicitacion.DefaultIfEmpty()
-                    //            join proyecto in context.PryProyecto
-                    //                on obra.PryProyecto_Id equals proyecto.Id
-                    //            join totales in context.vw_looker_obras_totales
-                    //                on obra.PryProyecto_Id equals totales.PryProyecto_Id
-                    //            select new { obra, licitacion, proyecto, totales };
 
                     var query = from obra in tmp
                                 join licitacion in context.LicProyectoFecha
@@ -308,6 +301,10 @@ namespace VisorObraCFI
                     else
                     {
                         tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
+                    }
+                    if (selectEstado == 3)
+                    {
+                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1));
                     }
                     if (!(string.IsNullOrEmpty(nombreObra)))
                     {
@@ -443,7 +440,6 @@ namespace VisorObraCFI
                     {
                         tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
                     }
-
                     if (selectEstado == 18)
                     {
                         tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1));
@@ -520,7 +516,6 @@ namespace VisorObraCFI
                         {
                             var obra = listaObra[i];
                             var estadoParaExportar = (obra.Estado == "Recepción Provisoria") ? "Ejecutada" : obra.Estado;
-                            
                             worksheet.Cells[i + 2, 1].Value = obra.IdObra;
                             worksheet.Cells[i + 2, 2].Value = obra.Nombre;
                             worksheet.Cells[i + 2, 3].Value = estadoParaExportar;

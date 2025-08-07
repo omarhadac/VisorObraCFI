@@ -374,7 +374,6 @@
                         <p id="totalIPVLic">Obras en Licitación: 0</p>
                         <p id="totalMontoIPVLic">Monto: 0</p>
                         <p id="totalIPVFin">Obras Ejecutadas: 0</p>
-                        <p id="totalIPVFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
             </div>
@@ -627,7 +626,7 @@
                             document.getElementById('totalMontoIPV').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIPVLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIPVLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalIPVFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalIPVFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 2) {
                             document.getElementById('totalInfra').textContent = item.cantidadObraEjecucion;
@@ -635,7 +634,7 @@
                             document.getElementById('totalMontoInfra').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalInfraLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoInfraLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalInfraFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalInfraFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 9) {
                             document.getElementById('totalVialidad').textContent = item.cantidadObraEjecucion;
@@ -643,7 +642,7 @@
                             document.getElementById('totalMontoVialidad').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalVialidadLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoVialidadLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalVialidadFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalVialidadFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                         if (item.idOrganismo === 20) {
                             document.getElementById('totalIrrigacion').textContent = item.cantidadObraEjecucion;
@@ -651,7 +650,7 @@
                             document.getElementById('totalMontoIrrigacion').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
                             document.getElementById('totalIrrigacionLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIrrigacionLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
-                            document.getElementById('totalIrrigacionFin').textContent = 'Obras Finalizadas: ' + item.cantidadObraFinalizada;
+                            document.getElementById('totalIrrigacionFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })
@@ -753,11 +752,11 @@
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
-                            <td class="small-column">${obra.nombreFormatted}</td>
-                            <td>${estadoMostrar}</td>
-                            <td>${obra.dependenciaFormatted}</td>
-                            <td>${obra.departamentoFormatted}</td>
-                            <td>${obra.finFormatted}</td>
+                            <td class="small-column class="text-center"">${obra.nombreFormatted}</td>
+                            <td class="text-center">${estadoMostrar}</td>
+                            <td class="text-center">${obra.dependenciaFormatted}</td>
+                            <td class="text-center">${obra.departamentoFormatted}</td>
+                            <td class="text-center">${obra.finFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);

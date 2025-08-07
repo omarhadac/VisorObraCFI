@@ -753,11 +753,11 @@
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
-                            <td class="small-column">${obra.nombreFormatted}</td>
-                            <td>${estadoMostrar}</td>
-                            <td>${obra.dependenciaFormatted}</td>
-                            <td>${obra.departamentoFormatted}</td>
-                            <td>${obra.finFormatted}</td>
+                            <td class="small-column class="text-center"">${obra.nombreFormatted}</td>
+                            <td class="text-center">${estadoMostrar}</td>
+                            <td class="text-center">${obra.dependenciaFormatted}</td>
+                            <td class="text-center">${obra.departamentoFormatted}</td>
+                            <td class="text-center">${obra.finFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);

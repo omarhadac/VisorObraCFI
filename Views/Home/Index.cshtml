@@ -532,7 +532,7 @@
                             <th>Estado</th>
                             <th>Dependencia</th>
                             <th>Departamento</th>
-                            <th>Fecha Fin Actualizada</th>
+                            <th>Fecha de Finalización</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -915,14 +915,19 @@
             function showModal(obra) {
                 setFiltrosYBuscar(obra.nombreFormatted)
                 var modalBody = document.querySelector('#infoModal .modal-body');
+                let estadoMostrar = obra.estadoFormatted;
+                if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                    estadoMostrar = 'Ejecutada';
+                }
                 modalBody.innerHTML = `
                     <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
-                    <p><strong>Estado:</strong> ${obra.estadoFormatted}</p>
+                    <p><strong>Estado:</strong> ${estadoMostrar}</p>
                     <p><strong>Financiamiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>`;
+                    `;
                 if (obra.idEstado == 1) {
+
                     modalBody.innerHTML +=
                         `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
@@ -932,7 +937,7 @@
                         `;
                 } else if (obra.idEstado == 18) {
                     modalBody.innerHTML +=
-                        `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                        `<p><strong>Fecha de Finalización:</strong> ${obra.finFormatted}</p>`;
                 }
                 else {
                     modalBody.innerHTML +=
@@ -1065,7 +1070,7 @@
                     `;
                     } else if (obra.idEstado == 18) {
                         contentString += `
-                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        <p><strong>Fecha de Finalización:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         `;
                     }
                     else {

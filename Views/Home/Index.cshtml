@@ -922,10 +922,10 @@
                     <p><strong>Financiamiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
-                    <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>`;
+                    `;
                 if (obra.idEstado == 1) {
                     modalBody.innerHTML +=
-                        `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                       `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                         <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                         <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
@@ -933,12 +933,11 @@
                         `;
                 } else if (obra.idEstado == 18) {
                     modalBody.innerHTML +=
-                        `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                        `<p><strong>Fecha Fin:</strong> ${obra.finFormatted}</p>`;
                 }
                 else {
                     modalBody.innerHTML +=
-                        `
-                        <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                        `                        
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
@@ -1066,7 +1065,7 @@
                     `;
                     } else if (obra.idEstado == 18) {
                         contentString += `
-                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         `;
                     }
                     else {

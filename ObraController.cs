@@ -48,7 +48,7 @@ namespace VisorObraCFI
                         CantidadObraEjecucion = listaEjecucion.Count,
                         MontoObraEjecucion = Convert.ToInt64(listaEjecucion.Sum(x => (decimal?)x.MontoContratado) ?? 0),
                         CantidadObraLicitacion = listaLicitacion.Count,
-                        MontoObraLicitacion = Convert.ToInt64(listaLicitacion.Sum(x => (decimal?)x.MontoContratado) ?? 0),
+                        MontoObraLicitacion = Convert.ToInt64(listaLicitacion.Sum(x => (decimal?)x.MontoOficial) ?? 0),
                         CantidadObraFinalizada = listaFinalizadas.Count
                     };
 
@@ -113,7 +113,7 @@ namespace VisorObraCFI
                     unItemAysam.CantidadObraEjecucion = listaEjecucionAySAM.Count;
                     unItemAysam.MontoObraEjecucion = Convert.ToInt64(listaEjecucionAySAM.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemAysam.CantidadObraLicitacion = listaLicitacionAySAM.Count;
-                    unItemAysam.MontoObraLicitacion = Convert.ToInt64(listaLicitacionAySAM.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemAysam.MontoObraLicitacion = Convert.ToInt64(listaLicitacionAySAM.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemAysam.IdOrganismo = 14;
                     unItemAysam.Organismo = "AySAM";
                     unItemAysam.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 14).Count();
@@ -123,7 +123,7 @@ namespace VisorObraCFI
                     unItemIPV.CantidadObraEjecucion = listaEjecucionIPV.Count;
                     unItemIPV.MontoObraEjecucion = Convert.ToInt64(listaEjecucionIPV.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemIPV.CantidadObraLicitacion = listaLicitacionIPV.Count;
-                    unItemIPV.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIPV.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemIPV.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIPV.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemIPV.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 4).Count();
                     unItemIPV.IdOrganismo = 4;
                     unItemIPV.Organismo = "IPV";
@@ -133,7 +133,7 @@ namespace VisorObraCFI
                     unItemVialidad.CantidadObraEjecucion = listaEjecucionVialidad.Count;
                     unItemVialidad.MontoObraEjecucion = Convert.ToInt64(listaEjecucionVialidad.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemVialidad.CantidadObraLicitacion = listaLicitacionVialidad.Count;
-                    unItemVialidad.MontoObraLicitacion = Convert.ToInt64(listaLicitacionVialidad.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemVialidad.MontoObraLicitacion = Convert.ToInt64(listaLicitacionVialidad.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemVialidad.IdOrganismo = 9;
                     unItemVialidad.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 9).Count();
                     unItemVialidad.Organismo = "Vialidad";
@@ -143,7 +143,7 @@ namespace VisorObraCFI
                     unItemInfra.CantidadObraEjecucion = listaEjecucionInfra.Count;
                     unItemInfra.MontoObraEjecucion = Convert.ToInt64(listaEjecucionInfra.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemInfra.CantidadObraLicitacion = listaLicitacionInfra.Count;
-                    unItemInfra.MontoObraLicitacion = Convert.ToInt64(listaLicitacionInfra.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemInfra.MontoObraLicitacion = Convert.ToInt64(listaLicitacionInfra.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemInfra.IdOrganismo = 2;
                     unItemInfra.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 2).Count();
                     unItemInfra.Organismo = "Infraestructura";
@@ -153,7 +153,7 @@ namespace VisorObraCFI
                     unItemIrrig.CantidadObraEjecucion = listaEjecucionIrrigacion.Count;
                     unItemIrrig.MontoObraEjecucion = Convert.ToInt64(listaEjecucionIrrigacion.Sum(x => (decimal?)x.MontoContratado) ?? 0);
                     unItemIrrig.CantidadObraLicitacion = listaLicitacionIrrigacion.Count;
-                    unItemIrrig.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIrrigacion.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemIrrig.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIrrigacion.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemIrrig.IdOrganismo = 20;
                     unItemIrrig.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 20).Count();
                     unItemIrrig.Organismo = "Irrigación";
@@ -244,6 +244,7 @@ namespace VisorObraCFI
                         //TotalAlteraciones = x.totales.TotalAlteraciones,
                         //TotalVariaciones = x.totales.TotalVariaciones,
                         MontoContratado = x.obra.MontoContratado,
+                        MontoOficial = x.obra.MontoOficial,
                         Empresa = x.obra.Empresa,
                         Avance = x.obra.OB_AcumuladoMensual,
                         MontoAdicional = x.obra.MontoAdicional,
@@ -362,6 +363,7 @@ namespace VisorObraCFI
                             idEstado = x.obra.IdEstado,
                             IdOrganismo = x.obra.OrganismoId,
                             Contrato = x.obra.MontoContratado,
+                            MontoOficial = x.obra.MontoOficial,
                             TotalPagado = x.obra.OB_MontoPagado,
                             Avance = x.obra.OB_AcumuladoMensual,
                             Inicio = x.obra.FechaInicio,
@@ -470,6 +472,7 @@ namespace VisorObraCFI
                         Dependencia = x.obra.Dependencia,
                         Departamento = x.obra.Departamento,
                         Contrato = x.obra.MontoContratado,
+                        MontoOficial = x.obra.MontoOficial,
                         TotalPagado = x.obra.OB_MontoPagado,
                         MontoAdicional = x.obra.MontoAdicional,
                         MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
@@ -494,13 +497,14 @@ namespace VisorObraCFI
                         worksheet.Cells["D1"].Value = "Dependencia";
                         worksheet.Cells["E1"].Value = "Departamento";
                         worksheet.Cells["F1"].Value = "Contrato";
-                        worksheet.Cells["G1"].Value = "Financiamiento";
-                        worksheet.Cells["H1"].Value = "Empresa";
-                        worksheet.Cells["I1"].Value = "Avance";
-                        worksheet.Cells["J1"].Value = "Inicio";
-                        worksheet.Cells["K1"].Value = "Apertura";
-                        worksheet.Cells["L1"].Value = "Publicación";
-                        worksheet.Cells["M1"].Value = "Fin";
+                        worksheet.Cells["G1"].Value = "Presupuesto Oficial";
+                        worksheet.Cells["H1"].Value = "Financiamiento";
+                        worksheet.Cells["I1"].Value = "Empresa";
+                        worksheet.Cells["J1"].Value = "Avance";
+                        worksheet.Cells["K1"].Value = "Inicio";
+                        worksheet.Cells["L1"].Value = "Apertura";
+                        worksheet.Cells["M1"].Value = "Publicación";
+                        worksheet.Cells["N1"].Value = "Fin";
 
                         for (int i = 0; i < listaObra.Count; i++)
                         {
@@ -512,13 +516,14 @@ namespace VisorObraCFI
                             worksheet.Cells[i + 2, 4].Value = obra.Dependencia;
                             worksheet.Cells[i + 2, 5].Value = obra.Departamento;
                             worksheet.Cells[i + 2, 6].Value = obra.ContratoFormatted;
-                            worksheet.Cells[i + 2, 7].Value = obra.EsResarcimiento;
-                            worksheet.Cells[i + 2, 8].Value = obra.Empresa;
-                            worksheet.Cells[i + 2, 9].Value = obra.Avance;
-                            worksheet.Cells[i + 2, 10].Value = obra.Inicio?.ToString("dd/MM/yyyy");
-                            worksheet.Cells[i + 2, 11].Value = obra.Apertura?.ToString("dd/MM/yyyy");
-                            worksheet.Cells[i + 2, 12].Value = obra.Publicacion?.ToString("dd/MM/yyyy");
-                            worksheet.Cells[i + 2, 13].Value = obra.Fin?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 7].Value = obra.PresupuestoFormatted;
+                            worksheet.Cells[i + 2, 8].Value = obra.EsResarcimiento;
+                            worksheet.Cells[i + 2, 9].Value = obra.Empresa;
+                            worksheet.Cells[i + 2, 10].Value = obra.Avance;
+                            worksheet.Cells[i + 2, 11].Value = obra.Inicio?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 12].Value = obra.Apertura?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 13].Value = obra.Publicacion?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[i + 2, 14].Value = obra.Fin?.ToString("dd/MM/yyyy");
                         }
 
                         var stream = new MemoryStream(package.GetAsByteArray());

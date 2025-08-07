@@ -28,6 +28,7 @@ namespace VisorObraCFI.DTO
         public int? idEstado { get; set; }
         public decimal? TotalVariaciones { get; set; }
         public decimal? MontoContratado { get; set; }
+        public decimal? MontoOficial { get; set; }
         public decimal? Avance { get; set; }
         public DateTime? Inicio { get; set; }
         public DateTime? Fin { get; set; }
@@ -92,6 +93,7 @@ namespace VisorObraCFI.DTO
             }
         }
         public string ContratoFormatted => MontoTotal.HasValue ? $"${MontoTotal.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
+        public string PresupuestoFormatted => MontoOficial.HasValue ? $"${MontoOficial.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
 
     }
 }

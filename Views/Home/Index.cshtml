@@ -732,7 +732,7 @@
                                 <td>${obra.publicacionFormatted}</td>
                                 <td>${obra.aperturaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.contratoFormatted}</td>
+                                <td>${obra.presupuestoFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -941,7 +941,8 @@
                 }
                 else {
                     modalBody.innerHTML +=
-                        `                        
+                        `
+                        <p><strong>Presupuesto Oficial:</strong> ${obra.presupuestoFormatted}</p>
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
@@ -985,6 +986,7 @@
                             idEstado: obra.idEstado,
                             departamento: obra.departamentoFormatted,
                             montoContratado: obra.contratoFormatted,
+                            montoOficial: obra.presupuestoFormatted,
                             //montoContratado: obra.totalObraFormatted,
                             domicilio: obra.direccionFormatted,
                             montoPagado: obra.totalPagadoFormatted,
@@ -1074,6 +1076,7 @@
                     }
                     else {
                         contentString += `
+                        <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
                         <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
                         <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
                     </div>

@@ -28,6 +28,9 @@ namespace VisorObraCFI.DTO
         public int? Financiamiento { get; set; }
         public decimal? MontoContratado { get; set; }
         public decimal? TotalVariaciones { get; set; }
+
+        public decimal? MontoLegAbono { get; set; }
+        public decimal? MontoSupresion { get; set; }
         public DateTime? Apertura { get; set; }
         public DateTime? Publicacion { get; set; }
         public decimal? TotalObra
@@ -85,7 +88,9 @@ namespace VisorObraCFI.DTO
                 return (MontoContratado ?? 0)
                      + (MontoAdicional ?? 0)
                      + (MontoContratacionDirecta ?? 0)
-                     + (OB_VarPrecio ?? 0);
+                     + (OB_VarPrecio ?? 0)
+                     + (MontoLegAbono ?? 0)
+                     + (MontoSupresion ?? 0);
             }
         }
         public string ContratoFormatted => MontoTotal.HasValue ? $"${MontoTotal.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";

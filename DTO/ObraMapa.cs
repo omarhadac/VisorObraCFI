@@ -51,6 +51,8 @@ namespace VisorObraCFI.DTO
         public decimal? MontoAdicional { get; set; }
         public decimal? MontoContratacionDirecta { get; set; }
         public decimal? OB_VarPrecio { get; set; }
+
+        public bool esEntregada { get; set; }
         public string EsResarcimiento
         {
             get

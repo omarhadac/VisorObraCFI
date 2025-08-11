@@ -30,7 +30,7 @@ namespace VisorObraCFI
                     var listaEjecucion = await context.vw_looker_obras
                         //.Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
                         .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20) && x.esEntregada == false)
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
@@ -39,10 +39,15 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
 
                     var listaFinalizadas = await context.vw_looker_obras
-                        .Where(x => ((x.PryStage_Id == 48 && x.IdEstado == 18) || (x.PryStage_Id == 160 && x.IdEstado == 3))
-                            && x.FechaFinActualizada >= new DateTime(2024, 1, 1) || x.esEntregada == true && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
-                        .Distinct().ToListAsync();
+                                .Where(x =>
+                                    (
+                                        (x.PryStage_Id == 48 && x.IdEstado == 18) ||
+                                        (x.PryStage_Id == 160 && x.IdEstado == 3) ||
+                                        x.esEntregada == true
+                                    )
+                                    && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                                )
+                                .Distinct().ToListAsync();
 
                     var tmp = new ContadorObra
                     {
@@ -73,7 +78,7 @@ namespace VisorObraCFI
                 {
                     var listaEjecucion = await context.vw_looker_obras
                         .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20) && x.esEntregada==false)
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
@@ -82,9 +87,15 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
 
                     var listaFinalizadas = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1) && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
-                        .Distinct().ToListAsync();
+                               .Where(x =>
+                                   (
+                                       (x.PryStage_Id == 48 && x.IdEstado == 18) ||
+                                       (x.PryStage_Id == 160 && x.IdEstado == 3) ||
+                                       x.esEntregada == true
+                                   )
+                                   && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                               )
+                               .Distinct().ToListAsync();
 
                     var lista = new List<ContadorObra>();
 
@@ -189,7 +200,7 @@ namespace VisorObraCFI
                     IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
                     if (selectEstado == 1)
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false);
                     }
                     else
                     {
@@ -200,7 +211,8 @@ namespace VisorObraCFI
                     {
                         tmp = context.vw_looker_obras.Where(x =>
                            (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                           (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)));
+                           (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                           x.esEntregada == true);
 
                     }
 
@@ -254,6 +266,7 @@ namespace VisorObraCFI
                         Avance = x.obra.OB_AcumuladoMensual,
                         MontoAdicional = x.obra.MontoAdicional,
                         MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                        esEntregada = x.obra.esEntregada,
                         OB_VarPrecio = x.obra.OB_VarPrecio,
                         MontoLegAbono = x.obra.MontoLegAbono,
                         MontoSupresion = x.obra.MontoSupresion,
@@ -299,7 +312,7 @@ namespace VisorObraCFI
 
                     if (selectEstado == 1)
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false);
                     }
                     else
                     {
@@ -308,8 +321,10 @@ namespace VisorObraCFI
                     if (selectEstado == 3)
                     {
                         tmp = context.vw_looker_obras.Where(x =>
-                            (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                            (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)));
+                           (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                           (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                           x.esEntregada == true);
+
                     }
                     if (!(string.IsNullOrEmpty(nombreObra)))
                     {
@@ -323,11 +338,6 @@ namespace VisorObraCFI
                     if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
                     {
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
-                    }
-
-                    if (selectEstado == 3)
-                    {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1));
                     }
 
                     // Realiza el join con PryProyecto
@@ -385,6 +395,7 @@ namespace VisorObraCFI
                             Publicacion = x.licitacion?.fechaPublicacion,
                             Financiamiento = x.proyecto.PryFinanciacion_Id,
                             Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                            esEntregada = x.obra.esEntregada,
                             Latitud = x.obra.Latitud,
                             Longitud = x.obra.Longitud,
                             Direccion = x.obra.Domicilio,
@@ -442,7 +453,7 @@ namespace VisorObraCFI
                     IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
                     if (selectEstado == 1)
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1);
+                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false);
                     }
                     else
                     {
@@ -452,7 +463,8 @@ namespace VisorObraCFI
                     {
                         tmp = context.vw_looker_obras.Where(x =>
                             (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                            (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)));
+                            (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                            x.esEntregada == true);
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -494,6 +506,7 @@ namespace VisorObraCFI
                         TotalPagado = x.obra.OB_MontoPagado,
                         MontoAdicional = x.obra.MontoAdicional,
                         MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                        esEntregada = x.obra.esEntregada,
                         OB_VarPrecio = x.obra.OB_VarPrecio,
                         MontoLegAbono = x.obra.MontoLegAbono,
                         MontoSupresion = x.obra.MontoSupresion,

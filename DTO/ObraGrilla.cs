@@ -55,6 +55,8 @@ namespace VisorObraCFI.DTO
         public decimal? MontoLegAbono { get; set; }
 
         public decimal? MontoSupresion { get; set; }
+
+        public bool esEntregada { get; set; }
         public string EsResarcimiento
         {
             get

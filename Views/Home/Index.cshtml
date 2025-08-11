@@ -752,7 +752,15 @@
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
                             let estadoMostrar = obra.estadoFormatted;
-                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18' || obra.estadoFormatted === 'Entregada' || obra.idEstado == 3 || obra.idEstado == '3') {
+                            if (obra.estadoFormatted === 'Recepción Provisoria' ||
+                                obra.idEstado === 18 ||
+                                obra.idEstado === '18' ||
+                                obra.estadoFormatted === 'Entregada' ||
+                                obra.idEstado == 3 ||
+                                obra.idEstado == '3' ||
+                                (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
+                            )
+                            {
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
@@ -775,7 +783,15 @@
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
                             let estadoMostrar = obra.estadoFormatted;
-                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18' || obra.estadoFormatted === 'Entregada' || obra.idEstado == 3 || obra.idEstado == '3') {
+                            if (obra.estadoFormatted === 'Recepción Provisoria' ||
+                                obra.idEstado === 18 ||
+                                obra.idEstado === '18' ||
+                                obra.estadoFormatted === 'Entregada' ||
+                                obra.idEstado == 3 ||
+                                obra.idEstado == '3' ||
+                                (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
+
+                            ) {
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
@@ -943,7 +959,14 @@
                 setFiltrosYBuscar(obra.nombreFormatted)
                 var modalBody = document.querySelector('#infoModal .modal-body');
                 let estadoMostrar = obra.estadoFormatted;
-                if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                if (obra.estadoFormatted === 'Recepción Provisoria' ||
+                    obra.idEstado === 18 ||
+                    obra.idEstado === '18' ||
+                    obra.estadoFormatted === 'Entregada' ||
+                    obra.idEstado == 3 ||
+                    (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
+
+                ) {
                     estadoMostrar = 'Ejecutada';
                 }
                 modalBody.innerHTML = `
@@ -953,18 +976,18 @@
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
                     `;
-                if (obra.idEstado == 1) {
+                if (obra.idEstado == 1 && obra.esEntregada == false) {
                     if (obra.idObra === 1831) {
                         obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
                     }
                     modalBody.innerHTML +=
-                       `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                        `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                         <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                         <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
                         <p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>
                         `;
-                } else if (obra.idEstado == 18) {
+                } else if (obra.idEstado == 18 || obra.idEstado == 3 || (obra.idEstado == 1 && obra.esEntregada == true)) {
                     modalBody.innerHTML +=
                         `<p><strong>Fecha Fin:</strong> ${obra.finFormatted}</p>`;
                 }
@@ -980,6 +1003,7 @@
 
             function setFiltrosYBuscar(nombreObra) {
                 document.getElementById('nombreObra').value = nombreObra;
+                console.log(nombreObra)
                 //document.getElementById('selectDepartamento').value = departamento;
                 //document.getElementById('selectOrganismo').value = organismo;
                 //document.getElementById('selectEstado').value = estado;
@@ -1060,15 +1084,25 @@
                         return { url: archivo.url, nombre: archivo.nombre, fechaImagen: archivo.fechaImagen };
                     });
 
+                    let estadoMostrar = obra.estadoFormatted;
+                    if (obra.estadoFormatted === 'Recepción Provisoria' ||
+                        obra.idEstado === 18 ||
+                        obra.idEstado === '18' ||
+                        obra.estadoFormatted === 'Entregada' ||
+                        obra.idEstado == 3 ||
+                        (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
 
+                    ) {
+                        estadoMostrar = 'Ejecutada';
+                    }
                     var contentString = `
                     <div class="custom-popup">
                         <p><span class="badge badge-primary">${obra.nombre}</span></p>
                         <p><strong>Financiamiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
-                        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${obra.estado}</span></p>
+                        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${estadoMostrar}</span></p>
                         <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
                         <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
-                    if (obra.idEstado == 1) {
+                    if (obra.idEstado == 1 && obra.esEntregada == false) {
                         if (obra.idObra === 1831) {
                             obra.montoContratado = '$124.270.941'; // O el monto que necesites
                         }
@@ -1101,7 +1135,7 @@
                         <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
                     </div>
                     `;
-                    } else if (obra.idEstado == 18) {
+                    } else if (obra.idEstado == 18 || obra.idEstado == 3 || (obra.idEstado == 1 && obra.esEntregada == true)) {
                         contentString += `
                         <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         `;

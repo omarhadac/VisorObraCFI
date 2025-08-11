@@ -699,6 +699,10 @@
                         data.items.forEach(obra => {
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
+                            var montoContrato = obra.contratoFormatted;
+                            if (obra.idObra === 1831) {
+                                obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
+                            }
                             row.innerHTML = `
                                 <td class="small-column">${obra.nombreFormatted}</td>
                                 <td>${obra.estadoFormatted}</td>
@@ -748,7 +752,7 @@
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
                             let estadoMostrar = obra.estadoFormatted;
-                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18' || obra.estadoFormatted === 'Entregada' || obra.idEstado == 3 || obra.idEstado == '3') {
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
@@ -771,7 +775,7 @@
                             var row = document.createElement('tr');
                             row.classList.add('cursor-pointer');
                             let estadoMostrar = obra.estadoFormatted;
-                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                            if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18' || obra.estadoFormatted === 'Entregada' || obra.idEstado == 3 || obra.idEstado == '3') {
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
@@ -795,7 +799,7 @@
                         } else {
                             updatePaginationFinalizadas(data.totalItems, page, pageSize);
                         }
-                        
+
                     })
                     .catch(error => {
                         console.error('Error al obtener los datos:', error);
@@ -950,7 +954,9 @@
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
                     `;
                 if (obra.idEstado == 1) {
-
+                    if (obra.idObra === 1831) {
+                        obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
+                    }
                     modalBody.innerHTML +=
                        `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
@@ -1063,6 +1069,9 @@
                         <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
                         <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
                     if (obra.idEstado == 1) {
+                        if (obra.idObra === 1831) {
+                            obra.montoContratado = '$124.270.941'; // O el monto que necesites
+                        }
                         contentString += `
                         <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
                         <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>

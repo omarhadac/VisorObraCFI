@@ -84,5 +84,7 @@ namespace VisorObraCFI.Models
         public string MarcaArquitectura { get; set; }
         public int? CodIpv { get; set; }
         public string departamentoString { get; set; }
+
+        public bool esEntregada { get; set; }
     }
 }

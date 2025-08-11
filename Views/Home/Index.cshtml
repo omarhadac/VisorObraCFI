@@ -374,7 +374,6 @@
                         <p id="totalIPVLic">Obras en Licitación: 0</p>
                         <p id="totalMontoIPVLic">Monto: 0</p>
                         <p id="totalIPVFin">Obras Ejecutadas: 0</p>
-                        <p id="totalIPVFin">Obras Ejecutadas: 0</p>
                     </div>
                 </div>
             </div>
@@ -509,7 +508,7 @@
                             <th>Fecha Publicación</th>
                             <th>Fecha Apertura</th>
                             <th>Departamento</th>
-                            <th>Monto Contrato Actualizado</th>
+                            <th>Presupuesto Oficial</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -533,7 +532,7 @@
                             <th>Estado</th>
                             <th>Dependencia</th>
                             <th>Departamento</th>
-                            <th>Fecha Fin Actualizada</th>
+                            <th>Fecha de Finalización</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -733,7 +732,7 @@
                                 <td>${obra.publicacionFormatted}</td>
                                 <td>${obra.aperturaFormatted}</td>
                                 <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.contratoFormatted}</td>
+                                <td>${obra.presupuestoFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -753,11 +752,11 @@
                                 estadoMostrar = 'Ejecutada';
                             }
                             row.innerHTML = `
-                            <td class="small-column">${obra.nombreFormatted}</td>
-                            <td>${estadoMostrar}</td>
-                            <td>${obra.dependenciaFormatted}</td>
-                            <td>${obra.departamentoFormatted}</td>
-                            <td>${obra.finFormatted}</td>
+                            <td class="small-column class="text-center"">${obra.nombreFormatted}</td>
+                            <td class="text-center">${estadoMostrar}</td>
+                            <td class="text-center">${obra.dependenciaFormatted}</td>
+                            <td class="text-center">${obra.departamentoFormatted}</td>
+                            <td class="text-center">${obra.finFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -939,16 +938,21 @@
             function showModal(obra) {
                 setFiltrosYBuscar(obra.nombreFormatted)
                 var modalBody = document.querySelector('#infoModal .modal-body');
+                let estadoMostrar = obra.estadoFormatted;
+                if (obra.estadoFormatted === 'Recepción Provisoria' || obra.idEstado === 18 || obra.idEstado === '18') {
+                    estadoMostrar = 'Ejecutada';
+                }
                 modalBody.innerHTML = `
                     <p><strong>Nombre de Obra:</strong> ${obra.nombreFormatted}</p>
-                    <p><strong>Estadoo:</strong> ${obra.estadoFormatted}</p>
+                    <p><strong>Estado:</strong> ${estadoMostrar}</p>
                     <p><strong>Financiamiento:</strong> ${obra.esResarcimiento}</p>
                     <p><strong>Dependencia:</strong> ${obra.dependenciaFormatted}</p>
                     <p><strong>Departamento:</strong> ${obra.departamentoFormatted}</p>
                     `;
                 if (obra.idEstado == 1) {
+
                     modalBody.innerHTML +=
-                        `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                       `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                         <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                         <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
@@ -956,12 +960,12 @@
                         `;
                 } else if (obra.idEstado == 18) {
                     modalBody.innerHTML +=
-                        `<p><strong>Fecha Estimada Fin:</strong> ${obra.finFormatted}</p>`;
+                        `<p><strong>Fecha Fin:</strong> ${obra.finFormatted}</p>`;
                 }
                 else {
                     modalBody.innerHTML +=
                         `
-                        <p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                        <p><strong>Presupuesto Oficial:</strong> ${obra.presupuestoFormatted}</p>
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
@@ -1005,6 +1009,7 @@
                             idEstado: obra.idEstado,
                             departamento: obra.departamentoFormatted,
                             montoContratado: obra.contratoFormatted,
+                            montoOficial: obra.presupuestoFormatted,
                             //montoContratado: obra.totalObraFormatted,
                             domicilio: obra.direccionFormatted,
                             montoPagado: obra.totalPagadoFormatted,
@@ -1089,11 +1094,12 @@
                     `;
                     } else if (obra.idEstado == 18) {
                         contentString += `
-                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                        <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         `;
                     }
                     else {
                         contentString += `
+                        <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
                         <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
                         <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
                     </div>

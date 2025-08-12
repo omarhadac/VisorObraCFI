@@ -41,8 +41,8 @@ namespace VisorObraCFI
                     var listaFinalizadas = await context.vw_looker_obras
                                 .Where(x =>
                                     (
-                                        (x.PryStage_Id == 48 && x.IdEstado == 18) ||
-                                        (x.PryStage_Id == 160 && x.IdEstado == 3) ||
+                                        (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                                        (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
                                         x.esEntregada == true
                                     )
                                     && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
@@ -89,8 +89,8 @@ namespace VisorObraCFI
                     var listaFinalizadas = await context.vw_looker_obras
                                .Where(x =>
                                    (
-                                       (x.PryStage_Id == 48 && x.IdEstado == 18) ||
-                                       (x.PryStage_Id == 160 && x.IdEstado == 3) ||
+                                       (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
+                                       (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
                                        x.esEntregada == true
                                    )
                                    && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)

@@ -29,8 +29,8 @@ namespace VisorObraCFI
                 {
                     var listaEjecucion = await context.vw_looker_obras
                         //.Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
-                        .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20) && x.esEntregada == false)
+                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
@@ -77,8 +77,8 @@ namespace VisorObraCFI
                 using (var context = new MySqlDbContext())
                 {
                     var listaEjecucion = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20) && x.esEntregada==false)
+                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
@@ -100,7 +100,7 @@ namespace VisorObraCFI
                     var lista = new List<ContadorObra>();
 
                     var listaEjecucionAySAM = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && x.OrganismoId == 14)
+                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 14)
                         .Distinct().ToListAsync();
                     var listaLicitacionAySAM = listaLicitacion.Where(x => x.OrganismoId == 14).Distinct().ToList();
 
@@ -109,15 +109,15 @@ namespace VisorObraCFI
                         .Distinct().ToListAsync();
                     var listaLicitacionIPV = listaLicitacion.Where(x => x.OrganismoId == 4).Distinct().ToList();
 
-                    var listaEjecucionVialidad = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.OrganismoId == 9)
+                    var listaEjecucionVialidad = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 9)
                         .Distinct().ToListAsync();
                     var listaLicitacionVialidad = listaLicitacion.Where(x => x.OrganismoId == 9).Distinct().ToList();
 
-                    var listaEjecucionInfra = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.OrganismoId == 2)
+                    var listaEjecucionInfra = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 2)
                         .Distinct().ToListAsync();
                     var listaLicitacionInfra = listaLicitacion.Where(x => x.OrganismoId == 2).Distinct().ToList();
 
-                    var listaEjecucionIrrigacion = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.OrganismoId == 20)
+                    var listaEjecucionIrrigacion = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 20)
                             .Distinct().ToListAsync();
                     var listaLicitacionIrrigacion = listaLicitacion.Where(x => x.OrganismoId == 20).Distinct().ToList();
 

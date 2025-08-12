@@ -776,36 +776,6 @@
                             tbody3.appendChild(row);
                         })
 
-                        var tbody3 = document.querySelector('#FinalizadasTable tbody');
-                        tbody3.innerHTML = '';
-
-                        data.items.forEach(obra => {
-                            var row = document.createElement('tr');
-                            row.classList.add('cursor-pointer');
-                            let estadoMostrar = obra.estadoFormatted;
-                            if (obra.estadoFormatted === 'Recepción Provisoria' ||
-                                obra.idEstado === 18 ||
-                                obra.idEstado === '18' ||
-                                obra.estadoFormatted === 'Entregada' ||
-                                obra.idEstado == 3 ||
-                                obra.idEstado == '3' ||
-                                (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
-
-                            ) {
-                                estadoMostrar = 'Ejecutada';
-                            }
-                            row.innerHTML = `
-                            <td class="small-column">${obra.nombreFormatted}</td>
-                            <td>${estadoMostrar}</td>
-                            <td>${obra.departamentoFormatted}</td>
-                            <td>${obra.dependenciaFormatted}</td>
-                            <td>${obra.finFormatted}</td>
-                            `;
-                            row.addEventListener('click', function () {
-                                showModal(obra);
-                            });
-                            tbody3.appendChild(row);
-                        })
 
                         // Actualizar controles de paginación
                         if (document.getElementById('selectEstado').value === "1") {
@@ -1049,6 +1019,7 @@
                             publicacionFormatted: obra.publicacionFormatted,
                             aperturaFormatted: obra.aperturaFormatted,
                             icon: obra.icono,
+                            esEntregada: obra.esEntregada,
                             empresa: obra.empresa,
                             mesCertificado: obra.mesCertificado,
                             //archivos: obra.listaArchivos.map(url => ({ url: url, nombre: url.split('/').pop()())),
@@ -1083,71 +1054,70 @@
                     var archivosHtml = obra.archivos.map(function (archivo) {
                         return { url: archivo.url, nombre: archivo.nombre, fechaImagen: archivo.fechaImagen };
                     });
-
-                    let estadoMostrar = obra.estadoFormatted;
-                    if (obra.estadoFormatted === 'Recepción Provisoria' ||
+                    let estadoMostrar = obra.estado;
+                    if (obra.estado === 'Recepción Provisoria' ||
                         obra.idEstado === 18 ||
                         obra.idEstado === '18' ||
-                        obra.estadoFormatted === 'Entregada' ||
+                        obra.estado === 'Entregada' ||
                         obra.idEstado == 3 ||
-                        (obra.estadoFormatted === 'En ejecución' && obra.esEntregada === true)
-
+                        obra.idEstado == '3' ||
+                        (obra.estado === 'En ejecución' && obra.esEntregada === true)
                     ) {
                         estadoMostrar = 'Ejecutada';
                     }
                     var contentString = `
-                    <div class="custom-popup">
-                        <p><span class="badge badge-primary">${obra.nombre}</span></p>
-                        <p><strong>Financiamiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
-                        <p><strong>Estado:</strong><span class="badge badge-secondary"> ${estadoMostrar}</span></p>
-                        <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
-                        <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
+                        <div class="custom-popup">
+                            <p><span class="badge badge-primary">${obra.nombre}</span></p>
+                            <p><strong>Financiamiento:</strong><span class="badge badge-secondary"> ${obra.esResarcimiento}</span></p>
+                            <p><strong>Estado:</strong><span class="badge badge-secondary"> ${estadoMostrar}</span></p>
+                            <p><strong>Domicilio:</strong><span class="badge badge-secondary"> ${obra.domicilio}</span></p>
+                            <p><strong>Departamento:</strong><span class="badge badge-secondary"> ${obra.departamento}</span></p>`;
                     if (obra.idEstado == 1 && obra.esEntregada == false) {
                         if (obra.idObra === 1831) {
-                            obra.montoContratado = '$124.270.941'; // O el monto que necesites
-                        }
-                        contentString += `
-                        <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
-                        <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
-                        <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
-                        <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
-                        <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
-                        <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
-                        <div id="carousel${obra.idObra}" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                ${archivosHtml.map((archivo, index) => `
-                                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                        <img src="${archivo.url}" class="d-block w-100" alt="${archivo.nombre}">
-                                        <div class="carousel-caption-fecha">${archivo.fechaImagen}</div>
-                                    </div>
-                                `).join('')}
+                            obra.montoContratado = '$124.270.941';
+                            }
+                             contentString += `
+                            <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
+                            <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
+                            <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
+                            <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
+                            <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                            <p><strong>Anexos:</strong> ${archivosHtml.length} ${archivosHtml.length > 0 ? `
+                            <div id="carousel${obra.idObra}" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    ${archivosHtml.map((archivo, index) => `
+                                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                            <img src="${archivo.url}" class="d-block w-100" alt="${archivo.nombre}">
+                                            <div class="carousel-caption-fecha">${archivo.fechaImagen}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <a class="carousel-control-prev" href="#carousel${obra.idObra}" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Anterior</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carousel${obra.idObra}" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Próximo</span>
+                                </a>
                             </div>
-                            <a class="carousel-control-prev" href="#carousel${obra.idObra}" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Anterior</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carousel${obra.idObra}" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Próximo</span>
-                            </a>
+                            ` : '<p><span class="badge badge-secondary">No hay fotos</span></p>'}
+                            <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
                         </div>
-                        ` : '<p><span class="badge badge-secondary">No hay fotos</span></p>'}
-                        <canvas id="lineChart-${obra.nombre.replace(/\s+/g, '')}"></canvas>
-                    </div>
-                    `;
-                    } else if (obra.idEstado == 18 || obra.idEstado == 3 || (obra.idEstado == 1 && obra.esEntregada == true)) {
-                        contentString += `
-                        <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                         `;
-                    }
-                    else {
-                        contentString += `
-                        <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
-                        <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
-                        <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
-                    </div>
-                    `;
-                    }
+                    } else if (obra.idEstado == 18 || obra.idEstado == 3 || obra.esEntregada == true) {
+                                                contentString += `
+                            <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
+                            `;
+                          }
+                     else {
+                             contentString += `
+                            <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
+                            <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
+                            <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
+                        </div>
+                        `;
+                                            }
 
                     var infowindow = new google.maps.InfoWindow({
                         content: contentString

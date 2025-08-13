@@ -500,7 +500,7 @@ namespace VisorObraCFI
                         Nombre = x.obra.Nombre,
                         Estado = x.obra.Estado,
                         Dependencia = x.obra.Dependencia,
-                        Departamento = x.obra.Departamento,
+                        Departamento = x.obra.departamentoString,
                         Contrato = x.obra.MontoContratado,
                         MontoOficial = x.obra.MontoOficial,
                         TotalPagado = x.obra.OB_MontoPagado,

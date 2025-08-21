@@ -1012,6 +1012,8 @@
                             montoOficial: obra.presupuestoFormatted,
                             //montoContratado: obra.totalObraFormatted,
                             domicilio: obra.direccionFormatted,
+                            puntosLineaParaMapa: obra.puntosLineaParaMapa,
+                            PuntosLineaParaMapaSimple: obra.PuntosLineaParaMapaSimple,
                             montoPagado: obra.totalPagadoFormatted,
                             avance: obra.avanceFormatted,
                             fechaInicio: obra.inicioFormatted,
@@ -1051,6 +1053,10 @@
                 });
 
                 obras.forEach(function (obra) {
+                    console.log('obra **********');
+                    console.log(obra);
+                    var marker = null;
+
                     var archivosHtml = obra.archivos.map(function (archivo) {
                         return { url: archivo.url, nombre: archivo.nombre, fechaImagen: archivo.fechaImagen };
                     });
@@ -1075,8 +1081,8 @@
                     if (obra.idEstado == 1 && obra.esEntregada == false) {
                         if (obra.idObra === 1831) {
                             obra.montoContratado = '$124.270.941';
-                            }
-                             contentString += `
+                        }
+                        contentString += `
                             <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
                             <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
                             <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
@@ -1106,69 +1112,107 @@
                         </div>
                         `;
                     } else if (obra.idEstado == 18 || obra.idEstado == 3 || obra.esEntregada == true) {
-                                                contentString += `
+                        contentString += `
                             <p><strong>Fecha Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
                             `;
-                          }
-                     else {
-                             contentString += `
+                    }
+                    else {
+                        contentString += `
                             <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
                             <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
                             <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
                         </div>
                         `;
-                                            }
+                    }
 
-                    var infowindow = new google.maps.InfoWindow({
-                        content: contentString
-                    });
 
-                    var marker = new google.maps.Marker({
-                        position: obra.position,
-                        map: map,
-                        title: obra.nombre,
-                        icon: obra.icon
-                    });
+                    // Verifica si existe y tiene datos la propiedad puntosLineaParaMapa
+                    if (obra.puntosLineaParaMapa && obra.puntosLineaParaMapa.trim() !== "" && obra.puntosLineaParaMapa !== "[]") {
+                        // Parsear el string a array de coordenadas
+                        var puntos = JSON.parse(obra.puntosLineaParaMapa);
 
-                    marker.addListener('click', function () {
-                        infowindow.open(map, marker);
+                        // Dibujar un marker en cada punto
+                        puntos.forEach(function (coord, idx) {
+                            marker = new google.maps.Marker({
+                                position: { lat: coord[0], lng: coord[1] },
+                                map: map,
+                                title: obra.nombre + " (" + (idx + 1) + ")",
+                                icon: obra.icon
+                            });
+                            attachMarkerInfo(marker, map, obra, contentString);
+                        });
 
-                        // Espera a que el popup se haya abierto completamente
-                        google.maps.event.addListenerOnce(infowindow, 'domready', function () {
-                            // Inicializa el gráfico de líneas cuando se abre el popup
-                            var ctx = document.getElementById(`lineChart-${obra.nombre.replace(/\s+/g, '')}`).getContext('2d');
-                            new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: obra.chartData.labels,
-                                    datasets: [{
-                                        label: 'Avance',
-                                        data: obra.chartData.data,
-                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            min: 0,
-                                            max: 100
-                                        }
+                        // Dibujar la polilínea que une los puntos
+                        var path = puntos.map(function (coord) {
+                            return { lat: coord[0], lng: coord[1] };
+                        });
+
+                        var polyline = new google.maps.Polyline({
+                            path: path,
+                            geodesic: true,
+                            strokeColor: "#FF0000",
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2,
+                            map: map
+                        });
+                    } else {
+                        // Si no hay puntos, dibuja solo el marker habitual
+                        marker = new google.maps.Marker({
+                            position: obra.position,
+                            map: map,
+                            title: obra.nombre,
+                            icon: obra.icon
+                        });
+                        attachMarkerInfo(marker, map, obra, contentString);
+                    }
+
+
+                });
+            }
+
+            function attachMarkerInfo(marker, map, obra, contentString) {
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                marker.addListener('click', function () {
+                    infowindow.open(map, marker);
+
+                    google.maps.event.addListenerOnce(infowindow, 'domready', function () {
+                        // Inicializa el gráfico de líneas cuando se abre el popup
+                        var ctx = document.getElementById(`lineChart-${obra.nombre.replace(/\s+/g, '')}`).getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: obra.chartData.labels,
+                                datasets: [{
+                                    label: 'Avance',
+                                    data: obra.chartData.data,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        min: 0,
+                                        max: 100
                                     }
                                 }
-                            });
-
-                            // Inicializa el carrusel manualmente
-                            //$(`#carousel-${obra.nombre.replace(/\s+/g, '')}`).carousel();
-                            $(`#carousel${obra.idObra}`).carousel();
-
+                            }
                         });
+
+                        // Inicializa el carrusel manualmente
+                        //$(`#carousel-${obra.nombre.replace(/\s+/g, '')}`).carousel();
+                        $(`#carousel${obra.idObra}`).carousel();
+
                     });
                 });
             }
+
 
             // Para mostrar la tabla de obras
             function mostrarTablaObra() {

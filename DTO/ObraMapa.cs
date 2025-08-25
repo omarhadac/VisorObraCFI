@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace VisorObraCFI.DTO
 {
@@ -111,6 +112,117 @@ namespace VisorObraCFI.DTO
         public string TotalObraFormatted => TotalObra.HasValue ? $"${TotalObra.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-ES"))}" : "$0";
         public string PublicacionFormatted => Publicacion?.ToString("dd/MM/yyyy") ?? string.Empty;
         public string AperturaFormatted => Apertura?.ToString("dd/MM/yyyy") ?? string.Empty;
+        public string SegmentTypes { get; set; }
+        public string PuntosLineaSeleccionado { get; set; }
+        public string PuntosLinea { get; set; }
+        public string PuntosLineaParaMapa { get; set; }
+        public string PuntosLineaParaMapa12
+        {
+            get
+            {
+                //if (!string.IsNullOrWhiteSpace(PuntosLineaSeleccionado))
+                //    return PuntosLineaSeleccionado;
+                //return PuntosLinea;
+                var fuente = "";
+                if(string.IsNullOrWhiteSpace(PuntosLineaSeleccionado))
+                {
+                    if (!string.IsNullOrWhiteSpace(PuntosLinea))
+                    {
+                        fuente = PuntosLinea;
+                    }
+                }
+                else
+                {
+                    fuente = PuntosLineaSeleccionado;
+                }
+                if (string.IsNullOrWhiteSpace(fuente))
+                    return "[]";
+
+                // Elimina retornos de carro y saltos de línea
+                string limpio = fuente.Replace("\r", "").Replace("\n", "");
+
+                // Reemplaza ][ por ],[
+                limpio = limpio.Replace("][", "],[");
+
+                // Reemplaza todas las ocurrencias de [[ por [ y ]] por ]
+                limpio = limpio.Replace("[[", "[");
+                limpio = limpio.Replace("]]", "]");
+
+                // Vuelve a encerrar en corchetes
+                return "[" + limpio + "]";
+            }
+        }
+        public string PuntosLineaParaMapaSimple
+        {
+            get
+            {
+                string fuente = !string.IsNullOrWhiteSpace(PuntosLineaParaMapa) ? PuntosLineaParaMapa : "";
+                if (string.IsNullOrWhiteSpace(fuente))
+                    return "[]";
+
+                // Elimina retornos de carro y saltos de línea
+                string limpio = fuente.Replace("\r", "").Replace("\n", "");
+
+                // Reemplaza ][ por ],[
+                limpio = limpio.Replace("][", "],[");
+
+                // Elimina dobles corchetes al inicio y fin
+                limpio = limpio.Trim();
+                if (limpio.StartsWith("[["))
+                    limpio = limpio.Substring(1);
+                if (limpio.EndsWith("]]"))
+                    limpio = limpio.Substring(0, limpio.Length - 1);
+
+                // Vuelve a encerrar en corchetes
+                return "[" + limpio + "]";
+            }
+        }
+
+        public string PuntosLineaParaMapaJson2
+        {
+            get
+            {
+                string fuente = !string.IsNullOrWhiteSpace(PuntosLineaParaMapa) ? PuntosLineaParaMapa : "";
+                if (string.IsNullOrWhiteSpace(fuente))
+                    return "[]";
+
+                // Intenta deserializar como un solo array de arrays
+                try
+                {
+                    var puntos = JsonConvert.DeserializeObject<List<List<decimal>>>(fuente);
+                    if (puntos != null)
+                        return JsonConvert.SerializeObject(puntos);
+                }
+                catch { }
+
+                // Si falla, intenta juntar todos los puntos de cada línea
+                var resultado = new List<List<decimal>>();
+                foreach (var linea in fuente.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    try
+                    {
+                        // Intenta deserializar como array de arrays
+                        var arr = JsonConvert.DeserializeObject<List<List<decimal>>>(linea);
+                        if (arr != null && arr.Count > 0 && arr[0].Count == 2)
+                        {
+                            resultado.AddRange(arr);
+                            continue;
+                        }
+                    }
+                    catch { }
+
+                    try
+                    {
+                        // Si falla, intenta como un solo punto
+                        var punto = JsonConvert.DeserializeObject<List<decimal>>(linea);
+                        if (punto != null && punto.Count == 2)
+                            resultado.Add(punto);
+                    }
+                    catch { }
+                }
+                return JsonConvert.SerializeObject(resultado);
+            }
+        }
         public string Icono
         {
             get

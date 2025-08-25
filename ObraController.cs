@@ -38,16 +38,37 @@ namespace VisorObraCFI
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
+                    var fechaLimite = new DateTime(2024, 1, 1);
+
                     var listaFinalizadas = await context.vw_looker_obras
-                                .Where(x =>
+                        .Where(x =>
+                            (
+                                (
+                                    x.PryStage_Id == 48 &&
+                                    x.IdEstado == 18 &&
                                     (
-                                        (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                                        (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                                        x.esEntregada == true
+                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                            ? x.FechaFinActualizada
+                                            : x.FechaFin) >= fechaLimite
                                     )
-                                    && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
                                 )
-                                .Distinct().ToListAsync();
+                                ||
+                                (
+                                    x.PryStage_Id == 160 &&
+                                    x.IdEstado == 3 &&
+                                    (
+                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                            ? x.FechaFinActualizada
+                                            : x.FechaFin) >= fechaLimite
+                                    )
+                                )
+                                ||
+                                x.esEntregada == true
+                            )
+                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                        )
+                        .Distinct()
+                        .ToListAsync();
 
                     var tmp = new ContadorObra
                     {
@@ -86,16 +107,37 @@ namespace VisorObraCFI
                             || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
                         .Distinct().ToListAsync();
 
+                    var fechaLimite = new DateTime(2024, 1, 1);
+
                     var listaFinalizadas = await context.vw_looker_obras
-                               .Where(x =>
-                                   (
-                                       (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                                       (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                                       x.esEntregada == true
-                                   )
-                                   && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
-                               )
-                               .Distinct().ToListAsync();
+                        .Where(x =>
+                            (
+                                (
+                                    x.PryStage_Id == 48 &&
+                                    x.IdEstado == 18 &&
+                                    (
+                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                            ? x.FechaFinActualizada
+                                            : x.FechaFin) >= fechaLimite
+                                    )
+                                )
+                                ||
+                                (
+                                    x.PryStage_Id == 160 &&
+                                    x.IdEstado == 3 &&
+                                    (
+                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                            ? x.FechaFinActualizada
+                                            : x.FechaFin) >= fechaLimite
+                                    )
+                                )
+                                ||
+                                x.esEntregada == true
+                            )
+                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                        )
+                        .Distinct()
+                        .ToListAsync();
 
                     var lista = new List<ContadorObra>();
 
@@ -209,10 +251,29 @@ namespace VisorObraCFI
 
                     if (selectEstado == 3)
                     {
+                        var fechaLimite = new DateTime(2024, 1, 1);
+
                         tmp = context.vw_looker_obras.Where(x =>
-                           (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                           (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                           x.esEntregada == true);
+                            (
+                                x.PryStage_Id == 48 && x.IdEstado == 18 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            (
+                                x.PryStage_Id == 160 && x.IdEstado == 3 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            x.esEntregada == true
+                        );
 
                     }
 
@@ -320,10 +381,29 @@ namespace VisorObraCFI
                     }
                     if (selectEstado == 3)
                     {
+                        var fechaLimite = new DateTime(2024, 1, 1);
+
                         tmp = context.vw_looker_obras.Where(x =>
-                           (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                           (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                           x.esEntregada == true);
+                            (
+                                x.PryStage_Id == 48 && x.IdEstado == 18 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            (
+                                x.PryStage_Id == 160 && x.IdEstado == 3 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            x.esEntregada == true
+                        );
 
                     }
                     if (!(string.IsNullOrEmpty(nombreObra)))
@@ -404,7 +484,11 @@ namespace VisorObraCFI
                             OB_VarPrecio = x.obra.OB_VarPrecio,
                             MontoLegAbono = x.obra.MontoLegAbono,
                             MontoSupresion = x.obra.MontoSupresion,
+                            PuntosLinea = x.obra.puntosLinea,
+                            PuntosLineaSeleccionado = x.obra.puntosLineaSeleccionado,
+                            SegmentTypes = x.obra.segmentTypes,
                             Empresa = x.obra.Empresa ?? "",
+                            PuntosLineaParaMapa = convertirPuntosMapa(x.obra.puntosLineaSeleccionado, x.obra.puntosLinea),
                             //TotalAlteraciones = x.totales.TotalAlteraciones,
                             //TotalVariaciones = x.totales.TotalVariaciones,
                             MontoContratado = x.obra.MontoContratado,
@@ -461,10 +545,29 @@ namespace VisorObraCFI
                     }
                     if (selectEstado == 3)
                     {
+                        var fechaLimite = new DateTime(2024, 1, 1);
+
                         tmp = context.vw_looker_obras.Where(x =>
-                            (x.PryStage_Id == 48 && x.IdEstado == 18 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                            (x.PryStage_Id == 160 && x.IdEstado == 3 && x.FechaFinActualizada >= new DateTime(2024, 1, 1)) ||
-                            x.esEntregada == true);
+                            (
+                                x.PryStage_Id == 48 && x.IdEstado == 18 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            (
+                                x.PryStage_Id == 160 && x.IdEstado == 3 &&
+                                (
+                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                        ? x.FechaFinActualizada
+                                        : x.FechaFin) >= fechaLimite
+                                )
+                            )
+                            ||
+                            x.esEntregada == true
+                        );
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -578,6 +681,39 @@ namespace VisorObraCFI
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
+        }
+
+        private string convertirPuntosMapa(string PuntosLineaSeleccionado, string PuntosLinea)
+        {
+            var fuente = "";
+            if (string.IsNullOrWhiteSpace(PuntosLineaSeleccionado))
+            {
+                if (!string.IsNullOrWhiteSpace(PuntosLinea))
+                {
+                    fuente = PuntosLinea;
+                }
+            }
+            else
+            {
+                fuente = PuntosLineaSeleccionado;
+            }
+            if (string.IsNullOrWhiteSpace(fuente))
+                return "[]";
+
+            // Elimina retornos de carro y saltos de línea
+            string limpio = fuente.Replace("\r", "").Replace("\n", "");
+            limpio = limpio.Replace("[-32.8895,-68.8458]", "");
+            // Reemplaza ][ por ],[
+            limpio = limpio.Replace("][", "],[");
+
+            // Reemplaza todas las ocurrencias de [[ por [ y ]] por ]
+            limpio = limpio.Replace("[[", "[");
+            limpio = limpio.Replace("]]", "]");
+            limpio = limpio.Replace("[,", "");
+            limpio = limpio.Replace(",]", "");
+
+            // Vuelve a encerrar en corchetes
+            return "[" + limpio + "]";
         }
     }
 }

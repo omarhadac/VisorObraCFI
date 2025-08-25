@@ -1020,6 +1020,7 @@
                             fechaFin: obra.finFormatted,
                             publicacionFormatted: obra.publicacionFormatted,
                             aperturaFormatted: obra.aperturaFormatted,
+                            idOrganismo: obra.idOrganismo,
                             icon: obra.icono,
                             esEntregada: obra.esEntregada,
                             empresa: obra.empresa,
@@ -1125,6 +1126,14 @@
                         `;
                     }
 
+                    var colorPorOrganismo = {
+                        2: "#f44336",  
+                        9: "#ffc107",    
+                        4: "#009688",    
+                        14: "#3f51b5",   
+                        20: "#607d8b"    
+                    };
+
 
                     // Verifica si existe y tiene datos la propiedad puntosLineaParaMapa
                     if (obra.puntosLineaParaMapa && obra.puntosLineaParaMapa.trim() !== "" && obra.puntosLineaParaMapa !== "[]") {
@@ -1132,25 +1141,39 @@
                         var puntos = JSON.parse(obra.puntosLineaParaMapa);
 
                         // Dibujar un marker en cada punto
-                        puntos.forEach(function (coord, idx) {
+                        if (puntos.length > 0) {
+                            // Primer punto
                             marker = new google.maps.Marker({
-                                position: { lat: coord[0], lng: coord[1] },
+                                position: { lat: puntos[0][0], lng: puntos[0][1] },
                                 map: map,
-                                title: obra.nombre + " (" + (idx + 1) + ")",
+                                title: obra.nombre + " (Inicio)",
                                 icon: obra.icon
                             });
                             attachMarkerInfo(marker, map, obra, contentString);
-                        });
+
+                            // Último punto (solo si hay más de uno)
+                            if (puntos.length > 1) {
+                                marker = new google.maps.Marker({
+                                    position: { lat: puntos[puntos.length - 1][0], lng: puntos[puntos.length - 1][1] },
+                                    map: map,
+                                    title: obra.nombre + " (Fin)",
+                                    icon: obra.icon
+                                });
+                                attachMarkerInfo(marker, map, obra, contentString);
+                            }
+                        }
 
                         // Dibujar la polilínea que une los puntos
                         var path = puntos.map(function (coord) {
                             return { lat: coord[0], lng: coord[1] };
                         });
 
+                        var colorLinea = colorPorOrganismo[obra.idOrganismo] || "#FF0000";
+
                         var polyline = new google.maps.Polyline({
                             path: path,
                             geodesic: true,
-                            strokeColor: "#FF0000",
+                            strokeColor: colorLinea,
                             strokeOpacity: 1.0,
                             strokeWeight: 2,
                             map: map

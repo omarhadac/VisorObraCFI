@@ -284,11 +284,12 @@ namespace VisorObraCFI
 
                     if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
                     {
-                        tmp = from p in tmp
-                              join pm in context.PryProyectoMunicipio on p.PryProyecto_Id equals pm.PryProyecto_Id
-                              join m in context.GrlDepartament on pm.PryMunicipio_Id equals m.Id
-                              where m.Id == selectDepartamento.Value
-                              select p;
+                        tmp = (from p in tmp
+                               join pm in context.PryProyectoMunicipio on p.PryProyecto_Id equals pm.PryProyecto_Id
+                               join m in context.GrlDepartament on pm.PryMunicipio_Id equals m.Id
+                               where m.Id == selectDepartamento.Value
+                               select p)
+                                .Distinct();
                     }
 
                     if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
@@ -416,11 +417,12 @@ namespace VisorObraCFI
                     }
                     if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
                     {
-                        tmp = from p in tmp
-                              join pm in context.PryProyectoMunicipio on p.PryProyecto_Id equals pm.PryProyecto_Id
-                              join m in context.GrlDepartament on pm.PryMunicipio_Id equals m.Id
-                              where m.Id == selectDepartamento.Value
-                              select p;
+                        tmp = (from p in tmp
+                               join pm in context.PryProyectoMunicipio on p.PryProyecto_Id equals pm.PryProyecto_Id
+                               join m in context.GrlDepartament on pm.PryMunicipio_Id equals m.Id
+                               where m.Id == selectDepartamento.Value
+                               select p)
+                                .Distinct();
                     }
 
                     if (selectOrganismo.HasValue && selectOrganismo.Value != 0)

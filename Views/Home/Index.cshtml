@@ -704,16 +704,16 @@
                                 obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
                             }
                             row.innerHTML = `
-                                <td class="small-column">${obra.nombreFormatted}</td>
-                                <td>${obra.estadoFormatted}</td>
-                                <td>${obra.esResarcimiento}</td>
-                                <td>${obra.dependenciaFormatted}</td>
-                                <td>${obra.departamento}</td>
-                                <td>${obra.contratoFormatted}</td>
+                                <td class="small-column" class="text-center"">${obra.nombreFormatted}</td>
+                                <td class="text-center">${obra.estadoFormatted}</td>
+                                <td class="text-center">${obra.esResarcimiento}</td>
+                                <td class="text-center">${obra.dependenciaFormatted}</td>
+                                <td class="text-center">${obra.departamento}</td>
+                                <td class="text-center">${obra.contratoFormatted}</td>
                                 <td><span class="badge badge-success">${obra.avanceFormatted}</span></td>
-                                <td>${obra.empresaFormatted}</td>
-                                <td>${obra.inicioFormatted}</td>
-                                <td>${obra.finFormatted}</td>
+                                <td class="text-center">${obra.empresaFormatted}</td>
+                                <td class="text-center">${obra.inicioFormatted}</td>
+                                <td class="text-center">${obra.finFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);
@@ -730,13 +730,13 @@
                             row.classList.add('cursor-pointer');
                             let estadoMostrar = obra.estadoFormatted;
                             row.innerHTML = `
-                                <td class="small-column">${obra.nombreFormatted}</td>
-                                <td>${obra.estadoFormatted}</td>
-                                <td>${obra.dependenciaFormatted}</td>
-                                <td>${obra.publicacionFormatted}</td>
-                                <td>${obra.aperturaFormatted}</td>
-                                <td>${obra.departamentoFormatted}</td>
-                                <td>${obra.presupuestoFormatted}</td>
+                                <td class="small-column" class="text-center"">${obra.nombreFormatted}</td>
+                                <td class="text-center">${obra.estadoFormatted}</td>
+                                <td class="text-center">${obra.dependenciaFormatted}</td>
+                                <td class="text-center">${obra.publicacionFormatted}</td>
+                                <td class="text-center">${obra.aperturaFormatted}</td>
+                                <td class="text-center">${obra.departamentoFormatted}</td>
+                                <td class="text-center">${obra.presupuestoFormatted}</td>
                             `;
                             row.addEventListener('click', function () {
                                 showModal(obra);

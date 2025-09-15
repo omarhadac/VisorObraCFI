@@ -413,6 +413,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/iconoIrrigacion.png" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">Fopiatzad</span>
+                        <span class="info-box-number" id="totalFopiatzad">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>Fopiatzad</h4>
+                        <p id="totalObrasFopiatzad">Obras en Ejecución: 0</p>
+                        <p id="totalMontoFopiatzad">Monto: 0</p>
+                        <p id="totaFopiatzadLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoFopiatzadLic">Monto: 0</p>
+                        <p id="totalFopiatzadFin">Obras Ejecutadas: 0</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Segundo sector: Buscador -->
         <div class="row mb-3">
@@ -448,6 +466,7 @@
                     <option value="9">Dirección Provincial Vialidad</option>
                     <option value="2">Infraestructura</option>
                     <option value="20">Irrigación</option>
+                    <option value="17">Fopiatzad</option>
                 </select>
                 <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
                 <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
@@ -651,6 +670,14 @@
                             document.getElementById('totalIrrigacionLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIrrigacionLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
                             document.getElementById('totalIrrigacionFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
+                        }
+                        if (item.idOrganismo === 17) {
+                            document.getElementById('totalFopiatzad').textContent = item.cantidadObraEjecucion;
+                            document.getElementById('totalObrasFopiatzad').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
+                            document.getElementById('totalMontoFopiatzad').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
+                            document.getElementById('totalFopiatzadLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
+                            document.getElementById('totalMontoFopiatzadLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalFopiatzadFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })

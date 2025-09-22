@@ -612,9 +612,12 @@ namespace VisorObraCFI
             limpio = limpio.Replace("]]", "]");
             limpio = limpio.Replace("[,", "");
             limpio = limpio.Replace(",]", "");
-
-            // Vuelve a encerrar en corchetes
-            return "[" + limpio + "]";
+            limpio = "[" + limpio + "]";
+            if(limpio == "[,]")
+            {
+                return "";
+            }
+            return limpio;
         }
     }
 }

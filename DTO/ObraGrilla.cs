@@ -30,6 +30,7 @@ namespace VisorObraCFI.DTO
         public decimal? MontoContratado { get; set; }
         public decimal? MontoOficial { get; set; }
         public decimal? Avance { get; set; }
+        public string Expediente { get; set; }
         public DateTime? Inicio { get; set; }
         public DateTime? Fin { get; set; }
         public DateTime? Apertura { get; set; }

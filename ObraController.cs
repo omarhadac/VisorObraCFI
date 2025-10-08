@@ -218,9 +218,9 @@ namespace VisorObraCFI
                     lista.Add(unItemIrrig);
 
                     var unItemFop = new ContadorObra();
-                    unItemFop.CantidadObraEjecucion = listaEjecucionIrrigacion.Count;
+                    unItemFop.CantidadObraEjecucion = listaEjecucionFop.Count;
                     unItemFop.MontoObraEjecucion = Convert.ToInt64(listaEjecucionFop.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemFop.CantidadObraLicitacion = listaLicitacionIrrigacion.Count;
+                    unItemFop.CantidadObraLicitacion = listaLicitacionFop.Count;
                     unItemFop.MontoObraLicitacion = Convert.ToInt64(listaLicitacionFop.Sum(x => (decimal?)x.MontoOficial) ?? 0);
                     unItemFop.IdOrganismo = 22;
                     unItemFop.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 22).Count();

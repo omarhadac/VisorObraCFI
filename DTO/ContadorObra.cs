@@ -14,5 +14,6 @@ namespace VisorObraCFI.DTO
         public int? CantidadObraLicitacion { get; set; }
         public long? MontoObraLicitacion { get; set; }
         public int? CantidadObraFinalizada { get; set; }
+        public int? CantidadObraParalizada { get; set; }
     }
 }

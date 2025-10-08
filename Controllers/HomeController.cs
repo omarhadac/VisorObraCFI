@@ -20,5 +20,13 @@ namespace VisorObraCFI.Controllers
 
             return View();
         }
+        public ActionResult MapaMendoza()
+        {
+            return View();
+        }
+        public ActionResult Informe()
+        {
+            return View();
+        }
     }
 }

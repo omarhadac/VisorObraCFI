@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor Obras</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtCHaJKZU4y_tqF1CdSsqLyIM92Yd10jY&libraries=drawing"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <style>
+        body {
+            font-size: 0.8rem;
+        }
+
+        #map {
+            height: 750px;
+            width: 100%;
+        }
+
+        .chart-container {
+            width: 20%;
+            padding: 10px;
+        }
+
+        .info-box {
+            width: 20%;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            margin: 10px 5px;
+            border-radius: 10px;
+        }
+
+            .info-box:nth-child(1) {
+                background-color: #007bff;
+            }
+
+            .info-box:nth-child(2) {
+                background-color: #28a745;
+            }
+
+            .info-box:nth-child(3) {
+                background-color: #ffc107;
+            }
+
+            .info-box:nth-child(4) {
+                background-color: #dc3545;
+            }
+
+            .info-box:nth-child(5) {
+                background-color: #17a2b8;
+            }
+
+        .custom-popup {
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px; /* Ajusta el ancho */
+            max-height: 400px; /* Ajusta el alto */
+            overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
+        }
+
+            .custom-popup h4 {
+                margin: 0 0 10px;
+                font-size: 1.2rem;
+                color: #007bff;
+            }
+
+            .custom-popup p {
+                margin: 5px 0;
+            }
+
+            .custom-popup ul {
+                padding-left: 20px;
+            }
+
+            .custom-popup canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+
+        .small-column {
+            width: 250px; /* Ajusta el ancho según sea necesario */
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .small-chart {
+            width: 15%; /* Ajusta el ancho según sea necesario */
+            padding: 15px;
+        }
+
+        .badge {
+            font-size: .7rem;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            color: #fff;
+            background-color: #28a745;
+        }
+
+        .rounded-custom {
+            border-radius: 10px; /* Ajusta este valor para más redondeo */
+        }
+
+        .bold-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .wrap-dashNumber {
+            text-align: left;
+            padding-left: 60px;
+            display: flex;
+        }
+
+        .ic-wrap-container {
+            margin-right: 15px;
+            padding-top: 15px;
+        }
+
+            .ic-wrap-container img {
+                height: 45px;
+            }
+        /*        .wrap-dashNumber {
+            text-align: left;
+            padding-left: 60px;
+            display: flex;
+        }*/
+        /*.wrap-dashNumber {
+            text-align: center;
+            padding-left: 0;
+            display: flex;
+            margin: 0 20px;*/ /* Ajusta el margen según sea necesario */
+        /*}*/
+        .wrap-dashNumber {
+            text-align: center;
+            padding-left: 0;
+            display: flex;
+            margin: 0 20px; /* Ajusta el margen según sea necesario */
+            justify-content: center; /* Centra el contenido dentro del contenedor */
+        }
+
+        .ic-wrap-container {
+            margin-right: 15px;
+            padding-top: 15px;
+        }
+
+            .ic-wrap-container img {
+                height: 45px;
+            }
+
+        .DashBignumber {
+            font-size: 40px;
+            font-weight: 700;
+            font-family: "lora", sans-serif;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .header-row div {
+                margin: 0 10px;
+            }
+
+        .info-box {
+            display: block;
+            min-height: 90px;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
+            background-color: #00a65a !important;
+        }
+
+        .info-box-content {
+            padding: 5px 10px;
+            /*margin-left: 90px;*/
+        }
+
+        .info-box-text {
+            text-transform: uppercase;
+        }
+
+        .info-box-number {
+            display: block;
+            font-weight: bold;
+            font-size: 25px;
+        }
+
+        .popup-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            color: black;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 200px;
+            top: 100%; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px; /* Añadir bordes redondeados */
+        }
+
+        .info-box:hover .popup-content {
+            display: block;
+        }
+
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            #loading img {
+                width: 150px; /* Ajusta el tamaño del gif de carga */
+                height: 150px;
+            }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 200px; /* Ajusta la altura según sea necesario */
+            object-fit: cover; /* Ajusta la imagen para que cubra el contenedor */
+        }
+
+        .carousel-item {
+            position: relative;
+        }
+
+        .carousel-caption-fecha {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px #000;
+            background: rgba(0,0,0,0.25); /* Opcional: leve fondo para mejor contraste */
+            z-index: 2;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        th {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .referencia-box {
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .referencia-azul {
+            background: #274DF5;
+        }
+
+        .referencia-celeste {
+            background: #27CCF5;
+        }
+
+        .referencia-gris {
+            background: #CCCCC8;
+        }
+
+        .referencia-marron {
+            background: #bfa16c;
+        }
+
+        .referencia-box span.label {
+            display: inline-block;
+            min-width: 120px;
+            font-weight: normal;
+            color: #fff;
+        }
+
+        body, .container-fluid {
+            background-color: #f2f2f2 !important;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header class="bg-light py-3 mb-4">
+        <div class="container d-flex align-items-center">
+            <img src="~/Content/Iconos/MARCA_MINISTERIO2.png" alt="Logo" style="height: 50px; width: auto;" class="mr-3">
+            <h2 class="m-0">Mapa de Mendoza</h2>
+        </div>
+    </header>
+    <div class="container-fluid" st>
+        <div id="loading" style="display: none;">
+            <img src="~/Content/Iconos/loading.gif" alt="Cargando..." />
+        </div>
+        <div class="container-fluid">
+            <div id="loading" style="display: none;">
+                <img src="~/Content/Iconos/loading.gif" alt="Cargando..." />
+            </div>
+            <div class="row">
+                <!-- Columna izquierda para el mapa -->
+                <div class="col-md-9 d-flex align-items-center" style="min-height: 400px;">
+                    <img id="mapa-mendoza"
+                         src="~/Content/Iconos/MapaMendoza.png"
+                         alt="Mapa de Mendoza"
+                         class="img-fluid mx-auto d-block"
+                         style="width: 50%; max-width: 450px; height: auto;">
+                </div>
+                <!-- Columna derecha para referencias -->
+                <div class="col-md-3 d-flex align-items-center" style="min-height: 400px;">
+                    <div id="referencias" class="w-100">
+                        <div id="referencias-list"></div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- Puedes agregar aquí el contenedor de distritos si lo necesitas -->
+            <!-- <div id="distritos-container" class="row justify-content-center"></div> -->
+        </div>
+
+
+
+        <!--<div id="distritos-container" class="row justify-content-center">-->
+        <!-- Aquí se mostrarán los distritos y sus cantidades -->
+        <!--</div>-->
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var loadingElement = document.getElementById('loading');
+            loadingElement.style.display = 'block';
+
+            fetch('/api/MapaMendoza/BuscarDistritos')
+                .then(response => {
+                    if (!response.ok) throw new Error('Error de Red');
+                    return response.json();
+                })
+                .then(data => {
+                    loadingElement.style.display = 'none';
+
+                    // Render referencias por distrito
+                    const referenciasList = document.getElementById('referencias-list');
+                    referenciasList.innerHTML = '';
+
+                    data.forEach(distrito => {
+                        let colorClass = '';
+                        if (distrito.nombreDistrito === 'Primer Distrito') colorClass = 'referencia-azul';
+                        else if (distrito.nombreDistrito === 'Segundo Distrito') colorClass = 'referencia-celeste';
+                        else if (distrito.nombreDistrito === 'Tercer Distrito') colorClass = 'referencia-gris';
+                        else if (distrito.nombreDistrito === 'Cuarto Distrito') colorClass = 'referencia-marron';
+
+                        const box = document.createElement('div');
+                        box.className = `referencia-box ${colorClass}`;
+                        box.innerHTML = `
+                    <div>
+                        <span style="font-size:1.1rem;">${distrito.nombreDistrito}</span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="label">Obras en ejecución:</span> ${distrito.obrasEjecucion}
+                    </div>
+                    <div>
+                        <span class="label">Obras en licitación:</span> ${distrito.obrasLicitacion}
+                    </div>
+                    <div>
+                        <span class="label">Obras entregadas:</span> ${distrito.obrasEntregadas}
+                    </div>
+                    <div>
+                        <span class="label">Obras paralizadas:</span> ${distrito.obrasParalizadas}
+                    </div>
+                `;
+                        referenciasList.appendChild(box);
+                    });
+                })
+                .catch(error => {
+                    loadingElement.style.display = 'none';
+                    console.error('Error al obtener los datos:', error);
+                });
+        });
+
+
+
+    </script>
+
+
+</body>
+</html>
+

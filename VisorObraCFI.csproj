@@ -175,11 +175,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DTO\AvanceGrafico.cs" />
     <Compile Include="DTO\ContadorObra.cs" />
+    <Compile Include="DTO\MapaMendozaDto.cs" />
     <Compile Include="DTO\ObraGrilla.cs" />
     <Compile Include="DTO\ObraMapa.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="InformeController.cs" />
+    <Compile Include="MapaMendozaController.cs" />
     <Compile Include="Models\GrlDepartment.cs" />
     <Compile Include="Models\LicProyectoFecha.cs" />
     <Compile Include="Models\MySqlDbContext.cs" />
@@ -213,6 +216,10 @@
     <Content Include="Content\Iconos\arquitectura.svg" />
     <Content Include="Content\Iconos\aysam.png" />
     <Content Include="Content\Iconos\escuela.png" />
+    <Content Include="Content\Iconos\flecha4.png" />
+    <Content Include="Content\Iconos\flecha2.png" />
+    <Content Include="Content\Iconos\flecha3.png" />
+    <Content Include="Content\Iconos\flecha1.png" />
     <Content Include="Content\Iconos\ic-home-obras.svg" />
     <Content Include="Content\Iconos\ic-home-proy.svg" />
     <Content Include="Content\Iconos\iconizer-finalizadas-check.svg" />
@@ -221,8 +228,20 @@
     <Content Include="Content\Iconos\ipv.png" />
     <Content Include="Content\Iconos\irrigacion.png" />
     <Content Include="Content\Iconos\loading.gif" />
+    <Content Include="Content\Iconos\LogoEscudo.png" />
+    <Content Include="Content\Iconos\LogoMendoza.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido4.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido3.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido2.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido1.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido.png" />
+    <Content Include="Content\Iconos\MapaMendoza.png" />
     <Content Include="Content\Iconos\MARCA_MINISTERIO2.png" />
     <Content Include="Content\Iconos\obras-viales.svg" />
+    <Content Include="Content\Iconos\Recurso1.png" />
+    <Content Include="Content\Iconos\Recurso2.png" />
+    <Content Include="Content\Iconos\Recurso3.png" />
+    <Content Include="Content\Iconos\Recurso4.png" />
     <Content Include="Content\Iconos\vialidad.png" />
     <Content Include="Content\Iconos\vivienda.svg" />
     <Content Include="favicon.ico" />
@@ -253,6 +272,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Indicadores.cshtml" />
+    <Content Include="Views\Home\MapaMendoza.cshtml" />
+    <Content Include="Views\Home\Informe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

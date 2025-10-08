@@ -322,7 +322,6 @@
 
         <!-- Primer sector: Agrupación -->
         <div class="row">
-            <div class="col-md-1"></div>
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
@@ -413,6 +412,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-2">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/Fopiatzad2.png" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">FOPIATZAD</span>
+                        <span class="info-box-number" id="totalFopiatzad2">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>Fopiatzad</h4>
+                        <p id="totalObrasFop">Obras en Ejecución: 0</p>
+                        <p id="totalMontoFop">Monto: 0</p>
+                        <p id="totalFopLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoLic">Monto: 0</p>
+                        <p id="totalFopFin">Obras Ejecutadas: 0</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Segundo sector: Buscador -->
         <div class="row mb-3">
@@ -448,6 +465,7 @@
                     <option value="9">Dirección Provincial Vialidad</option>
                     <option value="2">Infraestructura</option>
                     <option value="20">Irrigación</option>
+                    <option value="22">Fopiatzad</option>
                 </select>
                 <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
                 <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
@@ -651,6 +669,14 @@
                             document.getElementById('totalIrrigacionLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoIrrigacionLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
                             document.getElementById('totalIrrigacionFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
+                        }
+                        if (item.idOrganismo === 22) {
+                            document.getElementById('totalFop').textContent = item.cantidadObraEjecucion;
+                            document.getElementById('totalObrasFop').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
+                            document.getElementById('totalMontoFop').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
+                            document.getElementById('totalFopLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
+                            document.getElementById('totalMontoFopLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalFopFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })

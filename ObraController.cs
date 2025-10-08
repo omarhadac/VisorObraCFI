@@ -30,12 +30,12 @@ namespace VisorObraCFI
                     var listaEjecucion = await context.vw_looker_obras
                         //.Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
                         .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
                         .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
-                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
                         .Distinct().ToListAsync();
 
                     var fechaLimite = new DateTime(2024, 1, 1);
@@ -65,7 +65,7 @@ namespace VisorObraCFI
                                 ||
                                 x.esEntregada == true
                             )
-                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22)
                         )
                         .Distinct()
                         .ToListAsync();
@@ -99,12 +99,12 @@ namespace VisorObraCFI
                 {
                     var listaEjecucion = await context.vw_looker_obras
                         .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
                         .Distinct().ToListAsync();
 
                     var listaLicitacion = await context.vw_looker_obras
                         .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
-                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
                         .Distinct().ToListAsync();
 
                     var fechaLimite = new DateTime(2024, 1, 1);
@@ -163,6 +163,10 @@ namespace VisorObraCFI
                             .Distinct().ToListAsync();
                     var listaLicitacionIrrigacion = listaLicitacion.Where(x => x.OrganismoId == 20).Distinct().ToList();
 
+                    var listaEjecucionFop = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 22)
+                        .Distinct().ToListAsync();
+                    var listaLicitacionFop = listaLicitacion.Where(x => x.OrganismoId == 22).Distinct().ToList();
+
                     var unItemAysam = new ContadorObra();
                     unItemAysam.CantidadObraEjecucion = listaEjecucionAySAM.Count;
                     unItemAysam.MontoObraEjecucion = Convert.ToInt64(listaEjecucionAySAM.Sum(x => (decimal?)x.MontoContratado) ?? 0);
@@ -213,6 +217,15 @@ namespace VisorObraCFI
                     unItemIrrig.Organismo = "Irrigación";
                     lista.Add(unItemIrrig);
 
+                    var unItemFop = new ContadorObra();
+                    unItemFop.CantidadObraEjecucion = listaEjecucionIrrigacion.Count;
+                    unItemFop.MontoObraEjecucion = Convert.ToInt64(listaEjecucionFop.Sum(x => (decimal?)x.MontoContratado) ?? 0);
+                    unItemFop.CantidadObraLicitacion = listaLicitacionIrrigacion.Count;
+                    unItemFop.MontoObraLicitacion = Convert.ToInt64(listaLicitacionFop.Sum(x => (decimal?)x.MontoOficial) ?? 0);
+                    unItemFop.IdOrganismo = 22;
+                    unItemFop.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 22).Count();
+                    unItemFop.Organismo = "Fopiatzad";
+                    lista.Add(unItemFop);
 
                     return Ok(lista);
                 }

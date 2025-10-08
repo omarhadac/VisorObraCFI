@@ -23,6 +23,9 @@ namespace VisorObraCFI.DTO
         public decimal? MontoOficial { get; set; }
         public decimal? TotalPagado { get; set; }
         public decimal? Avance { get; set; }
+
+        public string Expediente { get; set; }
+
         public DateTime? Inicio { get; set; }
         public DateTime? Fin { get; set; }
         public decimal? Latitud { get;set; }

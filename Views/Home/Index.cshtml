@@ -951,7 +951,9 @@
                         obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
                     }
                     modalBody.innerHTML +=
+
                         `<p><strong>Monto Contrato Actualizado:</strong> ${obra.contratoFormatted}</p>
+                         <p><strong>Expediente:</strong> ${obra.expediente ? obra.expediente : 'Sin expediente'} </p>
                         <p><strong>Avance:</strong> ${obra.avanceFormatted}</p>
                         <p><strong>Contratista:</strong> ${obra.empresaFormatted}</p>
                         <p><strong>Inicio:</strong> ${obra.inicioFormatted}</p>
@@ -964,6 +966,7 @@
                 else {
                     modalBody.innerHTML +=
                         `
+                         <p><strong>Expediente:</strong> ${obra.expediente ? obra.expediente : 'Sin expediente'} </p>
                         <p><strong>Presupuesto Oficial:</strong> ${obra.presupuestoFormatted}</p>
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
@@ -1015,6 +1018,7 @@
                             puntosLineaParaMapa: obra.puntosLineaParaMapa,
                             PuntosLineaParaMapaSimple: obra.PuntosLineaParaMapaSimple,
                             montoPagado: obra.totalPagadoFormatted,
+                            expediente: obra.expediente,
                             avance: obra.avanceFormatted,
                             fechaInicio: obra.inicioFormatted,
                             fechaFin: obra.finFormatted,
@@ -1086,6 +1090,7 @@
                         contentString += `
                             <p><strong>Monto Contrato Actualizado:</strong><span class="badge badge-secondary"> ${obra.montoContratado}</span></p>
                             <p><strong>Contratista:</strong><span class="badge badge-secondary"> ${obra.empresa}</span></p>
+                            <p><strong>Expediente:</strong><span class="badge badge-secondary"> ${obra.expediente ? obra.expediente : 'Sin Expediente'}</span></p>
                             <p><strong>Avance:</strong><span class="badge badge-success"> ${obra.avance} a ${obra.mesCertificado}</span></p>
                             <p><strong>Fecha Inicio:</strong><span class="badge badge-secondary"> ${obra.fechaInicio}</span></p>
                             <p><strong>Fecha Estimada Fin:</strong><span class="badge badge-secondary"> ${obra.fechaFin}</span></p>
@@ -1120,6 +1125,7 @@
                     else {
                         contentString += `
                             <p><strong>Presupuesto Oficial:</strong><span class="badge badge-secondary"> ${obra.montoOficial}</span></p>
+                            <p><strong>Expediente:</strong><span class="badge badge-secondary"> ${obra.expediente ? obra.expediente : 'Sin Expediente'}</span></p>
                             <p><strong>Apertura:</strong><span class="badge badge-secondary"> ${obra.aperturaFormatted}</span></p>
                             <p><strong>Publicación:</strong><span class="badge badge-secondary"> ${obra.publicacionFormatted}</span></p>
                         </div>
@@ -1127,11 +1133,11 @@
                     }
 
                     var colorPorOrganismo = {
-                        2: "#f44336",  
-                        9: "#ffc107",    
-                        4: "#009688",    
-                        14: "#3f51b5",   
-                        20: "#607d8b"    
+                        2: "#f44336",
+                        9: "#ffc107",
+                        4: "#009688",
+                        14: "#3f51b5",
+                        20: "#607d8b"
                     };
 
 

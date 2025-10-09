@@ -715,9 +715,9 @@ namespace VisorObraCFI
         private string convertirPuntosMapa(string PuntosLineaSeleccionado, string PuntosLinea)
         {
             var fuente = "";
-            if (string.IsNullOrWhiteSpace(PuntosLineaSeleccionado))
+            if (string.IsNullOrWhiteSpace(PuntosLineaSeleccionado) || PuntosLineaSeleccionado.Trim() == "[]")
             {
-                if (!string.IsNullOrWhiteSpace(PuntosLinea))
+                if (!string.IsNullOrWhiteSpace(PuntosLinea) && PuntosLinea.Trim() != "[]")
                 {
                     fuente = PuntosLinea;
                 }

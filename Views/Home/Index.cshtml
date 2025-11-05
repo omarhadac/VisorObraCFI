@@ -177,14 +177,17 @@
                 margin: 0 10px;
             }
 
+        /* 1. Hacemos que las columnas (col-md-2) sean contenedores flex.
+   Esto es necesario para que el hijo (.info-box) pueda crecer. */
+        .row > [class*="col-md-"] {
+            display: flex;
+        }
+
+        /* 2. Le decimos al .info-box que "crezca" (flex-grow: 1)
+   para llenar todo el espacio vertical disponible en su columna. */
         .info-box {
-            display: block;
-            min-height: 90px;
-            background: #fff;
-            width: 100%;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            margin-bottom: 15px;
+            flex-grow: 1;
+            width: 100%; /* Asegura que ocupe todo el ancho de la columna */
         }
 
         .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
@@ -361,7 +364,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 30%;">
+                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 40%;">
                     <div class="info-box-content">
                         <span class="info-box-text">IPV</span>
                         <span class="info-box-number" id="totalIPV">0</span>

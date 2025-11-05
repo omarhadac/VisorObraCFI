@@ -732,6 +732,10 @@
                             if (obra.idObra === 1831) {
                                 obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
                             }
+                            let avance = parseFloat(obra.avanceFormatted.replace('%', '').replace(',', '.'));
+                            if (avance > 100) avance = 100;
+                            let avanceFormatted = avance.toFixed(2).replace('.', ',') + '%';
+                            obra.avanceFormatted = avanceFormatted;
                             row.innerHTML = `
                                 <td class="small-column" class="text-center"">${obra.nombreFormatted}</td>
                                 <td class="text-center">${obra.estadoFormatted}</td>
@@ -1090,6 +1094,11 @@
                     console.log('obra **********');
                     console.log(obra);
                     var marker = null;
+                    if (obra.avance) {
+                        let avance = parseFloat(obra.avance.replace('%', '').replace(',', '.'));
+                        if (avance > 100) avance = 100;
+                        obra.avance = `${avance.toFixed(2).replace('.', ',')}%`;
+                    }
 
                     var archivosHtml = obra.archivos.map(function (archivo) {
                         return { url: archivo.url, nombre: archivo.nombre, fechaImagen: archivo.fechaImagen };

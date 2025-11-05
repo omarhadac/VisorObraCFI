@@ -959,7 +959,11 @@
             }
 
             function showModal(obra) {
-                setFiltrosYBuscar(obra.nombreFormatted)
+                setFiltrosYBuscar(obra.nombreFormatted, obra.idObra)
+                document.getElementById('map').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
                 var modalBody = document.querySelector('#infoModal .modal-body');
                 let estadoMostrar = obra.estadoFormatted;
                 if (obra.estadoFormatted === 'Recepción Provisoria' ||
@@ -1004,21 +1008,21 @@
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
-                $('#infoModal').modal('show');
+                //$('#infoModal').modal('show'); Comentado para no mostrar el modal
             }
 
-            function setFiltrosYBuscar(nombreObra) {
+            function setFiltrosYBuscar(nombreObra, idObra) {
                 document.getElementById('nombreObra').value = nombreObra;
                 console.log(nombreObra)
                 //document.getElementById('selectDepartamento').value = departamento;
                 //document.getElementById('selectOrganismo').value = organismo;
                 //document.getElementById('selectEstado').value = estado;
-                fetchObrasMapa();
+                fetchObrasMapa(idObra);
                 document.getElementById('nombreObra').value = '';
             }
 
 
-            function fetchObrasMapa() {
+            function fetchObrasMapa(idObraToOpen) {
                 var nombreObra = document.getElementById('nombreObra').value;
                 var selectDepartamento = document.getElementById('selectDepartamento').value;
                 var selectOrganismo = document.getElementById('selectOrganismo').value;
@@ -1076,11 +1080,18 @@
                         console.log('obras');
                         console.log(obras);
                         initMap(obras);
+                        if (idObraToOpen && markersMap[idObraToOpen]) {
+                            setTimeout(function () {
+                                google.maps.event.trigger(markersMap[idObraToOpen], 'click');
+                            }, 300); // Pequeño delay para asegurar que el mapa esté listo
+                        }
                     })
+                    
                     .catch(error => {
                         console.error('Error al obtener los datos:', error);
                     });
             }
+            var markersMap = {};
 
             function initMap(obras) {
                 var mendoza = { lat: -32.889458, lng: -68.845839 };
@@ -1089,6 +1100,9 @@
                     center: mendoza,
                     mapTypeId: 'satellite'
                 });
+
+                markersMap = {}; // Reiniciar el objeto de marcadores
+
 
                 obras.forEach(function (obra) {
                     console.log('obra **********');
@@ -1194,6 +1208,7 @@
                                 icon: obra.icon
                             });
                             attachMarkerInfo(marker, map, obra, contentString);
+                            markersMap[obra.idObra] = marker;
 
                             // Último punto (solo si hay más de uno)
                             if (puntos.length > 1) {
@@ -1231,6 +1246,7 @@
                             icon: obra.icon
                         });
                         attachMarkerInfo(marker, map, obra, contentString);
+                        markersMap[obra.idObra] = marker;
                     }
 
 

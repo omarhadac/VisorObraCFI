@@ -517,8 +517,8 @@ namespace VisorObraCFI
                             //TotalAlteraciones = x.totales.TotalAlteraciones,
                             //TotalVariaciones = x.totales.TotalVariaciones,
                             MontoContratado = x.obra.MontoContratado,
-                            MesCertificado = x.obra.OB_UltMesCert.HasValue
-                                ? x.obra.OB_UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                            MesCertificado = x.obra.UltMesCert.HasValue
+                                ? x.obra.UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
                                 : string.Empty,
                             ListaArchivos = context.PryArchivosObra
                                 .Where(a => a.IdProyecto == x.obra.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)

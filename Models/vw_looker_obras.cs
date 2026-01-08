@@ -57,7 +57,7 @@ namespace VisorObraCFI.Models
         public decimal? OB_AcumuladoMensual { get; set; }
         public decimal? OB_AvanceReal { get; set; }
         public decimal? OB_AvanceTeorico { get; set; }
-        public DateTime? OB_UltMesCert { get; set; }
+        public DateTime? UltMesCert { get; set; }
         public int? OB_CantCert { get; set; }
         public decimal? OB_VarPrecio { get; set; }
         public decimal? OB_MontoPagado { get; set; }

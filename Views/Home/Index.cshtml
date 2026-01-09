@@ -177,14 +177,17 @@
                 margin: 0 10px;
             }
 
+        /* 1. Hacemos que las columnas (col-md-2) sean contenedores flex.
+   Esto es necesario para que el hijo (.info-box) pueda crecer. */
+        .row > [class*="col-md-"] {
+            display: flex;
+        }
+
+        /* 2. Le decimos al .info-box que "crezca" (flex-grow: 1)
+   para llenar todo el espacio vertical disponible en su columna. */
         .info-box {
-            display: block;
-            min-height: 90px;
-            background: #fff;
-            width: 100%;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            margin-bottom: 15px;
+            flex-grow: 1;
+            width: 100%; /* Asegura que ocupe todo el ancho de la columna */
         }
 
         .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
@@ -361,7 +364,7 @@
             <div class="col-md-2">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
-                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 30%;">
+                    <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 40%;">
                     <div class="info-box-content">
                         <span class="info-box-text">IPV</span>
                         <span class="info-box-number" id="totalIPV">0</span>
@@ -956,7 +959,11 @@
             }
 
             function showModal(obra) {
-                setFiltrosYBuscar(obra.nombreFormatted)
+                setFiltrosYBuscar(obra.nombreFormatted, obra.idObra)
+                document.getElementById('map').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
                 var modalBody = document.querySelector('#infoModal .modal-body');
                 let estadoMostrar = obra.estadoFormatted;
                 if (obra.estadoFormatted === 'Recepción Provisoria' ||
@@ -1001,21 +1008,21 @@
                         <p><strong>Publicación:</strong> ${obra.publicacionFormatted}</p>
                         <p><strong>Apertura:</strong> ${obra.aperturaFormatted}</p>`;
                 }
-                $('#infoModal').modal('show');
+                //$('#infoModal').modal('show'); Comentado para no mostrar el modal
             }
 
-            function setFiltrosYBuscar(nombreObra) {
+            function setFiltrosYBuscar(nombreObra, idObra) {
                 document.getElementById('nombreObra').value = nombreObra;
                 console.log(nombreObra)
                 //document.getElementById('selectDepartamento').value = departamento;
                 //document.getElementById('selectOrganismo').value = organismo;
                 //document.getElementById('selectEstado').value = estado;
-                fetchObrasMapa();
+                fetchObrasMapa(idObra);
                 document.getElementById('nombreObra').value = '';
             }
 
 
-            function fetchObrasMapa() {
+            function fetchObrasMapa(idObraToOpen) {
                 var nombreObra = document.getElementById('nombreObra').value;
                 var selectDepartamento = document.getElementById('selectDepartamento').value;
                 var selectOrganismo = document.getElementById('selectOrganismo').value;
@@ -1073,11 +1080,18 @@
                         console.log('obras');
                         console.log(obras);
                         initMap(obras);
+                        if (idObraToOpen && markersMap[idObraToOpen]) {
+                            setTimeout(function () {
+                                google.maps.event.trigger(markersMap[idObraToOpen], 'click');
+                            }, 300); // Pequeño delay para asegurar que el mapa esté listo
+                        }
                     })
+                    
                     .catch(error => {
                         console.error('Error al obtener los datos:', error);
                     });
             }
+            var markersMap = {};
 
             function initMap(obras) {
                 var mendoza = { lat: -32.889458, lng: -68.845839 };
@@ -1086,6 +1100,9 @@
                     center: mendoza,
                     mapTypeId: 'satellite'
                 });
+
+                markersMap = {}; // Reiniciar el objeto de marcadores
+
 
                 obras.forEach(function (obra) {
                     console.log('obra **********');
@@ -1191,6 +1208,7 @@
                                 icon: obra.icon
                             });
                             attachMarkerInfo(marker, map, obra, contentString);
+                            markersMap[obra.idObra] = marker;
 
                             // Último punto (solo si hay más de uno)
                             if (puntos.length > 1) {
@@ -1228,6 +1246,7 @@
                             icon: obra.icon
                         });
                         attachMarkerInfo(marker, map, obra, contentString);
+                        markersMap[obra.idObra] = marker;
                     }
 
 

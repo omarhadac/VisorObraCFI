@@ -84,6 +84,8 @@ namespace VisorObraCFI.DTO
                     return "Resarcimiento";
                 if (Financiamiento.Value == 10)
                     return "Municipal";
+                if (Financiamiento.Value == 11)
+                    return "Propio";
                 return "Sin datos";
             }
         }

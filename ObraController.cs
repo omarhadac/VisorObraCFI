@@ -18,68 +18,79 @@ namespace VisorObraCFI
     {
 
 
+        [HttpGet]
         [Route("api/Obra/BuscarTotalesObras")]
-        [System.Web.Http.ActionName("BuscarTotalesObras")]
-        [System.Web.Http.HttpGet]
         public async Task<IHttpActionResult> BuscarTotalesObras()
         {
             try
             {
                 using (var context = new MySqlDbContext())
                 {
-                    var listaEjecucion = await context.vw_looker_obras
-                        //.Where(x => x.IdEstado == 1 && (x.OrganismoId == 2 || x.OrganismoId == 4 
-                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
-                        .Distinct().ToListAsync();
-
-                    var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
-                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
-                        .Distinct().ToListAsync();
-
+                    int[] organismos = { 2, 4, 9, 14, 20, 22 };
                     var fechaLimite = new DateTime(2024, 1, 1);
 
-                    var listaFinalizadas = await context.vw_looker_obras
+                    var query = context.vw_looker_obras
                         .Where(x =>
-                            (
-                                (
-                                    x.PryStage_Id == 48 &&
-                                    x.IdEstado == 18 &&
-                                    (
-                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                            ? x.FechaFinActualizada
-                                            : x.FechaFin) >= fechaLimite
-                                    )
-                                )
-                                ||
-                                (
-                                    x.PryStage_Id == 160 &&
-                                    x.IdEstado == 3 &&
-                                    (
-                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                            ? x.FechaFinActualizada
-                                            : x.FechaFin) >= fechaLimite
-                                    )
-                                )
-                                ||
-                                x.esEntregada == true
-                            )
-                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22)
-                        )
-                        .Distinct()
-                        .ToListAsync();
+                            x.OrganismoId.HasValue &&
+                            organismos.Contains(x.OrganismoId.Value)
+                        );
 
-                    var tmp = new ContadorObra
+                    var obras = await query
+                         .Select(x => new
+                         {
+                             x.IdEstado,
+                             x.PryStage_Id,
+                             x.esEntregada,
+                             x.FechaFinActualizada,
+                             x.FechaFin,
+                             x.MontoContratado,
+                             x.MontoOficial
+                         })
+                         .ToListAsync();
+
+                    int cantidadEjecucion = 0, cantidadLicitacion = 0, cantidadFinalizada = 0;
+                    decimal montoEjecucion = 0, montoLicitacion = 0;
+
+                    foreach (var x in obras)
                     {
-                        CantidadObraEjecucion = listaEjecucion.Count,
-                        MontoObraEjecucion = Convert.ToInt64(listaEjecucion.Sum(x => (decimal?)x.MontoContratado) ?? 0),
-                        CantidadObraLicitacion = listaLicitacion.Count,
-                        MontoObraLicitacion = Convert.ToInt64(listaLicitacion.Sum(x => (decimal?)x.MontoOficial) ?? 0),
-                        CantidadObraFinalizada = listaFinalizadas.Count
+                        bool esEjecucion = x.IdEstado == 1 && !x.esEntregada;
+                        bool esLicitacion = x.PryStage_Id == 49 &&
+                            (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15);
+                        bool esFinalizada = x.esEntregada ||
+                            (
+                                (x.PryStage_Id == 48 && x.IdEstado == 18 &&
+                                 ((x.FechaFinActualizada ?? DateTime.MinValue) >= fechaLimite || (x.FechaFin ?? DateTime.MinValue) >= fechaLimite))
+                                ||
+                                (x.PryStage_Id == 160 && x.IdEstado == 3 &&
+                                 ((x.FechaFinActualizada ?? DateTime.MinValue) >= fechaLimite || (x.FechaFin ?? DateTime.MinValue) >= fechaLimite))
+                            );
+
+                        if (esEjecucion)
+                        {
+                            cantidadEjecucion++;
+                            montoEjecucion += x.MontoContratado;
+                        }
+                        if (esLicitacion)
+                        {
+                            cantidadLicitacion++;
+                            montoLicitacion += x.MontoOficial ?? 0;
+                        }
+                        if (esFinalizada)
+                        {
+                            cantidadFinalizada++;
+                        }
+                    }
+
+                    var data = new ContadorObra
+                    {
+                        CantidadObraEjecucion = cantidadEjecucion,
+                        MontoObraEjecucion = (long)montoEjecucion,
+                        CantidadObraLicitacion = cantidadLicitacion,
+                        MontoObraLicitacion = (long)montoLicitacion,
+                        CantidadObraFinalizada = cantidadFinalizada
                     };
 
-                    return Ok(tmp);
+                    return Ok(data);
                 }
             }
             catch (Exception ex)
@@ -97,146 +108,108 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
-                    var listaEjecucion = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && (x.OrganismoId == 2 || x.OrganismoId == 4
-                            || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
-                        .Distinct().ToListAsync();
-
-                    var listaLicitacion = await context.vw_looker_obras
-                        .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
-                            || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20 || x.OrganismoId == 22))
-                        .Distinct().ToListAsync();
-
+                    int[] organismos = { 2, 4, 9, 14, 20, 22 };
                     var fechaLimite = new DateTime(2024, 1, 1);
 
-                    var listaFinalizadas = await context.vw_looker_obras
+                    var ejecucion = await context.vw_looker_obras
+                        .Where(x =>
+                            x.IdEstado == 1 &&
+                            !x.esEntregada &&
+                            x.OrganismoId.HasValue &&
+                            organismos.Contains(x.OrganismoId.Value)
+                        )
+                        .GroupBy(x => x.OrganismoId)
+                        .Select(g => new
+                        {
+                            OrganismoId = g.Key.Value,
+                            Cantidad = g.Count(),
+                            Monto = g.Sum(x => (decimal?)x.MontoContratado) ?? 0
+                        })
+                        .ToListAsync();
+
+                    var licitacion = await context.vw_looker_obras
+                        .Where(x =>
+                            x.PryStage_Id == 49 &&
+                            (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 ||
+                             x.IdEstado == 14 || x.IdEstado == 15) &&
+                            x.OrganismoId.HasValue &&
+                            organismos.Contains(x.OrganismoId.Value)
+                        )
+                        .GroupBy(x => x.OrganismoId)
+                        .Select(g => new
+                        {
+                            OrganismoId = g.Key.Value,
+                            Cantidad = g.Count(),
+                            Monto = g.Sum(x => (decimal?)x.MontoOficial) ?? 0
+                        })
+                        .ToListAsync();
+
+                    var finalizadas = await context.vw_looker_obras
                         .Where(x =>
                             (
                                 (
                                     x.PryStage_Id == 48 &&
                                     x.IdEstado == 18 &&
-                                    (
-                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                            ? x.FechaFinActualizada
-                                            : x.FechaFin) >= fechaLimite
-                                    )
+                                    (x.FechaFinActualizada ?? x.FechaFin) >= fechaLimite
                                 )
                                 ||
                                 (
                                     x.PryStage_Id == 160 &&
                                     x.IdEstado == 3 &&
-                                    (
-                                        ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                            ? x.FechaFinActualizada
-                                            : x.FechaFin) >= fechaLimite
-                                    )
+                                    (x.FechaFinActualizada ?? x.FechaFin) >= fechaLimite
                                 )
                                 ||
-                                x.esEntregada == true
+                                x.esEntregada
                             )
-                            && (x.OrganismoId == 2 || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20)
+                            && x.OrganismoId.HasValue
+                            && organismos.Contains(x.OrganismoId.Value)
                         )
-                        .Distinct()
+                        .GroupBy(x => x.OrganismoId)
+                        .Select(g => new
+                        {
+                            OrganismoId = g.Key.Value,
+                            Cantidad = g.Count()
+                        })
                         .ToListAsync();
 
-                    var lista = new List<ContadorObra>();
+                    var nombres = new Dictionary<int, string>
+            {
+                { 14, "AySAM" },
+                { 4, "IPV" },
+                { 9, "Vialidad" },
+                { 2, "Infraestructura" },
+                { 20, "Irrigación" },
+                { 22, "Fopiatzad" }
+            };
 
-                    var listaEjecucionAySAM = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 14)
-                        .Distinct().ToListAsync();
-                    var listaLicitacionAySAM = listaLicitacion.Where(x => x.OrganismoId == 14).Distinct().ToList();
+                    var resultado = organismos.Select(id => new ContadorObra
+                    {
+                        IdOrganismo = id,
+                        Organismo = nombres[id],
 
-                    var listaEjecucionIPV = await context.vw_looker_obras
-                        .Where(x => x.IdEstado == 1 && x.OrganismoId == 4)
-                        .Distinct().ToListAsync();
-                    var listaLicitacionIPV = listaLicitacion.Where(x => x.OrganismoId == 4).Distinct().ToList();
+                        CantidadObraEjecucion =
+                            ejecucion.FirstOrDefault(x => x.OrganismoId == id)?.Cantidad ?? 0,
 
-                    var listaEjecucionVialidad = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 9)
-                        .Distinct().ToListAsync();
-                    var listaLicitacionVialidad = listaLicitacion.Where(x => x.OrganismoId == 9).Distinct().ToList();
+                        MontoObraEjecucion =
+                            Convert.ToInt64(ejecucion.FirstOrDefault(x => x.OrganismoId == id)?.Monto ?? 0),
 
-                    var listaEjecucionInfra = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 2)
-                        .Distinct().ToListAsync();
-                    var listaLicitacionInfra = listaLicitacion.Where(x => x.OrganismoId == 2).Distinct().ToList();
+                        CantidadObraLicitacion =
+                            licitacion.FirstOrDefault(x => x.OrganismoId == id)?.Cantidad ?? 0,
 
-                    var listaEjecucionIrrigacion = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 20)
-                            .Distinct().ToListAsync();
-                    var listaLicitacionIrrigacion = listaLicitacion.Where(x => x.OrganismoId == 20).Distinct().ToList();
+                        MontoObraLicitacion =
+                            Convert.ToInt64(licitacion.FirstOrDefault(x => x.OrganismoId == id)?.Monto ?? 0),
 
-                    var listaEjecucionFop = await context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false && x.OrganismoId == 22)
-                        .Distinct().ToListAsync();
-                    var listaLicitacionFop = listaLicitacion.Where(x => x.OrganismoId == 22).Distinct().ToList();
+                        CantidadObraFinalizada =
+                            finalizadas.FirstOrDefault(x => x.OrganismoId == id)?.Cantidad ?? 0
 
-                    var unItemAysam = new ContadorObra();
-                    unItemAysam.CantidadObraEjecucion = listaEjecucionAySAM.Count;
-                    unItemAysam.MontoObraEjecucion = Convert.ToInt64(listaEjecucionAySAM.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemAysam.CantidadObraLicitacion = listaLicitacionAySAM.Count;
-                    unItemAysam.MontoObraLicitacion = Convert.ToInt64(listaLicitacionAySAM.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemAysam.IdOrganismo = 14;
-                    unItemAysam.Organismo = "AySAM";
-                    unItemAysam.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 14).Count();
-                    lista.Add(unItemAysam);
+                    }).ToList();
 
-                    var unItemIPV = new ContadorObra();
-                    unItemIPV.CantidadObraEjecucion = listaEjecucionIPV.Count;
-                    unItemIPV.MontoObraEjecucion = Convert.ToInt64(listaEjecucionIPV.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemIPV.CantidadObraLicitacion = listaLicitacionIPV.Count;
-                    unItemIPV.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIPV.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemIPV.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 4).Count();
-                    unItemIPV.IdOrganismo = 4;
-                    unItemIPV.Organismo = "IPV";
-                    lista.Add(unItemIPV);
-
-                    var unItemVialidad = new ContadorObra();
-                    unItemVialidad.CantidadObraEjecucion = listaEjecucionVialidad.Count;
-                    unItemVialidad.MontoObraEjecucion = Convert.ToInt64(listaEjecucionVialidad.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemVialidad.CantidadObraLicitacion = listaLicitacionVialidad.Count;
-                    unItemVialidad.MontoObraLicitacion = Convert.ToInt64(listaLicitacionVialidad.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemVialidad.IdOrganismo = 9;
-                    unItemVialidad.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 9).Count();
-                    unItemVialidad.Organismo = "Vialidad";
-                    lista.Add(unItemVialidad);
-
-                    var unItemInfra = new ContadorObra();
-                    unItemInfra.CantidadObraEjecucion = listaEjecucionInfra.Count;
-                    unItemInfra.MontoObraEjecucion = Convert.ToInt64(listaEjecucionInfra.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemInfra.CantidadObraLicitacion = listaLicitacionInfra.Count;
-                    unItemInfra.MontoObraLicitacion = Convert.ToInt64(listaLicitacionInfra.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemInfra.IdOrganismo = 2;
-                    unItemInfra.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 2).Count();
-                    unItemInfra.Organismo = "Infraestructura";
-                    lista.Add(unItemInfra);
-
-                    var unItemIrrig = new ContadorObra();
-                    unItemIrrig.CantidadObraEjecucion = listaEjecucionIrrigacion.Count;
-                    unItemIrrig.MontoObraEjecucion = Convert.ToInt64(listaEjecucionIrrigacion.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemIrrig.CantidadObraLicitacion = listaLicitacionIrrigacion.Count;
-                    unItemIrrig.MontoObraLicitacion = Convert.ToInt64(listaLicitacionIrrigacion.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemIrrig.IdOrganismo = 20;
-                    unItemIrrig.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 20).Count();
-                    unItemIrrig.Organismo = "Irrigación";
-                    lista.Add(unItemIrrig);
-
-                    var unItemFop = new ContadorObra();
-                    unItemFop.CantidadObraEjecucion = listaEjecucionFop.Count;
-                    unItemFop.MontoObraEjecucion = Convert.ToInt64(listaEjecucionFop.Sum(x => (decimal?)x.MontoContratado) ?? 0);
-                    unItemFop.CantidadObraLicitacion = listaLicitacionFop.Count;
-                    unItemFop.MontoObraLicitacion = Convert.ToInt64(listaLicitacionFop.Sum(x => (decimal?)x.MontoOficial) ?? 0);
-                    unItemFop.IdOrganismo = 22;
-                    unItemFop.CantidadObraFinalizada = listaFinalizadas.Where(x => x.OrganismoId == 22).Count();
-                    unItemFop.Organismo = "Fopiatzad";
-                    lista.Add(unItemFop);
-
-                    return Ok(lista);
+                    return Ok(resultado);
                 }
             }
             catch (Exception ex)
             {
-                if (ex.InnerException != null)
-                {
-                    return InternalServerError(ex.InnerException);
-                }
-                return InternalServerError(ex);
+                return InternalServerError(ex.InnerException ?? ex);
             }
         }
 
@@ -244,50 +217,43 @@ namespace VisorObraCFI
         [System.Web.Http.ActionName("BuscarObrasFiltradas")]
         [System.Web.Http.HttpGet]
         public async Task<IHttpActionResult> BuscarObrasFiltradas(string nombreObra, int? selectDepartamento,
-            int? selectOrganismo, int? selectEstado, int page = 1, int pageSize = 10)
+     int? selectOrganismo, int? selectEstado, int page = 1, int pageSize = 10)
         {
-            List<ObraGrilla> listaObra = new List<ObraGrilla>();
             try
             {
                 using (var context = new MySqlDbContext())
                 {
                     context.Database.CommandTimeout = 360;
-                    IQueryable<vw_looker_obras> tmp = new List<vw_looker_obras>().AsQueryable();
+
+                    var tmp = context.vw_looker_obras.AsQueryable();
+
                     if (selectEstado == 1)
                     {
-                        tmp = context.vw_looker_obras.Where(x => x.IdEstado == 1 && x.esEntregada == false);
+                        tmp = tmp.Where(x => x.IdEstado == 1 && !x.esEntregada);
                     }
-                    else
-                    {
-                        tmp = context.vw_looker_obras.Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
-                    }
-
-                    if (selectEstado == 3)
+                    else if (selectEstado == 3)
                     {
                         var fechaLimite = new DateTime(2024, 1, 1);
-
-                        tmp = context.vw_looker_obras.Where(x =>
-                            (
-                                x.PryStage_Id == 48 && x.IdEstado == 18 &&
-                                (
-                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                        ? x.FechaFinActualizada
-                                        : x.FechaFin) >= fechaLimite
-                                )
+                        tmp = tmp.Where(x =>
+                            (x.PryStage_Id == 48 && x.IdEstado == 18 &&
+                                (((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                    ? x.FechaFinActualizada
+                                    : x.FechaFin) >= fechaLimite)
                             )
                             ||
-                            (
-                                x.PryStage_Id == 160 && x.IdEstado == 3 &&
-                                (
-                                    ((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
-                                        ? x.FechaFinActualizada
-                                        : x.FechaFin) >= fechaLimite
-                                )
+                            (x.PryStage_Id == 160 && x.IdEstado == 3 &&
+                                (((x.FechaFinActualizada ?? DateTime.MinValue) > (x.FechaFin ?? DateTime.MinValue)
+                                    ? x.FechaFinActualizada
+                                    : x.FechaFin) >= fechaLimite)
                             )
                             ||
                             x.esEntregada == true
                         );
-
+                    }
+                    else
+                    {
+                        tmp = tmp.Where(x => x.PryStage_Id == 49 &&
+                            (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15));
                     }
 
                     if (!string.IsNullOrEmpty(nombreObra))
@@ -297,37 +263,42 @@ namespace VisorObraCFI
 
                     if (selectDepartamento.HasValue && selectDepartamento.Value != 0)
                     {
-                        tmp = (from p in tmp
-                               join pm in context.PryProyectoMunicipio on p.PryProyecto_Id equals pm.PryProyecto_Id
-                               join m in context.GrlDepartament on pm.PryMunicipio_Id equals m.Id
-                               where m.Id == selectDepartamento.Value
-                               select p)
-                                .Distinct();
+                        int depId = selectDepartamento.Value;
+                        tmp = tmp.Where(p =>
+                            context.PryProyectoMunicipio
+                                .Any(pm => pm.PryProyecto_Id == p.PryProyecto_Id &&
+                                           context.GrlDepartament.Any(m => m.Id == pm.PryMunicipio_Id && m.Id == depId))
+                        );
                     }
 
                     if (selectOrganismo.HasValue && selectOrganismo.Value != 0)
                     {
-                        tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
+                        int orgId = selectOrganismo.Value;
+                        tmp = tmp.Where(x => x.OrganismoId == orgId);
                     }
 
+                    var licitacionesQuery = context.LicProyectoFecha
+                        .GroupBy(l => l.idProyecto)
+                        .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault());
+
                     var query = from obra in tmp
-                                join licitacion in context.LicProyectoFecha
-                                    .GroupBy(l => l.idProyecto)
-                                    .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                                join licitacion in licitacionesQuery
                                     on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
                                 from licitacion in obraLicitacion.DefaultIfEmpty()
                                 join proyecto in context.PryProyecto
                                     on obra.PryProyecto_Id equals proyecto.Id
                                 select new { obra, licitacion, proyecto };
 
-                    var totalItems = await query.CountAsync();
-                    var obrasFiltradas = await query
+                    var totalItemsTask = query.CountAsync();
+                    var obrasFiltradasTask = query
                         .OrderBy(x => x.obra.PryProyecto_Id)
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
                         .ToListAsync();
 
-                    listaObra = obrasFiltradas.Select(x => new ObraGrilla
+                    await Task.WhenAll(totalItemsTask, obrasFiltradasTask);
+
+                    var listaObra = obrasFiltradasTask.Result.Select(x => new ObraGrilla
                     {
                         IdObra = x.obra.PryProyecto_Id,
                         Nombre = x.obra.Nombre,
@@ -359,7 +330,7 @@ namespace VisorObraCFI
 
                     var result = new
                     {
-                        TotalItems = totalItems,
+                        TotalItems = totalItemsTask.Result,
                         Items = listaObra
                     };
 
@@ -517,8 +488,8 @@ namespace VisorObraCFI
                             //TotalAlteraciones = x.totales.TotalAlteraciones,
                             //TotalVariaciones = x.totales.TotalVariaciones,
                             MontoContratado = x.obra.MontoContratado,
-                            MesCertificado = x.obra.OB_UltMesCert.HasValue
-                                ? x.obra.OB_UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                            MesCertificado = x.obra.UltMesCert.HasValue
+                                ? x.obra.UltMesCert.Value.ToString("MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
                                 : string.Empty,
                             ListaArchivos = context.PryArchivosObra
                                 .Where(a => a.IdProyecto == x.obra.PryProyecto_Id && a.IdTipoArchivo == 1 && a.Estado == 1)
@@ -741,7 +712,7 @@ namespace VisorObraCFI
             limpio = limpio.Replace("[,", "");
             limpio = limpio.Replace(",]", "");
             limpio = "[" + limpio + "]";
-            if(limpio == "[,]")
+            if (limpio == "[,]")
             {
                 return "";
             }

@@ -231,6 +231,7 @@
     <Content Include="Content\Iconos\loading.gif" />
     <Content Include="Content\Iconos\LogoEscudo.png" />
     <Content Include="Content\Iconos\LogoMendoza.png" />
+    <Content Include="Content\Iconos\LogoMzaReducido5.png" />
     <Content Include="Content\Iconos\LogoMzaReducido4.png" />
     <Content Include="Content\Iconos\LogoMzaReducido3.png" />
     <Content Include="Content\Iconos\LogoMzaReducido2.png" />

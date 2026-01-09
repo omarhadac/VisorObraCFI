@@ -13,6 +13,7 @@ using System.Windows.Media;
 using OfficeOpenXml;
 using VisorObraCFI.DTO;
 using VisorObraCFI.Models;
+using static System.Net.WebRequestMethods;
 
 
 namespace VisorObraCFI
@@ -461,7 +462,7 @@ namespace VisorObraCFI
                         // 2. Insertar imagen en J1
                         string rutaImagen = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoEscudo.png");
                         // O usa una ruta absoluta si la imagen está en otro lugar
-                        if (File.Exists(rutaImagen))
+                        if (System.IO.File.Exists(rutaImagen))
                         {
                             var imagen = Image.FromFile(rutaImagen);
                             var picture = ws.Drawings.AddPicture("Imagen1", rutaImagen);
@@ -486,7 +487,7 @@ namespace VisorObraCFI
                         // 2. Insertar imagen en J1
                         string rutaImagen2 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoMzaReducido1.png");
                         // O usa una ruta absoluta si la imagen está en otro lugar
-                        if (File.Exists(rutaImagen2))
+                        if (System.IO.File.Exists(rutaImagen2))
                         {
                             var imagen1 = Image.FromFile(rutaImagen2);
                             var picture1 = ws.Drawings.AddPicture("Imagen2", rutaImagen2);
@@ -590,7 +591,7 @@ namespace VisorObraCFI
                         }
                         // 2. Insertar imagen en J1
                         string rutaImagen3 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoMzaReducido2.png");
-                        if (File.Exists(rutaImagen3))
+                        if (System.IO.File.Exists(rutaImagen3))
                         {
                             var imagen1 = Image.FromFile(rutaImagen3);
                             var picture1 = ws.Drawings.AddPicture("Imagen3", rutaImagen3);
@@ -612,33 +613,34 @@ namespace VisorObraCFI
 
                         // 2. Insertar imagen en J1
                         string rutaImagen4 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/Recurso1.png");
-                        if (File.Exists(rutaImagen4))
+                        if (System.IO.File.Exists(rutaImagen4))
                         {
                             var imagen4 = Image.FromFile(rutaImagen4);
                             var picture4 = ws.Drawings.AddPicture("Imagen4", rutaImagen4);
-                            picture4.SetPosition(95, 0, 1, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
+                            picture4.SetPosition(95, 0, 0, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
+                            //picture.SetPosition(fila, offsetFilaPx, columna, offsetColPx);
 
                             picture4.SetSize(50, 50);
                         }
                         // Título superior
-                        ws.Cells["C96"].Value = $"0 M2";
-                        ws.Cells["C96"].Style.Font.Size = 12;
-                        ws.Cells["C96"].Style.Font.Bold = true;
-                        ws.Cells["C96"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
-                        ws.Cells["C96"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B96"].Value = $"0 M2";
+                        ws.Cells["B96"].Style.Font.Size = 12;
+                        ws.Cells["B96"].Style.Font.Bold = true;
+                        ws.Cells["B96"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["B96"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D96"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["C97"].Value = $"CONSTRUIDOS EN SALUD";
-                        ws.Cells["C97"].Style.Font.Size = 11;
-                        ws.Cells["C97"].Style.Font.Bold = true;
-                        ws.Cells["C97"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["C97"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B97"].Value = $"CONSTRUIDOS EN SALUD";
+                        ws.Cells["B97"].Style.Font.Size = 11;
+                        ws.Cells["B97"].Style.Font.Bold = true;
+                        ws.Cells["B97"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["B97"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // 2. Insertar imagen en J1
                         string rutaImagen5 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/Recurso4.png");
-                        if (File.Exists(rutaImagen5))
+                        if (System.IO.File.Exists(rutaImagen5))
                         {
                             var imagen5 = Image.FromFile(rutaImagen5);
                             var picture5 = ws.Drawings.AddPicture("Imagen5", rutaImagen5);
@@ -665,44 +667,44 @@ namespace VisorObraCFI
 
                         // 2. Insertar imagen en J1
                         string rutaImagen6 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/Recurso2.png");
-                        if (File.Exists(rutaImagen6))
+                        if (System.IO.File.Exists(rutaImagen6))
                         {
                             var imagen6 = Image.FromFile(rutaImagen6);
                             var picture6 = ws.Drawings.AddPicture("Imagen6", rutaImagen6);
-                            picture6.SetPosition(99, 0, 1, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
+                            picture6.SetPosition(99, 0, 0, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
 
                             picture6.SetSize(50, 50);
                         }
                         // Título superior
-                        ws.Cells["C100"].Value = $"0 KM";
-                        ws.Cells["C100"].Style.Font.Size = 12;
-                        ws.Cells["C100"].Style.Font.Bold = true;
-                        ws.Cells["C100"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
-                        ws.Cells["C100"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B100"].Value = $"0 KM";
+                        ws.Cells["B100"].Style.Font.Size = 12;
+                        ws.Cells["B100"].Style.Font.Bold = true;
+                        ws.Cells["B100"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["B100"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D96"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["C101"].Value = $"NUEVAS RUTAS";
-                        ws.Cells["C101"].Style.Font.Size = 11;
-                        ws.Cells["C101"].Style.Font.Bold = true;
-                        ws.Cells["C101"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["C101"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B101"].Value = $"NUEVAS RUTAS";
+                        ws.Cells["B101"].Style.Font.Size = 11;
+                        ws.Cells["B101"].Style.Font.Bold = true;
+                        ws.Cells["B101"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["B101"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["G100"].Value = $"0 KM";
-                        ws.Cells["G100"].Style.Font.Size = 12;
-                        ws.Cells["G100"].Style.Font.Bold = true;
-                        ws.Cells["G100"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
-                        ws.Cells["G100"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["F100"].Value = $"0 KM";
+                        ws.Cells["F100"].Style.Font.Size = 12;
+                        ws.Cells["F100"].Style.Font.Bold = true;
+                        ws.Cells["F100"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["F100"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D96"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["G101"].Value = $"RUTAS PAVIMENTADAS";
-                        ws.Cells["G101"].Style.Font.Size = 11;
-                        ws.Cells["G101"].Style.Font.Bold = true;
-                        ws.Cells["G101"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["G101"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["F101"].Value = $"RUTAS PAVIMENTADAS";
+                        ws.Cells["F101"].Style.Font.Size = 11;
+                        ws.Cells["F101"].Style.Font.Bold = true;
+                        ws.Cells["F101"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["F101"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
@@ -723,52 +725,52 @@ namespace VisorObraCFI
 
                         // 2. Insertar imagen en J1
                         string rutaImagen7 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/Recurso3.png");
-                        if (File.Exists(rutaImagen7))
+                        if (System.IO.File.Exists(rutaImagen7))
                         {
                             var imagen6 = Image.FromFile(rutaImagen7);
                             var picture6 = ws.Drawings.AddPicture("Imagen7", rutaImagen7);
-                            picture6.SetPosition(104, 0, 1, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
+                            picture6.SetPosition(104, 0, 0, 0); // Fila 1, columna J, 1px de margen izquierdo, 2px margen superior
 
                             picture6.SetSize(50, 50);
                         }
                         // Título superior
-                        ws.Cells["C105"].Value = $"0 KM";
-                        ws.Cells["C105"].Style.Font.Size = 12;
-                        ws.Cells["C105"].Style.Font.Bold = true;
-                        ws.Cells["C105"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
-                        ws.Cells["C105"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B105"].Value = $"0 KM";
+                        ws.Cells["B105"].Style.Font.Size = 12;
+                        ws.Cells["B105"].Style.Font.Bold = true;
+                        ws.Cells["B105"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["B105"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D96"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["C106"].Value = $"IMPERMEABILIZACION";
-                        ws.Cells["C106"].Style.Font.Size = 11;
-                        ws.Cells["C106"].Style.Font.Bold = true;
-                        ws.Cells["C106"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["C106"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B106"].Value = $"IMPERMEABILIZACION";
+                        ws.Cells["B106"].Style.Font.Size = 11;
+                        ws.Cells["B106"].Style.Font.Bold = true;
+                        ws.Cells["B106"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["B106"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["C107"].Value = $"DE CANALES";
-                        ws.Cells["C107"].Style.Font.Size = 11;
-                        ws.Cells["C107"].Style.Font.Bold = true;
-                        ws.Cells["C107"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["C107"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["B107"].Value = $"DE CANALES";
+                        ws.Cells["B107"].Style.Font.Size = 11;
+                        ws.Cells["B107"].Style.Font.Bold = true;
+                        ws.Cells["B107"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["B107"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["G105"].Value = $"0 HA";
-                        ws.Cells["G105"].Style.Font.Size = 12;
-                        ws.Cells["G105"].Style.Font.Bold = true;
-                        ws.Cells["G105"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
-                        ws.Cells["G105"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["F105"].Value = $"0 HA";
+                        ws.Cells["F105"].Style.Font.Size = 12;
+                        ws.Cells["F105"].Style.Font.Bold = true;
+                        ws.Cells["F105"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["F105"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D96"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
-                        ws.Cells["G106"].Value = $"BENEFICIADAS";
-                        ws.Cells["G106"].Style.Font.Size = 11;
-                        ws.Cells["G106"].Style.Font.Bold = true;
-                        ws.Cells["G106"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
-                        ws.Cells["G106"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["F106"].Value = $"BENEFICIADAS";
+                        ws.Cells["F106"].Style.Font.Size = 11;
+                        ws.Cells["F106"].Style.Font.Bold = true;
+                        ws.Cells["F106"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+                        ws.Cells["F106"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         //ws.Cells["D97"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
@@ -799,7 +801,7 @@ namespace VisorObraCFI
                         }
                         // 2. Insertar imagen en J1
                         string rutaImagen8 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoMzaReducido3.png");
-                        if (File.Exists(rutaImagen8))
+                        if (System.IO.File.Exists(rutaImagen8))
                         {
                             var imagen1 = Image.FromFile(rutaImagen8);
                             var picture1 = ws.Drawings.AddPicture("Imagen8", rutaImagen8);
@@ -810,7 +812,7 @@ namespace VisorObraCFI
                         }
                         // 2. Insertar Mapa
                         string rutaImagen9 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/MapaMendoza.png");
-                        if (File.Exists(rutaImagen9))
+                        if (System.IO.File.Exists(rutaImagen9))
                         {
                             var imagen1 = Image.FromFile(rutaImagen9);
                             var picture1 = ws.Drawings.AddPicture("Imagen9", rutaImagen9);
@@ -822,7 +824,7 @@ namespace VisorObraCFI
 
                         // 2. Insertar Flecha#1
                         string rutaImagen10 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/flecha1.png");
-                        if (File.Exists(rutaImagen10))
+                        if (System.IO.File.Exists(rutaImagen10))
                         {
                             var imagen1 = Image.FromFile(rutaImagen10);
                             var picture1 = ws.Drawings.AddPicture("Imagen10", rutaImagen10);
@@ -837,6 +839,13 @@ namespace VisorObraCFI
                         var totalObrasEnLicitacion1 = listaDistrito.Where(x => x.NroDistrito == 1).Sum(x => x.ObrasLicitacion) ?? 0;
                         var totalObrasParalizadas1 = listaDistrito.Where(x => x.NroDistrito == 1).Sum(x => x.ObrasParalizadas) ?? 0;
                         var totalObrasEntregadas1 = listaDistrito.Where(x => x.NroDistrito == 1).Sum(x => x.ObrasEntregadas) ?? 0;
+
+                        ws.Cells["F135"].Value = $"OBRAS POR DISTRITO";
+                        ws.Cells["F135"].Style.Font.Size = 11;
+                        ws.Cells["F135"].Style.Font.Bold = true;
+                        ws.Cells["F135"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["F135"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
+
 
                         ws.Cells["A135"].Value = $"PRIMER DISTRITO";
                         ws.Cells["A135"].Style.Font.Size = 9;
@@ -862,7 +871,7 @@ namespace VisorObraCFI
                         
                         // 2. Insertar Flecha#1
                         string rutaImagen11 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/flecha3.png");
-                        if (File.Exists(rutaImagen11))
+                        if (System.IO.File.Exists(rutaImagen11))
                         {
                             var imagen1 = Image.FromFile(rutaImagen11);
                             var picture1 = ws.Drawings.AddPicture("Imagen11", rutaImagen11);
@@ -901,7 +910,7 @@ namespace VisorObraCFI
 
                         // 2. Insertar Flecha#1
                         string rutaImagen12 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/flecha2.png");
-                        if (File.Exists(rutaImagen12))
+                        if (System.IO.File.Exists(rutaImagen12))
                         {
                             var imagen1 = Image.FromFile(rutaImagen12);
                             var picture1 = ws.Drawings.AddPicture("Imagen12", rutaImagen12);
@@ -939,7 +948,7 @@ namespace VisorObraCFI
 
                         // 2. Insertar Flecha#1
                         string rutaImagen13 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/flecha4.png");
-                        if (File.Exists(rutaImagen13))
+                        if (System.IO.File.Exists(rutaImagen13))
                         {
                             var imagen1 = Image.FromFile(rutaImagen13);
                             var picture1 = ws.Drawings.AddPicture("Imagen13", rutaImagen13);
@@ -958,20 +967,20 @@ namespace VisorObraCFI
                         ws.Cells["K153"].Style.Font.Bold = true;
                         ws.Cells["K153"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
 
-                        ws.Cells["K154"].Value = $"En ejecución: " + totalObrasEnEjecucion3;
+                        ws.Cells["K154"].Value = $"En ejecución: " + totalObrasEnEjecucion4;
                         ws.Cells["K154"].Style.Font.Size = 10;
                         ws.Cells["K154"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
 
 
-                        ws.Cells["K155"].Value = $"En Licitación: " + totalObrasEnLicitacion3;
+                        ws.Cells["K155"].Value = $"En Licitación: " + totalObrasEnLicitacion4;
                         ws.Cells["K155"].Style.Font.Size = 10;
                         ws.Cells["K155"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
 
-                        ws.Cells["K156"].Value = $"Entregadas: " + totalObrasParalizadas3;
+                        ws.Cells["K156"].Value = $"Entregadas: " + totalObrasParalizadas4;
                         ws.Cells["K156"].Style.Font.Size = 10;
                         ws.Cells["K156"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
 
-                        ws.Cells["K157"].Value = $"Paralizadas: " + totalObrasEntregadas3;
+                        ws.Cells["K157"].Value = $"Paralizadas: " + totalObrasEntregadas4;
                         ws.Cells["K157"].Style.Font.Size = 10;
                         ws.Cells["K157"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
 
@@ -990,24 +999,23 @@ namespace VisorObraCFI
                         // Título superior
                         ws.Cells["A195:L195"].Merge = true;
                         ws.Cells["A195"].Value = $"Subsecretaria de Infraestructura ";
-                        ws.Cells["A195"].Style.Font.Size = 28;
+                        ws.Cells["A195"].Style.Font.Size = 16;
                         ws.Cells["A195"].Style.Font.Bold = true;
-                        ws.Cells["A195"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFFFFF")); // Azul
-                        ws.Cells["A195"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["A195"].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        //ws.Cells["A195"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
                         ws.Cells["A195"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // Título superior
                         ws.Cells["A196:L196"].Merge = true;
                         ws.Cells["A196"].Value = $"y Desarrollo Territorial";
-                        ws.Cells["A196"].Style.Font.Size = 28;
+                        ws.Cells["A196"].Style.Font.Size = 16;
                         ws.Cells["A196"].Style.Font.Bold = true;
-                        ws.Cells["A196"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#FFFFFF")); // Azul
-                        ws.Cells["A196"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["A196"].Style.Font.Color.SetColor(System.Drawing.Color.White);
                         ws.Cells["A196"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         #endregion
 
-                        #region BuscaBDOrganismo
+                        #region BuscaBDOrganismoTotales
                         var listaOrganismo = await BuscarTotalesPorOrganismo(listaObras);
                         #endregion
 
@@ -1023,7 +1031,7 @@ namespace VisorObraCFI
                         }
                         // 2. Insertar imagen en J1
                         string rutaImage14 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoMzaReducido4.png");
-                        if (File.Exists(rutaImage14))
+                        if (System.IO.File.Exists(rutaImage14))
                         {
                             var imagen1 = Image.FromFile(rutaImage14);
                             var picture1 = ws.Drawings.AddPicture("Imagen14", rutaImage14);
@@ -1050,48 +1058,48 @@ namespace VisorObraCFI
                         int[] valores2 = { totalLicitacion, totalEjecucion, totalEntregadas, totalParalizadas };
                         string[] colores2 = { "#007bff", "#003366", "#bfa16c", "#d3d3d3" }; // azul, azul oscuro, marrón claro, gris claro
 
-                        wsDatos.Cells["A230"].Value = "Tipo";
-                        wsDatos.Cells["B230"].Value = "Cantidad";
+                        wsDatos2.Cells["A230"].Value = "Tipo";
+                        wsDatos2.Cells["B230"].Value = "Cantidad";
                         for (int i = 0; i < 4; i++)
                         {
-                            wsDatos.Cells[2 + i, 1].Value = titulos[i];
-                            wsDatos.Cells[2 + i, 2].Value = valores[i];
+                            wsDatos2.Cells[2 + i, 1].Value = titulos2[i];
+                            wsDatos2.Cells[2 + i, 2].Value = valores2[i];
                         }
 
 
-                        ws.Row(41).PageBreak = true; // Salto de página después de la fila 42
+                        //ws.Row(41).PageBreak = true; // Salto de página después de la fila 42
 
                         // Título superior: CONSOLIDADO - OBRAS GESTIONADAS AL X
-                        ws.Cells["A245:L245"].Merge = true;
-                        ws.Cells["A245"].Value = $"SUBSECRETARIA DE INFRAESTRUCTURA";
-                        ws.Cells["A245"].Style.Font.Size = 16;
-                        ws.Cells["A245"].Style.Font.Bold = true;
-                        ws.Cells["A245"].Style.Font.Color.SetColor(System.Drawing.Color.White);
-                        ws.Cells["A245"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
-                        ws.Cells["A245"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;                        
+                        ws.Cells["A230:L230"].Merge = true;
+                        ws.Cells["A230"].Value = $"SUBSECRETARIA DE INFRAESTRUCTURA";
+                        ws.Cells["A230"].Style.Font.Size = 16;
+                        ws.Cells["A230"].Style.Font.Bold = true;
+                        //ws.Cells["A245"].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        ws.Cells["A230"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["A230"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;                        
 
-                        ws.Cells["A246:L246"].Merge = true;
-                        ws.Cells["A246"].Value = $"Y DESARROLLO TERRITORIAL";
-                        ws.Cells["A246"].Style.Font.Size = 16;
-                        ws.Cells["A246"].Style.Font.Bold = true;
-                        ws.Cells["A245"].Style.Font.Color.SetColor(System.Drawing.Color.White);
-                        ws.Cells["A246"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
-                        ws.Cells["A246"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        ws.Cells["A231:L231"].Merge = true;
+                        ws.Cells["A231"].Value = $"Y DESARROLLO TERRITORIAL";
+                        ws.Cells["A231"].Style.Font.Size = 16;
+                        ws.Cells["A231"].Style.Font.Bold = true;
+                        //ws.Cells["A245"].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        ws.Cells["A231"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["A231"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                         
 
                         // 1. Título arriba (una sola fila)
-                        ws.Cells["A247:L247"].Merge = true;
-                        ws.Cells["A247"].Value = $"TOTAL DE OBRAS: {totalObras}";
-                        ws.Cells["A247"].Style.Font.Size = 18;
-                        ws.Cells["A247"].Style.Font.Bold = true;
-                        ws.Cells["A247"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        ws.Cells["A247"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
-                        ws.Cells["A247"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        ws.Cells["A232:L232"].Merge = true;
+                        ws.Cells["A232"].Value = $"TOTAL DE OBRAS: {totalObras}";
+                        ws.Cells["A232"].Style.Font.Size = 18;
+                        ws.Cells["A232"].Style.Font.Bold = true;
+                        ws.Cells["A232"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        ws.Cells["A232"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                        ws.Cells["A232"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
                         // 2. Gráfico de torta (izquierda, columnas A-B)
                         var chart2 = ws.Drawings.AddChart("graficoTorta2", OfficeOpenXml.Drawing.Chart.eChartType.Pie);
                         //chart.Title.Text = "Distribución de Obras";
-                        chart2.SetPosition(247, 0, 5, 0); // Fila 3, Columna A
+                        chart2.SetPosition(232, 5, 5, 0); // Fila 3, Columna A
                         chart2.SetSize(400, 300);
                         var serie2 = chart2.Series.Add("datosGrafico2!B2:B5", "datosGrafico2!A2:A5");
                         serie2.Header = "Cantidad";
@@ -1099,7 +1107,7 @@ namespace VisorObraCFI
 
                         // 3. Cuadros de datos (derecha, columnas E-H)
                         int colBase2 = 1; // Columna A
-                        int rowBase2 = 250; // Fila inicial para cuadros
+                        int rowBase2 = 235; // Fila inicial para cuadros
 
                         for (int i = 0; i < 4; i++)
                         {
@@ -1109,7 +1117,7 @@ namespace VisorObraCFI
                             // Encabezado
                             var headerCell = ws.Cells[row, col, row, col + 1];
                             headerCell.Merge = true;
-                            headerCell.Value = titulos[i];
+                            headerCell.Value = titulos2[i];
                             headerCell.Style.Font.Bold = true;
                             headerCell.Style.Font.Size = 14; // Más grande
                             headerCell.Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -1122,7 +1130,7 @@ namespace VisorObraCFI
                             // Valor
                             var valueCell = ws.Cells[row + 1, col, row + 3, col + 1];
                             valueCell.Merge = true;
-                            valueCell.Value = valores[i];
+                            valueCell.Value = valores2[i];
                             valueCell.Style.Font.Size = 16; // Más chico
                             valueCell.Style.Font.Bold = true;
                             valueCell.Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#003366")); // Azul
@@ -1132,7 +1140,101 @@ namespace VisorObraCFI
                         }
 
                         #endregion
-                        
+
+                        #region SeptimaHoja
+
+                        for (int fila = 268; fila <= 269; fila++)
+                        {
+                            for (int col = 1; col <= 12; col++)
+                            {
+                                ws.Cells[fila, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(azul);
+                            }
+                        }
+                        // 2. Insertar imagen en J1
+                        string rutaImagen20 = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Iconos/LogoMzaReducido5.png");
+                        if (System.IO.File.Exists(rutaImagen20))
+                        {
+                            var imagen1 = Image.FromFile(rutaImagen20);
+                            var picture1 = ws.Drawings.AddPicture("Imagen20", rutaImagen20);
+                            //picture.SetPosition(10, 0, 9, 0); // Fila 1 (índice 0), Columna J (índice 9)
+                            picture1.SetPosition(267, 3, 10, 1);
+                            picture1.SetSize(84, 30);
+                        }
+
+                        // Título superior
+                        ws.Cells["A272:L272"].Merge = true;
+                        ws.Cells["A272"].Value = $"SUBSECRETARIA DE INFRAESTRUCTURA ";
+                        ws.Cells["A272"].Style.Font.Size = 16;
+                        ws.Cells["A272"].Style.Font.Bold = true;
+                        ws.Cells["A272"].Style.Font.Color.SetColor(azul);
+                        //ws.Cells["A195"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.None;
+                        ws.Cells["A272"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        // Título superior
+                        ws.Cells["A273:L273"].Merge = true;
+                        ws.Cells["A273"].Value = $"Y DESARROLLO TERRITORIAL";
+                        ws.Cells["A273"].Style.Font.Size = 16;
+                        ws.Cells["A273"].Style.Font.Bold = true;
+                        ws.Cells["A273"].Style.Font.Color.SetColor(azul);
+                        ws.Cells["A273"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        // Título superior
+                        ws.Cells["A276:L276"].Merge = true;
+                        ws.Cells["A276"].Value = $"OBRAS EN LICITACION {totalLicitacion}";
+                        ws.Cells["A276"].Style.Font.Size = 16;
+                        ws.Cells["A276"].Style.Font.Bold = true;
+                        ws.Cells["A276"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["A276"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        ws.Cells["A278"].Value = $"N°";
+                        ws.Cells["A278"].Style.Font.Size = 9;
+                        ws.Cells["A278"].Style.Font.Bold = true;
+                        ws.Cells["A278"].Style.Font.Color.SetColor(System.Drawing.Color.White); // Blanco
+                        ws.Cells["A278"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["A278"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        ws.Cells["B278"].Value = $"EN LICITACION";
+                        ws.Cells["B278"].Style.Font.Size = 9;
+                        ws.Cells["B278"].Style.Font.Bold = true;
+                        ws.Cells["B278"].Style.Font.Color.SetColor(System.Drawing.Color.White); // Blanco
+                        ws.Cells["B278"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["B278"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        ws.Cells["C278"].Value = $"DEPARTAMENTO";
+                        ws.Cells["C278"].Style.Font.Size = 9;
+                        ws.Cells["C278"].Style.Font.Bold = true;
+                        ws.Cells["C278"].Style.Font.Color.SetColor(System.Drawing.Color.White); // Blanco
+                        ws.Cells["C278"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["C278"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        ws.Cells["D278"].Value = $"ESTADO";
+                        ws.Cells["D278"].Style.Font.Size = 9;
+                        ws.Cells["D278"].Style.Font.Bold = true;
+                        ws.Cells["D278"].Style.Font.Color.SetColor(System.Drawing.Color.White); // Blanco
+                        ws.Cells["D278"].Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml("#f7BD56")); // Azul
+                        ws.Cells["D278"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        var listaLicitacion = listaObras
+                            .Where(x => x.PryStage_Id == 49 && (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 || x.IdEstado == 14 || x.IdEstado == 15) && (x.OrganismoId == 2
+                                || x.OrganismoId == 4 || x.OrganismoId == 9 || x.OrganismoId == 14 || x.OrganismoId == 20))
+                            .Distinct().ToList();
+
+                        var listaLicitacionInfra = listaLicitacion.Where(x => x.OrganismoId == 2).Distinct().ToList();
+                        var filaCelda = 279;
+                        int cont = 0;
+                        foreach (var celda in listaLicitacionInfra)
+                        {
+                            cont = cont + 1;
+                            ws.Cells[filaCelda, 1].Value = cont;
+                            ws.Cells[filaCelda, 2].Value = celda.Nombre;
+                            ws.Cells[filaCelda, 3].Value = celda.departamentoString;
+                            ws.Cells[filaCelda, 4].Value = celda.Estado;
+                            filaCelda = filaCelda +1;
+                        }
+
+                        #endregion
+
                         for (int i = 1; i <= 12; i++)
                         {
                             ws.Column(i).Width = 7;
@@ -1424,6 +1526,6 @@ namespace VisorObraCFI
                 }
             }
             return lista;
-        }
+        }        
     }
 }

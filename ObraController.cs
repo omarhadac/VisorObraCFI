@@ -108,7 +108,7 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
-                    int[] organismos = { 2, 4, 9, 14, 20, 22, 27 };
+                    int[] organismos = { 2, 4, 9, 14, 20, 22, 24 };
                     var fechaLimite = new DateTime(2024, 1, 1);
 
                     var ejecucion = await context.vw_looker_obras
@@ -180,7 +180,7 @@ namespace VisorObraCFI
                 { 2, "Infraestructura" },
                 { 20, "Irrigación" },
                 { 22, "Fopiatzad" },
-                { 27, "Municipalidad" }
+                { 24, "Municipalidad" }
             };
 
                     var resultado = organismos.Select(id => new ContadorObra

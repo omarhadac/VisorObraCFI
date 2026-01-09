@@ -496,8 +496,7 @@
                     <option value="15">San Rafael</option>
                     <option value="16">Santa Rosa</option>
                     <option value="17">Tunuyan</option>
-                    <option value="18">Tupungato</option>
-                    <option value="27">Municipalidades</option>
+                    <option value="18">Tupungato</option>                    
                 </select>
                 <label for="selectOrganismo" class="mr-2 bold-label mb-0">Dependencia</label>
                 <select id="selectOrganismo" class="form-control rounded-custom mr-2" style="width: 150px;">
@@ -508,6 +507,7 @@
                     <option value="2">Infraestructura</option>
                     <option value="20">Irrigación</option>
                     <option value="22">Fopiatzad</option>
+                    <option value="24">Municipalidades</option>
                 </select>
                 <label for="selectEstado" class="mr-2 bold-label mb-0">Estado</label>
                 <select id="selectEstado" class="form-control rounded-custom mr-2" style="width: 150px;">
@@ -720,7 +720,7 @@
                             document.getElementById('totalMontoFopLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
                             document.getElementById('totalFopFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
-                        if (item.idOrganismo === 27) {
+                        if (item.idOrganismo === 24) {
                             document.getElementById('totalMuni').textContent = item.cantidadObraEjecucion;
                             document.getElementById('totalObrasMuni').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
                             document.getElementById('totalMontoMuni').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');

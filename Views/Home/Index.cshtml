@@ -183,13 +183,6 @@
             display: flex;
         }
 
-        /* 2. Le decimos al .info-box que "crezca" (flex-grow: 1)
-   para llenar todo el espacio vertical disponible en su columna. */
-        .info-box {
-            flex-grow: 1;
-            width: 100%; /* Asegura que ocupe todo el ancho de la columna */
-        }
-
         .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
             background-color: #00a65a !important;
         }
@@ -219,10 +212,10 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             width: 200px;
-            top: 100%; /* Adjust as needed */
+            top: 100%; 
             left: 50%;
             transform: translateX(-50%);
-            border-radius: 10px; /* Añadir bordes redondeados */
+            border-radius: 10px; 
         }
 
         .info-box:hover .popup-content {
@@ -278,6 +271,26 @@
             white-space: normal;
             word-wrap: break-word;
         }
+
+        .info-row {
+            display: flex;
+            flex-wrap: nowrap; /* No permite que se bajen de fila */
+            gap: 16px; /* Espacio entre columnas */
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .info-col {
+            flex: 1 1 0;
+            display: flex;
+        }
+
+        .info-box {
+            width: 100%;
+            flex: 1 1 0;
+            margin: 0;
+            position: relative;            
+        }
     </style>
 </head>
 <body>
@@ -324,8 +337,11 @@
         </div>
 
         <!-- Primer sector: Agrupación -->
-        <div class="row">
-            <div class="col-md-2">
+
+
+
+        <div class="info-row">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/agua-y-cloacas.svg" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -343,7 +359,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/arquitectura.svg" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -361,7 +377,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/vivienda.svg" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -379,7 +395,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/obras-viales.svg" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -397,7 +413,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/iconoIrrigacion.png" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -415,7 +431,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="info-col">
                 <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
                     <span class="info-box-icon bg-green"></span>
                     <img src="~/Content/Iconos/Fopiatzad2.png" alt="icono representativo a obras publicas" style="width: 40%;">
@@ -433,7 +449,29 @@
                     </div>
                 </div>
             </div>
+            <div class="info-col">
+                <div class="info-box" onmouseover="showPopup(this)" onmouseout="hidePopup(this)">
+                    <span class="info-box-icon bg-green"></span>
+                    <img src="~/Content/Iconos/municipalidad.png" alt="icono representativo a obras publicas" style="width: 40%;">
+                    <div class="info-box-content">
+                        <span class="info-box-text">MUNICIPALIDADES</span>
+                        <span class="info-box-number" id="totalMuni">0</span>
+                    </div>
+                    <div class="popup-content">
+                        <h4>Municipalidades</h4>
+                        <p id="totalObrasMuni">Obras en Ejecución: 0</p>
+                        <p id="totalMontoMuni">Monto: 0</p>
+                        <p id="totalMuniLic">Obras en Licitación: 0</p>
+                        <p id="totalMontoMuniLic">Monto: 0</p>
+                        <p id="totalMuniFin">Obras Ejecutadas: 0</p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+
         <!-- Segundo sector: Buscador -->
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-center">
@@ -459,6 +497,7 @@
                     <option value="16">Santa Rosa</option>
                     <option value="17">Tunuyan</option>
                     <option value="18">Tupungato</option>
+                    <option value="27">Municipalidades</option>
                 </select>
                 <label for="selectOrganismo" class="mr-2 bold-label mb-0">Dependencia</label>
                 <select id="selectOrganismo" class="form-control rounded-custom mr-2" style="width: 150px;">
@@ -680,6 +719,14 @@
                             document.getElementById('totalFopLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
                             document.getElementById('totalMontoFopLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
                             document.getElementById('totalFopFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
+                        }
+                        if (item.idOrganismo === 27) {
+                            document.getElementById('totalMuni').textContent = item.cantidadObraEjecucion;
+                            document.getElementById('totalObrasMuni').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
+                            document.getElementById('totalMontoMuni').textContent = 'Monto: $ ' + item.montoObraEjecucion.toLocaleString('es-ES');
+                            document.getElementById('totalMuniLic').textContent = 'Obras en Licitación: ' + item.cantidadObraLicitacion;
+                            document.getElementById('totalMontoMuniLic').textContent = 'Monto: $ ' + item.montoObraLicitacion.toLocaleString('es-ES');
+                            document.getElementById('totalMuniFin').textContent = 'Obras Ejecutadas: ' + item.cantidadObraFinalizada;
                         }
                     });
                 })

@@ -86,5 +86,7 @@ namespace VisorObraCFI.Models
         public string departamentoString { get; set; }
 
         public bool esEntregada { get; set; }
+
+        public bool noVisor { get; set; }
     }
 }

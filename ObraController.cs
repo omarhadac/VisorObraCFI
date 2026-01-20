@@ -29,11 +29,12 @@ namespace VisorObraCFI
                     int[] organismos = { 2, 4, 9, 14, 20, 22 };
                     var fechaLimite = new DateTime(2024, 1, 1);
 
-                    var query = context.vw_looker_obras
-                        .Where(x =>
-                            x.OrganismoId.HasValue &&
-                            organismos.Contains(x.OrganismoId.Value)
-                        );
+                    var query = from o in context.vw_looker_obras
+                                join p in context.PryProyecto on o.PryProyecto_Id equals p.Id
+                                where !p.noVisor
+                                      && o.OrganismoId.HasValue
+                                      && organismos.Contains(o.OrganismoId.Value)
+                                select o;
 
                     var obras = await query
                          .Select(x => new
@@ -111,60 +112,65 @@ namespace VisorObraCFI
                     int[] organismos = { 2, 4, 9, 14, 20, 22, 24 };
                     var fechaLimite = new DateTime(2024, 1, 1);
 
-                    var ejecucion = await context.vw_looker_obras
+                    var baseQuery = from o in context.vw_looker_obras
+                                    join p in context.PryProyecto on o.PryProyecto_Id equals p.Id
+                                    where !p.noVisor
+                                    select new { obra = o, proyecto = p };
+
+                    var ejecucion = await baseQuery
                         .Where(x =>
-                            x.IdEstado == 1 &&
-                            !x.esEntregada &&
-                            x.OrganismoId.HasValue &&
-                            organismos.Contains(x.OrganismoId.Value)
+                            x.obra.IdEstado == 1 &&
+                            !x.obra.esEntregada &&
+                            x.obra.OrganismoId.HasValue &&
+                            organismos.Contains(x.obra.OrganismoId.Value)
                         )
-                        .GroupBy(x => x.OrganismoId)
+                        .GroupBy(x => x.obra.OrganismoId)
                         .Select(g => new
                         {
                             OrganismoId = g.Key.Value,
                             Cantidad = g.Count(),
-                            Monto = g.Sum(x => (decimal?)x.MontoContratado) ?? 0
+                            Monto = g.Sum(x => (decimal?)x.obra.MontoContratado) ?? 0
                         })
                         .ToListAsync();
 
-                    var licitacion = await context.vw_looker_obras
+                    var licitacion = await baseQuery
                         .Where(x =>
-                            x.PryStage_Id == 49 &&
-                            (x.IdEstado == 6 || x.IdEstado == 7 || x.IdEstado == 8 ||
-                             x.IdEstado == 14 || x.IdEstado == 15) &&
-                            x.OrganismoId.HasValue &&
-                            organismos.Contains(x.OrganismoId.Value)
+                            x.obra.PryStage_Id == 49 &&
+                            (x.obra.IdEstado == 6 || x.obra.IdEstado == 7 || x.obra.IdEstado == 8 ||
+                             x.obra.IdEstado == 14 || x.obra.IdEstado == 15) &&
+                            x.obra.OrganismoId.HasValue &&
+                            organismos.Contains(x.obra.OrganismoId.Value)
                         )
-                        .GroupBy(x => x.OrganismoId)
+                        .GroupBy(x => x.obra.OrganismoId)
                         .Select(g => new
                         {
                             OrganismoId = g.Key.Value,
                             Cantidad = g.Count(),
-                            Monto = g.Sum(x => (decimal?)x.MontoOficial) ?? 0
+                            Monto = g.Sum(x => (decimal?)x.obra.MontoOficial) ?? 0
                         })
                         .ToListAsync();
 
-                    var finalizadas = await context.vw_looker_obras
+                    var finalizadas = await baseQuery
                         .Where(x =>
                             (
                                 (
-                                    x.PryStage_Id == 48 &&
-                                    x.IdEstado == 18 &&
-                                    (x.FechaFinActualizada ?? x.FechaFin) >= fechaLimite
+                                    x.obra.PryStage_Id == 48 &&
+                                    x.obra.IdEstado == 18 &&
+                                    (x.obra.FechaFinActualizada ?? x.obra.FechaFin) >= fechaLimite
                                 )
                                 ||
                                 (
-                                    x.PryStage_Id == 160 &&
-                                    x.IdEstado == 3 &&
-                                    (x.FechaFinActualizada ?? x.FechaFin) >= fechaLimite
+                                    x.obra.PryStage_Id == 160 &&
+                                    x.obra.IdEstado == 3 &&
+                                    (x.obra.FechaFinActualizada ?? x.obra.FechaFin) >= fechaLimite
                                 )
                                 ||
-                                x.esEntregada
+                                x.obra.esEntregada
                             )
-                            && x.OrganismoId.HasValue
-                            && organismos.Contains(x.OrganismoId.Value)
+                            && x.obra.OrganismoId.HasValue
+                            && organismos.Contains(x.obra.OrganismoId.Value)
                         )
-                        .GroupBy(x => x.OrganismoId)
+                        .GroupBy(x => x.obra.OrganismoId)
                         .Select(g => new
                         {
                             OrganismoId = g.Key.Value,
@@ -186,7 +192,7 @@ namespace VisorObraCFI
                     var resultado = organismos.Select(id => new ContadorObra
                     {
                         IdOrganismo = id,
-                        Organismo = nombres[id],
+                        Organismo = nombres.ContainsKey(id) ? nombres[id] : id.ToString(),
 
                         CantidadObraEjecucion =
                             ejecucion.FirstOrDefault(x => x.OrganismoId == id)?.Cantidad ?? 0,
@@ -278,17 +284,11 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == orgId);
                     }
 
-                    var licitacionesQuery = context.LicProyectoFecha
-                        .GroupBy(l => l.idProyecto)
-                        .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault());
-
                     var query = from obra in tmp
-                                join licitacion in licitacionesQuery
-                                    on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
-                                from licitacion in obraLicitacion.DefaultIfEmpty()
                                 join proyecto in context.PryProyecto
                                     on obra.PryProyecto_Id equals proyecto.Id
-                                select new { obra, licitacion, proyecto };
+                                where !proyecto.noVisor
+                                select new { obra, proyecto };
 
                     var totalItemsTask = query.CountAsync();
                     var obrasFiltradasTask = query
@@ -299,34 +299,48 @@ namespace VisorObraCFI
 
                     await Task.WhenAll(totalItemsTask, obrasFiltradasTask);
 
-                    var listaObra = obrasFiltradasTask.Result.Select(x => new ObraGrilla
-                    {
-                        IdObra = x.obra.PryProyecto_Id,
-                        Nombre = x.obra.Nombre,
-                        Estado = x.obra.Estado,
-                        idEstado = x.obra.IdEstado,
-                        Dependencia = x.obra.Dependencia,
-                        Departamento = x.obra.departamentoString,
-                        Contrato = x.obra.MontoContratado,
-                        TotalPagado = x.obra.OB_MontoPagado,
-                        //TotalAlteraciones = x.totales.TotalAlteraciones,
-                        //TotalVariaciones = x.totales.TotalVariaciones,
-                        MontoContratado = x.obra.MontoContratado,
-                        MontoOficial = x.obra.MontoOficial,
-                        Empresa = x.obra.Empresa,
-                        Avance = x.obra.OB_AcumuladoMensual,
-                        MontoAdicional = x.obra.MontoAdicional,
-                        MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
-                        Expediente = x.obra.Expediente,
-                        esEntregada = x.obra.esEntregada,
-                        OB_VarPrecio = x.obra.OB_VarPrecio,
-                        MontoLegAbono = x.obra.MontoLegAbono,
-                        MontoSupresion = x.obra.MontoSupresion,
-                        Inicio = x.obra.FechaInicio,
-                        Apertura = x.licitacion?.fechaApertura,
-                        Publicacion = x.licitacion?.fechaPublicacion,
-                        Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
-                        Financiamiento = x.proyecto.PryFinanciacion_Id
+                    var proyectoIds = obrasFiltradasTask.Result.Select(x => x.obra.PryProyecto_Id).Distinct().ToList();
+
+                    var licitacionesDict = (await context.LicProyectoFecha
+                        .Where(l => proyectoIds.Contains(l.idProyecto))
+                        .GroupBy(l => l.idProyecto)
+                        .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                        .ToListAsync())
+                        .Where(l => l != null)
+                        .ToDictionary(l => l.idProyecto, l => l);
+
+                    var listaObra = obrasFiltradasTask.Result.Select(x => {
+                        LicProyectoFecha licitacion = null;
+                        licitacionesDict.TryGetValue(x.obra.PryProyecto_Id, out licitacion);
+                        return new ObraGrilla
+                        {
+                            IdObra = x.obra.PryProyecto_Id,
+                            Nombre = x.obra.Nombre,
+                            Estado = x.obra.Estado,
+                            idEstado = x.obra.IdEstado,
+                            Dependencia = x.obra.Dependencia,
+                            Departamento = x.obra.departamentoString,
+                            Contrato = x.obra.MontoContratado,
+                            TotalPagado = x.obra.OB_MontoPagado,
+                            //TotalAlteraciones = x.totales.TotalAlteraciones,
+                            //TotalVariaciones = x.totales.TotalVariaciones,
+                            MontoContratado = x.obra.MontoContratado,
+                            MontoOficial = x.obra.MontoOficial,
+                            Empresa = x.obra.Empresa,
+                            Avance = x.obra.OB_AcumuladoMensual,
+                            MontoAdicional = x.obra.MontoAdicional,
+                            MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                            Expediente = x.obra.Expediente,
+                            esEntregada = x.obra.esEntregada,
+                            OB_VarPrecio = x.obra.OB_VarPrecio,
+                            MontoLegAbono = x.obra.MontoLegAbono,
+                            MontoSupresion = x.obra.MontoSupresion,
+                            Inicio = x.obra.FechaInicio,
+                            Apertura = licitacion?.fechaApertura,
+                            Publicacion = licitacion?.fechaPublicacion,
+                            Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                            Financiamiento = x.proyecto.PryFinanciacion_Id
+                        };
                     }).ToList();
 
                     var result = new
@@ -416,14 +430,6 @@ namespace VisorObraCFI
                         tmp = tmp.Where(x => x.OrganismoId == selectOrganismo.Value);
                     }
 
-                    // Realiza el join con PryProyecto
-                    //var query = from obra in tmp
-                    //            join proyecto in context.PryProyecto
-                    //                on obra.PryProyecto_Id equals proyecto.Id
-                    //            join totales in context.vw_looker_obras_totales
-                    //                on obra.PryProyecto_Id equals totales.PryProyecto_Id
-                    //            select new { obra, proyecto, totales };
-
                     var query = from obra in tmp
                                 join licitacion in context.LicProyectoFecha
                                     .GroupBy(l => l.idProyecto)
@@ -432,6 +438,7 @@ namespace VisorObraCFI
                                 from licitacion in obraLicitacion.DefaultIfEmpty()
                                 join proyecto in context.PryProyecto
                                     on obra.PryProyecto_Id equals proyecto.Id
+                                where !proyecto.noVisor
                                 select new { obra, licitacion, proyecto };
 
                     var obrasFiltradas = await query.ToListAsync();
@@ -587,39 +594,48 @@ namespace VisorObraCFI
                     }
 
                     var query = from obra in tmp
-                                join licitacion in context.LicProyectoFecha
-                                    .GroupBy(l => l.idProyecto)
-                                    .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
-                                    on obra.PryProyecto_Id equals licitacion.idProyecto into obraLicitacion
-                                from licitacion in obraLicitacion.DefaultIfEmpty()
-                                select new { obra, licitacion };
+                                join proyecto in context.PryProyecto
+                                    on obra.PryProyecto_Id equals proyecto.Id
+                                where !proyecto.noVisor
+                                select new { obra, proyecto };
 
                     var obrasFiltradas = await query
                         .OrderBy(x => x.obra.PryProyecto_Id)
                         .ToListAsync();
 
-                    var listaObra = obrasFiltradas.Select(x => new ObraGrilla
-                    {
-                        IdObra = x.obra.PryProyecto_Id,
-                        Nombre = x.obra.Nombre,
-                        Estado = x.obra.Estado,
-                        Dependencia = x.obra.Dependencia,
-                        Departamento = x.obra.departamentoString,
-                        Contrato = x.obra.MontoContratado,
-                        MontoOficial = x.obra.MontoOficial,
-                        TotalPagado = x.obra.OB_MontoPagado,
-                        MontoAdicional = x.obra.MontoAdicional,
-                        MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
-                        esEntregada = x.obra.esEntregada,
-                        OB_VarPrecio = x.obra.OB_VarPrecio,
-                        MontoLegAbono = x.obra.MontoLegAbono,
-                        MontoSupresion = x.obra.MontoSupresion,
-                        Empresa = x.obra.Empresa,
-                        Avance = x.obra.OB_AcumuladoMensual,
-                        Inicio = x.obra.FechaInicio,
-                        Apertura = x.licitacion?.fechaApertura,
-                        Publicacion = x.licitacion?.fechaPublicacion,
-                        Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                    var licitacionesDict = (await context.LicProyectoFecha
+                        .GroupBy(l => l.idProyecto)
+                        .Select(g => g.OrderByDescending(l => l.idLicProyectoFecha).FirstOrDefault())
+                        .ToListAsync())
+                        .Where(l => l != null)
+                        .ToDictionary(l => l.idProyecto, l => l);
+
+                    var listaObra = obrasFiltradas.Select(x => {
+                        LicProyectoFecha licitacion = null;
+                        licitacionesDict.TryGetValue(x.obra.PryProyecto_Id, out licitacion);
+                        return new ObraGrilla
+                        {
+                            IdObra = x.obra.PryProyecto_Id,
+                            Nombre = x.obra.Nombre,
+                            Estado = x.obra.Estado,
+                            Dependencia = x.obra.Dependencia,
+                            Departamento = x.obra.departamentoString,
+                            Contrato = x.obra.MontoContratado,
+                            MontoOficial = x.obra.MontoOficial,
+                            TotalPagado = x.obra.OB_MontoPagado,
+                            MontoAdicional = x.obra.MontoAdicional,
+                            MontoContratacionDirecta = x.obra.MontoContratacionDirecta,
+                            esEntregada = x.obra.esEntregada,
+                            OB_VarPrecio = x.obra.OB_VarPrecio,
+                            MontoLegAbono = x.obra.MontoLegAbono,
+                            MontoSupresion = x.obra.MontoSupresion,
+                            Empresa = x.obra.Empresa,
+                            Avance = x.obra.OB_AcumuladoMensual,
+                            Inicio = x.obra.FechaInicio,
+                            Apertura = licitacion?.fechaApertura,
+                            Publicacion = licitacion?.fechaPublicacion,
+                            Fin = x.obra.FechaFinActualizada ?? x.obra.FechaFin,
+                        };
                     }).ToList();
 
                     // Establecer la propiedad LicenseContext

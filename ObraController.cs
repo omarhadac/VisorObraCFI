@@ -26,7 +26,7 @@ namespace VisorObraCFI
             {
                 using (var context = new MySqlDbContext())
                 {
-                    int[] organismos = { 2, 4, 9, 14, 20, 22 };
+                    int[] organismos = { 2, 4, 9, 14, 20, 22 , 24};
                     var fechaLimite = new DateTime(2024, 1, 1);
 
                     var query = from o in context.vw_looker_obras

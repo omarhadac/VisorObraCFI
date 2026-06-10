@@ -671,7 +671,7 @@
                 })
                 .then(data => {
                     data.forEach(item => {
-                        console.log(item);
+                        //console.log(item);
                         if (item.idOrganismo === 14) {
                             document.getElementById('totalAySAM').textContent = item.cantidadObraEjecucion;
                             document.getElementById('totalObrasAySAM').textContent = 'Obras en Ejecución: ' + item.cantidadObraEjecucion;
@@ -756,7 +756,7 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data.items);
+                        //console.log(data.items);
 
                         if (document.getElementById('selectEstado').value === "1") {
                             mostrarTablaObra();
@@ -777,7 +777,7 @@
                             row.classList.add('cursor-pointer');
                             var montoContrato = obra.contratoFormatted;
                             if (obra.idObra === 1831) {
-                                obra.contratoFormatted = '$124.270.941'; // O el monto que necesites
+                                obra.contratoFormatted = '$124.270.941'; // obra HC a pedido de autoridades
                             }
                             let avance = parseFloat(obra.avanceFormatted.replace('%', '').replace(',', '.'));
                             if (avance > 100) avance = 100;
@@ -1060,7 +1060,7 @@
 
             function setFiltrosYBuscar(nombreObra, idObra) {
                 document.getElementById('nombreObra').value = nombreObra;
-                console.log(nombreObra)
+                //console.log(nombreObra)
                 //document.getElementById('selectDepartamento').value = departamento;
                 //document.getElementById('selectOrganismo').value = organismo;
                 //document.getElementById('selectEstado').value = estado;
@@ -1085,8 +1085,8 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('*** OBRAS MAPA ***');
-						console.log(data);
+      //                  console.log('*** OBRAS MAPA ***');
+						//console.log(data);
                         var obras = data.map(obra => ({
                             idObra: obra.idObra,
                             position: { lat: parseFloat(obra.latitudFormatted), lng: parseFloat(obra.longitudFormatted) },
@@ -1124,8 +1124,8 @@
                                 data: obra.chartData.map(avance => avance.avanceReal)
                             }
                         }));
-                        console.log('obras');
-                        console.log(obras);
+                        //console.log('obras');
+                        //console.log(obras);
                         initMap(obras);
                         if (idObraToOpen && markersMap[idObraToOpen]) {
                             setTimeout(function () {
@@ -1152,8 +1152,8 @@
 
 
                 obras.forEach(function (obra) {
-                    console.log('obra **********');
-                    console.log(obra);
+                    //console.log('obra **********');
+                    //console.log(obra);
                     var marker = null;
                     if (obra.avance) {
                         let avance = parseFloat(obra.avance.replace('%', '').replace(',', '.'));
@@ -1239,55 +1239,27 @@
                         20: "#607d8b"
                     };
 
-
+                    /* Marco solo el punto inicial */
                     // Verifica si existe y tiene datos la propiedad puntosLineaParaMapa
                     if (obra.puntosLineaParaMapa && obra.puntosLineaParaMapa.trim() !== "" && obra.puntosLineaParaMapa !== "[]") {
                         // Parsear el string a array de coordenadas
                         var puntos = JSON.parse(obra.puntosLineaParaMapa);
 
-                        // Dibujar un marker en cada punto
+                        // Dibujar un marcador SOLO en el primer punto
                         if (puntos.length > 0) {
-                            // Primer punto
                             marker = new google.maps.Marker({
                                 position: { lat: puntos[0][0], lng: puntos[0][1] },
                                 map: map,
-                                title: obra.nombre + " (Inicio)",
+                                title: obra.nombre, // Le saqué el " (Inicio)" porque ahora es único
                                 icon: obra.icon
                             });
                             attachMarkerInfo(marker, map, obra, contentString);
                             markersMap[obra.idObra] = marker;
-
-                            // Último punto (solo si hay más de uno)
-                            if (puntos.length > 1) {
-                                marker = new google.maps.Marker({
-                                    position: { lat: puntos[puntos.length - 1][0], lng: puntos[puntos.length - 1][1] },
-                                    map: map,
-                                    title: obra.nombre + " (Fin)",
-                                    icon: obra.icon
-                                });
-                                attachMarkerInfo(marker, map, obra, contentString);
-                            }
                         }
-
-                        // Dibujar la polilínea que une los puntos
-                        var path = puntos.map(function (coord) {
-                            return { lat: coord[0], lng: coord[1] };
-                        });
-
-                        var colorLinea = colorPorOrganismo[obra.idOrganismo] || "#FF0000";
-
-                        var polyline = new google.maps.Polyline({
-                            path: path,
-                            geodesic: true,
-                            strokeColor: colorLinea,
-                            strokeOpacity: 1.0,
-                            strokeWeight: 2,
-                            map: map
-                        });
                     } else {
                         // Si no hay puntos, dibuja solo el marker habitual
                         marker = new google.maps.Marker({
-                            position: obra.position,
+                            position: { lat: obra.position.lat, lng: obra.position.lng }, // O simplemente obra.position si ya es un objeto {lat, lng}
                             map: map,
                             title: obra.nombre,
                             icon: obra.icon
@@ -1295,6 +1267,64 @@
                         attachMarkerInfo(marker, map, obra, contentString);
                         markersMap[obra.idObra] = marker;
                     }
+
+                    /* se descomenta lo de abajo para volver a marcar en el mapa el punto inicial, el final y la linea*/
+
+                    //// Verifica si existe y tiene datos la propiedad puntosLineaParaMapa
+                    //if (obra.puntosLineaParaMapa && obra.puntosLineaParaMapa.trim() !== "" && obra.puntosLineaParaMapa !== "[]") {
+                    //    // Parsear el string a array de coordenadas
+                    //    var puntos = JSON.parse(obra.puntosLineaParaMapa);
+
+                    //    // Dibujar un marker en cada punto
+                    //    if (puntos.length > 0) {
+                    //        // Primer punto
+                    //        marker = new google.maps.Marker({
+                    //            position: { lat: puntos[0][0], lng: puntos[0][1] },
+                    //            map: map,
+                    //            title: obra.nombre + " (Inicio)",
+                    //            icon: obra.icon
+                    //        });
+                    //        attachMarkerInfo(marker, map, obra, contentString);
+                    //        markersMap[obra.idObra] = marker;
+
+                    //        // Último punto (solo si hay más de uno)
+                    //        if (puntos.length > 1) {
+                    //            marker = new google.maps.Marker({
+                    //                position: { lat: puntos[puntos.length - 1][0], lng: puntos[puntos.length - 1][1] },
+                    //                map: map,
+                    //                title: obra.nombre + " (Fin)",
+                    //                icon: obra.icon
+                    //            });
+                    //            attachMarkerInfo(marker, map, obra, contentString);
+                    //        }
+                    //    }
+
+                    //    // Dibujar la polilínea que une los puntos
+                    //    var path = puntos.map(function (coord) {
+                    //        return { lat: coord[0], lng: coord[1] };
+                    //    });
+
+                    //    var colorLinea = colorPorOrganismo[obra.idOrganismo] || "#FF0000";
+
+                    //    var polyline = new google.maps.Polyline({
+                    //        path: path,
+                    //        geodesic: true,
+                    //        strokeColor: colorLinea,
+                    //        strokeOpacity: 1.0,
+                    //        strokeWeight: 2,
+                    //        map: map
+                    //    });
+                    //} else {
+                    //    // Si no hay puntos, dibuja solo el marker habitual
+                    //    marker = new google.maps.Marker({
+                    //        position: obra.position,
+                    //        map: map,
+                    //        title: obra.nombre,
+                    //        icon: obra.icon
+                    //    });
+                    //    attachMarkerInfo(marker, map, obra, contentString);
+                    //    markersMap[obra.idObra] = marker;
+                    //}
 
 
                 });
